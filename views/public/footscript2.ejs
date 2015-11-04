@@ -1,0 +1,17 @@
+<!-- ace scripts -->
+<script id="ace_script_position" src="<%-setting.filePath%>/js/ace-elements.min.js"></script>
+<script src="<%-setting.filePath%>/js/ace.min.js"></script>
+<script>
+$('.nav-list').on('click', 'a', function(e) {
+	var $el = $(this),
+		id = $el.attr('id');
+	if (id) {
+		$('.nav-list li.active').removeClass('active').removeClass('open').find('ul').removeClass('nav-show').addClass('nav-hide').hide();
+		$el.parent().addClass('active').parent('ul').parent('li').addClass('active');
+	}
+});
+//左侧菜单自动定位
+//seajs.use('why',function(a){
+//	a.autonav('#sidebar ul.submenu>li','active').parents('ul.submenu').parent().addClass('active open');
+//})
+</script>

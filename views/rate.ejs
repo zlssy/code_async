@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title><%=title%></title>
+
+		<meta name="description" content="Tcl settlements" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<link href='<%-setting.filePath%>/css/jquery-ui.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/jquery-ui.custom.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/datepicker.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/bootstrap-datetimepicker.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/ui.jqgrid.css' rel="stylesheet" />
+		<%- include('public/header') %>
+		<style>
+			.lm-5{
+				margin-top: 5px;
+			}
+			.row{
+				margin: 4px 0;
+			}
+			@media(min-width: 768px) {
+				.modal-dialog{
+					width: 900px!important;
+				}
+			}
+		</style>
+	</head>
+<body class="no-skin">
+<%- include('public/nav')%>
+
+<div class="main-container" id="main-container">
+	<%- include('public/side') %>
+	<div class="main-content">
+		<div id="content" class="main-content-inner">
+		<div class="page-content">
+			<div class="row">
+			<div class="col-xs-12">
+				<div class="widget-box">
+					<div class="widget-header">
+						<h4 class="widget-title">搜索：</h4>
+						<div class="widget-toolbar">
+						<a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
+						</div>
+					</div>
+					<div class="widget-body">
+						<div class="widget-main">
+							<div class="row">
+								<div class="col-xs-12 col-sm-4">
+									<label class="col-sm-3 control-label no-padding lm-5" for="ids">计费编号:</label>
+									<div class="col-sm-9">
+										<input type="text" id="ids" class="form-control col-sm-5 input-sm">
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-4">
+									<label class="col-sm-3 control-label no-padding lm-5" for="ownerIds">所有者编号2:</label>
+									<div class="col-sm-9">
+										<input type="text" id="ownerIds" class="form-control col-sm-5 input-sm">
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-4">
+									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="chargeTypeInt">手续费类型:</label></div>
+									<div class="col-sm-9">
+									  	<select class="form-control" id="chargeTypeInt">
+									  		<option value="0">全部</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 col-sm-4">
+									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="chargeSystemPropertyInt">系统属性:</label></div>
+									<div class="col-sm-9">
+									  	<select class="form-control" id="chargeSystemPropertyInt">
+									  		<option value="0">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-4">
+									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="chargeStatusInt">状态:</label></div>
+									<div class="col-sm-9">
+									  	<select class="form-control" id="chargeStatusInt">
+									  		<option value="0">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-4">
+									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="chargeServiceTypeInt">服务类型:</label></div>
+									<div class="col-sm-9">
+									  	<select class="form-control" id="chargeServiceTypeInt">
+									  		<option value="0">全部</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 col-sm-6">
+								 <label class="col-sm-3 no-padding lm-5">生效日期:</label>
+								 <div class="col-sm-9">
+								  <div class="col-sm-12">
+								  	<div class="input-group"><input type="text" class="input-sm form-control datepicker" name="effectiveDateStart" placeholder="from" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+								    	<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+								    <input type="text" class="input-sm form-control datepicker" name="effectiveDateEnd" placeholder="to" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+								  	</div>
+								  </div>
+								 </div>
+								</div>
+								<div class="col-xs-12 col-sm-6">
+								 <label class="col-sm-3 no-padding lm-5">失效日期:</label>
+								 <div class="col-sm-9 no-padding">
+								 	<div class="col-sm-12">
+									  <div class="input-group"><input type="text" class="input-sm form-control datepicker" name="expirationDateStart" placeholder="from" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+									  <span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+									  <input type="text" class="input-sm form-control datepicker" name="expirationDateEnd" placeholder="to" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+									</div>
+								 </div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 col-sm-6">
+								 <label class="col-sm-3 no-padding lm-5">创建日期:</label>
+								 <div class="col-sm-9">
+								  <div class="col-sm-12">
+								  	<div class="input-group"><input type="text" class="input-sm form-control datepicker" name="creationDateStart" placeholder="from" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+								  		<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+								  <input type="text" class="input-sm form-control datepicker" name="creationDateEnd" placeholder="to" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>								  	
+								  </div></div>
+								 </div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-9">
+									<button id="query-btn" class="btn btn-info btn-sm" type="button">
+										<i class="ace-icon fa fa-check bigger-110"></i>
+										查询
+									</button>
+									<button id="reset-btn" class="btn btn-sm" type="reset">
+										<i class="ace-icon fa fa-undo bigger-110"></i>
+										重置
+									</button>
+								</div>
+								<div class="col-md-3 align-right">
+									<button id="add-btn" class="btn btn-info btn-sm" type="button">
+										<i class="ace-icon fa fa-plus bigger-110 white"></i>
+										新增
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div><!-- end search box row -->
+
+			<div class="row">
+				<div id="grid_list" class="col-xs-12">
+				</div>
+			</div><!-- end grid row-->
+		</div>
+		</div>
+	</div>
+</div>
+<div id="mask" class="widget-box-overlay hide"></div>
+
+<!-- add edit dialog html-->
+<script id="addEditTpl-baseInfo" type="text/html"><!--基本信息   新增的时候这样，编辑时就只显示-->
+	<div class="widget-box" id="baseInfoPanel">
+		<div class="widget-header"><h5 class="widget-title">计费基本信息设置</h5></div>
+		<div class="widget-body">
+			<div class="widget-main">
+				<div class="row">
+					<div class="col-xs-12 col-sm-6 form-group">
+						<label class="col-sm-3 control-label no-padding lm-5 text-center" for="fownerId">所有者编号:</label>
+						<div class="col-sm-8">
+							<input type="text" id="fownerId" class="form-control col-sm-5 input-sm" data-empty="true">
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-6 form-group">
+						<label class="col-sm-3 control-label no-padding lm-5 text-center" for="fchargeTypeInt">手续费类型:</label>
+						<div class="col-sm-9">
+							<input type="radio" name="fchargeTypeInt" value="" checked="checked">固定费率&nbsp;
+							<input type="radio" name="fchargeTypeInt" value="">阶梯费率
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-6 form-group">
+						<label class="col-sm-3 control-label no-padding lm-5 text-center" for="fchargeStatusInt">状态:</label>
+						<div class="col-sm-8 lm-5">
+							<input type="radio" name="fchargeStatusInt" value="">可用&nbsp;
+							<input type="radio" name="fchargeStatusInt" value="">不可用
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-6">
+						<label class="col-sm-3 control-label no-padding lm-5 text-center" for="faccountNumber">有效期:</label>
+						<div class="col-sm-9">
+							  <div class="col-sm-5 no-padding form-group"><div class="input-group" style="z-index:1060"><input type="text" class="input-sm form-control datepicker" name="feffectiveDate" placeholder="from" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>
+							  <div class="col-sm-1 no-padding text-center">-</div>
+							  <div class="col-sm-5 no-padding form-group"><div class="input-group" style="z-index:1060"><input type="text" class="input-sm form-control datepicker" name="fexpirationDate" placeholder="to" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>							
+						</div>
+					</div>	
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-6 form-group">
+						<label class="col-sm-3 control-label no-padding lm-5 text-center" for="fchargeSystemPropertyInt">系统属性:</label>
+						<div class="col-sm-8 lm-5">
+							<input type="radio" name="fchargeSystemPropertyInt" />接入商户&nbsp;
+							<input type="radio" name="fchargeSystemPropertyInt" />交易通道
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-6 form-group">
+						<label class="col-sm-3 control-label no-padding lm-5 text-center" for="fchargeServiceTypeInt">服务类型:</label>
+						<div class="col-sm-8">
+							<select class="form-control" id="fchargeServiceTypeInt">
+							</select>
+						</div>
+					</div>	
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<script id="addEditTpl-gd" type="text/html"><!--固定费率-->
+<div id="gdPanel" class="widget-box">
+	<div class="widget-header"><h5 class="widget-title">固定费率设置</h5></div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5 text-center" for="ffixedCharge">管理费:</label>
+					<div class="col-sm-8">
+						<input type="hidden" name="fruleId">
+						<input type="text" name="ffixedCharge" class="form-control col-sm-5 input-sm input-mini" data-int="true" placeholder="0">
+						<div class="col-sm-6">
+							<select class="form-control" name="fexcludeChanelCharge">
+								<option value="0">元/笔</option>
+								<option value="1">通道成本</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5 text-center" for="fvariableRate">费率:</label>
+					<div class="col-sm-8">
+						<input type="text" name="fvariableRate" class="form-control col-sm-5 input-sm input-mini" data-int="true" placeholder="0">
+						<label class="col-sm-6 control-label lm-5 text-left">%/笔</label>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5 text-center" for="fchargeFloor">手续费下限:</label>
+					<div class="col-sm-8">
+						<input type="text" name="fchargeFloor" class="form-control col-sm-5 input-sm input-mini" data-int="true" placeholder="0">
+						<label class="col-sm-6 control-label lm-5 text-left">元/笔</label>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5 text-center" for="fchargeCeiling">手续费上限:</label>
+					<div class="col-sm-8">
+						<input type="text" name="fchargeCeiling" class="form-control col-sm-5 input-sm input-mini" data-int="true" placeholder="0">
+						<label class="col-sm-6 control-label lm-5 text-left">元/笔</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</script>
+
+<script id="addEditTpl-jt" type="text/html"><!--阶梯费率-->
+<div id="jtPanel" class="widget-box hide">
+	<div class="widget-header"><h5 class="widget-title">阶梯费率设置</h5></div>
+	<div class="widget-body">
+		<div class="widget-main">
+		<%%=template%>
+		</div>
+	</div>
+</div>
+</script>
+<script id="flTpl" type="text/html">
+<div class="row">
+	<div class="col-xs-12 col-sm-3 no-padding ">
+		<div class="col-sm-4 no-padding  form-group"><input type="text" name="ftransactionFloor" class="form-control col-sm-2 input-sm input-mini"  data-int="true"><input type="hidden" name="fruleId"></div>
+		<div class="col-sm-4 no-padding lm-5 center">&lt;交易额&lt;=</div>
+		<div class="col-sm-4 no-padding  form-group"><input type="text" name="ftransactionCeiling" class="form-control col-sm-2 input-sm input-mini"  data-int="true"></div>
+	</div>
+	<div class="col-xs-12 col-sm-8 no-padding">
+		<div class="col-sm-3 no-padding  form-group">
+			<span class="col-sm-4 no-padding lm-5">管理费</span>
+			<div class="col-sm-3 no-padding"><input type="text" name="ffixedCharge" class="form-control col-sm-2 input-sm input-mini" data-int="true" placeholder="0"></div>
+			<div class="col-sm-5 no-padding">
+				<select class="form-control no-padding" name="fexcludeChanelCharge">
+					<option value="0">元/笔</option>
+					<option value="1">通道成本</option>
+				</select>
+			</div>
+		</div>
+		<div class="col-sm-3 no-padding  form-group">
+			<span class="col-sm-4 no-padding lm-5 center">费率</span>
+			<div class="col-sm-4 no-padding"><input type="text" name="fvariableRate" class="form-control col-sm-2 input-sm input-mini"  data-int="true" placeholder="0"></div>
+			<span class="col-sm-4 no-padding lm-5">%/笔</span>
+		</div>
+		<div class="col-sm-3 no-padding  form-group">
+			<span class="col-sm-4 no-padding">手续费下限</span>
+			<div class="col-sm-4 no-padding"><input type="text" name="fchargeFloor" class="form-control col-sm-2 input-sm input-mini"  data-int="true" placeholder="0"></div>
+			<span class="col-sm-4 no-padding lm-5">元/笔</span>
+		</div>
+		<div class="col-sm-3 no-padding  form-group">
+			<span class="col-sm-4 no-padding">手续费上限</span>
+			<div class="col-sm-4 no-padding"><input type="text" name="fchargeCeiling" class="form-control col-sm-2 input-sm input-mini"  data-int="true" placeholder="0"></div>
+			<span class="col-sm-4 no-padding lm-5">元/笔</span>
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-1 no-padding center lm-5">
+		<i class="ace-icon glyphicon glyphicon-minus blue" style="cursor:pointer;"></i>
+	</div>
+</div>
+</script>
+<script id="viewTpl-baseInfo" type="text/html">
+	<div class="widget-box">
+		<div class="widget-header"><h5 class="widget-title">计费基本信息</h5></div>
+		<div class="widget-body">
+			<div class="widget-main">
+				<div class="row">
+					
+				</div>
+				<div class="row">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script id="viewTpl-gd" type="text/html">
+<div class="widget-box">
+	<div class="widget-header"><h5 class="widget-title">固定费率信息</h5></div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="row">
+				
+			</div>
+			<div class="row">
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+</script>
+<script id="viewTpl-jt" type="text/html">
+<div class="widget-box">
+	<div class="widget-header"><h5 class="widget-title">阶梯费率信息</h5></div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="row">
+				
+			</div>
+			<div class="row">
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+</script>
+<script id="addEditTpl-bl" type="text/html"><!--包量费率-->
+<div class="widget-box">
+	<div class="widget-header"><h5 class="widget-title">包量费率设置</h5></div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="row">
+				
+			</div>
+			<div class="row">
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+</script>
+<script id="viewTpl-bl" type="text/html">
+<div class="widget-box">
+	<div class="widget-header"><h5 class="widget-title">包量费率信息</h5></div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="row">
+				
+			</div>
+			<div class="row">
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+</script>
+<%- include('public/footscript1') %>
+<%- include('public/footscript2') %>
+
+<script src='<%-setting.filePath%>/js/jquery-ui.custom.min.js'></script>
+<script src='<%-setting.filePath%>/js/moment.min.js'></script>
+<script src='<%-setting.filePath%>/js/bootstrap-datepicker.min.js'></script>
+<script src='<%-setting.filePath%>/js/bootstrap-datetimepicker.min.js'></script>
+<script src='<%-setting.filePath%>/js/jquery.jqGrid.min.js'></script>
+<script src='<%-setting.filePath%>/js/grid.locale-cn.js'></script>
+
+
+<!-- process enter -->
+<script>
+seajs.use('rate', function(m){
+	m.init();
+});
+</script>
+<%- include('public/footer') %>

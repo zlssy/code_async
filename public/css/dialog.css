@@ -1,0 +1,295 @@
+/*--------覆盖art_dialog的样式和自定义样式----------*/
+.ui-dialog.ui-dialog-custom{
+    border-radius: 0;
+    border: none;
+    font-family: inherit;
+}
+
+.ui-dialog-custom .ui-dialog-body{
+    padding:30px 60px;
+}
+.ui-dialog-custom .ui-dialog-footer{
+    text-align: center;
+    padding:0 30px 30px;
+}
+.ui-dialog-custom .ui-dialog-button{
+    float: none;
+}
+.ui-dialog-custom .ui-dialog-footer button.ui-dialog-autofocus,
+.ui-dialog-custom .ui-dialog-footer button:focus,
+.ui-dialog-custom .ui-dialog-footer button{
+    height: 40px;
+    line-height: 40px;
+    font-size: 18px;
+    padding: 0;
+    font-family: inherit;
+    border: none;
+    background-color: #4185F4;
+    border-radius: 3px;
+    outline: none;
+    color: #fff;
+}
+.ui-dialog-custom .ui-dialog-footer button{
+    width:100px;
+}
+.ui-dialog-custom .ui-dialog-footer button:hover,
+.ui-dialog-custom .ui-dialog-footer button:focus,
+.ui-dialog-custom .ui-dialog-footer button:active {
+    color: #fff;
+    background-color: #2D63BD;
+}
+
+.dialog-msg{
+    font-size: 20px;
+    text-align: center;
+    height: 56px;
+    line-height: 56px;
+    width: 400px;
+}
+.dialog-icon {
+    width: 400px;
+    height: 82px;
+    background: url('img/icon-dialog-tip.png') center 0 no-repeat;
+}
+.ui-dialog-success .dialog-icon{
+    background-position: center 0;
+}
+.ui-dialog-success .ui-dialog-footer button{
+    width:210px;
+}
+.ui-dialog-warning .dialog-icon{
+    background-position: center -103px;
+}
+.dialog-msg2{
+    line-height: 30px;
+    text-align: center;
+    width:400px;
+    font-size: 16px;
+    color:#9C9C9C;
+    display: inline-block;
+}
+.ui-dialog-warning .dialog-msg2{
+    text-align: center;
+}
+
+ .ui-dialog-custom .ui-dialog-footer button{
+    margin:0 30px;
+}
+
+
+/*--------------编辑弹框-------------*/
+.ui-dialog-edit {
+    width:460px;
+}
+
+.ui-dialog-edit-2 {
+    width:900px;
+}
+.ui-dialog-edit-2  .j-product{
+    overflow: hidden;
+}
+.ui-dialog-edit-2  .j-product .checkbox-inline{
+    margin-left: 10px;
+}
+.ui-dialog-edit .ui-dialog-grid{
+    width:100%;
+}
+
+.ui-dialog-edit .img-wrap {
+}
+
+.ui-dialog-edit .img-wrap img {
+    width: 200px;
+    height: 140px;
+    border-radius: 3px;
+    border: 1px solid #AEB9D4;
+}
+
+.ui-dialog-edit .edit-close{
+    width: 54px;
+    height: 54px;
+    display: block;
+    position: absolute;
+    top:0;
+    right:-20px;
+    background: url("../../img/common/icon-edit-close.png") 0 0 no-repeat;
+    cursor: pointer;
+}
+.ui-dialog-edit .edit-close:hover {
+    background-position: 0 -146px;
+}
+
+.ui-dialog-edit .edit-content {
+    padding: 20px 0;
+    color: #000;
+}
+
+.ui-dialog-edit .ui-form {
+    padding: 0 20px;
+    color: #000;
+}
+
+.ui-dialog-edit .ui-form .form-label {
+    width: 220px;
+}
+
+.ui-dialog-edit .ui-form .form-content {
+    margin-left: 220px;
+}
+
+.ui-dialog-edit .tit {
+    height: 54px;
+    line-height: 54px;
+    text-align: center;
+    font-size: 24px;
+    border-bottom: 1px solid #E9E9E9;
+}
+
+.ui-dialog-edit .ui-dialog-body {
+    padding: 0 20px;
+}
+.ui-dialog-edit .ui-dialog-content{
+    border-bottom: 1px solid #E9E9E9;
+    margin: 0 0 30px;
+    width:100%;
+}
+.ui-dialog-edit-no-button .ui-dialog-content{
+	border-bottom: none;
+	margin-bottom:0;
+}
+.ui-dialog-edit .form-select{
+    padding:6px 8px;
+}
+.ui-dialog-edit .ui-form .form-item{
+    margin-bottom: 20px;
+}
+.ui-dialog-edit .form-tit{
+    font-size: 18px;
+    color: #4185F3;
+}
+
+.ui-dialog-edit .nav-edit-form .form-label{
+    width:126px;
+}
+.ui-dialog-edit .nav-edit-form .form-content{
+    margin-left:126px;
+}
+.ui-dialog-edit .nav-edit-form .form-input{
+    width:400px;
+}
+
+.ui-dialog-edit.ad-edit-one .top{
+    padding:10px 0 20px;
+    text-align: right;
+}
+
+.ad-edit-two .img-wrap{
+    border:1px solid #AEB9D4;
+    width:198px;
+    height:138px;
+    overflow: hidden;
+    border-radius: 3px;
+    background: url('../../img/common/img-none.png') center center no-repeat;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+.ad-edit-two .img-wrap img{
+    position: relative;
+    top:-1px;
+    left:-1px;
+    width:200px;
+    height:140px;
+    display: inline-block;
+
+}
+
+.comment-edit .break-word{
+    white-space:normal ;
+}
+
+.ui-dialog-edit .ui-tabs .tab{
+    width:212px;
+}
+
+.ui-dialog-edit .ui-tabs-content{
+    padding-top:30px;
+}
+.ui-dialog-edit .tip-msg{
+    color: #ACB7C0;
+    font-size: 16px;
+}
+
+.video-edit .ui-form .form-label{
+    width:110px;
+}
+
+.video-edit .ui-form .form-content{
+    margin-left:110px;
+}
+.video-edit .img-wrap{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/*------------图片列表----------------*/
+.img-list{
+    margin:0 -8px;
+    padding-top:24px;
+}
+.img-list li{
+    margin:10px 8px;
+    float: left;
+    width:200px;
+    height:140px;
+    position: relative;
+}
+.img-list li .icon-delete{
+    position: absolute;
+    right:-11px;
+    top:-11px;
+    cursor: pointer;
+    display: none;
+}
+.img-list .img-wrap{
+    border:1px solid #AEB9D4;
+    width:198px;
+    height:138px;
+    overflow: hidden;
+    border-radius: 3px;
+    background: url('../../img/common/img-none.png') center center no-repeat;
+    position: relative;
+}
+.img-list .img-wrap img{
+    position: relative;
+    top:-1px;
+    left:-1px;
+    width:200px;
+    height:140px;
+    display: block;
+
+}
+.img-list li.is-hover .img-wrap,
+.img-list li:hover .img-wrap{
+    border:2px solid #4185F4;
+    width:196px;
+    height:136px;
+}
+.img-list li.is-hover .img-wrap img,
+.img-list li:hover .img-wrap img{
+    top:-2px;
+    left:-2px;
+}
+.img-list li.is-hover .icon-delete,
+.img-list li:hover .icon-delete{
+    display: inline-block;
+}
+
+.picture-edit .selecter{
+    margin:0;
+}
+
+.picture-edit .img-list{
+    max-height: 320px;
+    overflow: auto;
+}

@@ -1,0 +1,156 @@
+<script type="text/javascript">
+	try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+</script>
+<%
+	var url = req.url,
+		menus = [{
+			name:'商户信息管理',
+			child: [{
+				name: '商户信息',
+				url: '/aa'
+			}]
+		},{
+			name:'商户审核管理',
+			child: [{
+				name: '商户信息',
+				url: '/a'
+			}]
+		},{
+			name:'支付渠道管理',
+			child: [{
+				name: '支付渠道',
+				url: '/payment-channel'
+			}]
+		},{
+			name:'订单查询',
+			child: [{
+				name: '订单',
+				url: '/order'
+			}]
+		},{
+			name:'文档管理',
+			child: [{
+				name: '文档管理',
+				url: '/tradeRecord/list'
+			}]
+		},{
+			name: '交易管理',
+			child: [{
+				name: '交易明细管理',
+				url: '/tradeRecord/list'
+			}]
+		},{
+			name: '清分管理',
+			child: [{
+				name: '清分单查询',
+				url: '/qingfen-list-query'
+			}]
+		},{
+			name: '结算管理',
+			child: [{
+				name: '结算卡',
+				url: '/settle-card'
+			},{
+				name: '结算规则',
+				url: '/settle-rule'
+			},{
+				name: '结算限额',
+				url: '/settle-limit'
+			},{
+				name: '结算单查询',
+				url: '/settle-query'
+			}]
+		},{
+			name: '费率管理',
+			child:[{
+				name: '费率',
+				url: '/rate'
+			}]
+		},{
+			name: '汇率管理',
+			child:[{
+				name: '汇率',
+				url: '/exchange-query'
+			}]
+		},{
+			name: '对账差错处理',
+			child:[{
+				name: '上传对账单',
+				url: '/statement-upload'
+			},{
+				name: '差错张处理',
+				url: '/statement-list'
+			}]
+		},{
+			name: '财务统计管理',
+			child:[{
+				name: '财务统计查询',
+				url: '/financial-statistics'
+			}]
+		},{
+			name: '数据字典管理',
+			child: [{
+				name: '数据字典',
+				url: '/dataDictionary/list'
+			}]
+		},{
+			name: '常用功能',
+			child: [{
+				name: '修改密码',
+				url: '/system/password'
+			},{
+				name: '安全退出',
+				url: '/logout'
+			}]
+		}], mm;
+
+	for(var i=0;i<menus.length;i++){
+		mm = menus[i];
+		mm.keys = mm.child.map(function(v){return v.url});
+	}
+%>
+<div id="sidebar" class="sidebar responsive">
+	<script type="text/javascript">
+		try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
+	</script>
+
+	<ul class="nav nav-list">
+		<%
+			var menu, children, child;
+			for(var i=0;i<menus.length;i++){
+				menu = menus[i];
+				children = menu.child;
+		%>
+		<li<%if(menu.keys.map(function(v){if(url.indexOf(v) > -1){return 1} return ''}).join('') != ''){%> class="active open"<%}%>>
+			<a href="javascript:;" class="dropdown-toggle">
+				<i class="menu-icon fa fa-desktop"></i>
+				<span class="menu-text"> <%=menu.name%> </span>
+				<b class="arrow fa fa-angle-down"></b>
+			</a>
+			<b class="arrow"></b>
+			<ul class="submenu">
+				<%
+					for(var j=0;j<children.length;j++){
+						child = children[j];
+				%>
+				<li<%if(url.indexOf(child.url)>-1){%> class="active"<%}%>>
+					<a id="business-detail-query" href="<%-setting.proxyPath%><%=child.url%>">
+						<i class="menu-icon fa fa-caret-right"></i>
+						<%=child.name%>
+					</a>
+					<b class="arrow"></b>
+				</li>
+				<%}%>
+			</ul>
+		</li>
+		<%}%>
+	</ul><!-- /.nav-list -->
+
+	<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+		<i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+	</div>
+
+	<script type="text/javascript">
+		try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
+	</script>
+</div>

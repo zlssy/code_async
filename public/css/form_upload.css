@@ -1,0 +1,255 @@
+.ui-form {
+    color: #434751;
+    font-size: 16px;
+}
+
+.ui-form .form-item {
+    margin-bottom: 30px;
+}
+
+.ui-formvalid-field-error {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    text-align: left;
+    font-size: 16px;
+    color: #4185F3;
+    height: 34px;
+    line-height: 34px;
+    overflow: hidden;
+}
+
+.ui-form .form-label {
+    height: 34px;
+    line-height: 34px;
+    width: 94px;
+    text-align: left;
+    /*position: absolute;*/
+    left: 0;
+    float: left;
+}
+.ui-form .form-static{
+    height: 34px;
+    line-height: 34px;
+	margin-bottom:30px;
+}
+.ui-form .form-content {
+    margin-left: 94px;
+    vertical-align: middle;
+    position: relative;
+}
+
+ .form-select {
+    border: 1px solid #AEB9D4;
+    border-radius: 3px;
+    width: 200px;
+    padding-left: 10px;
+    height:34px;
+    line-height: 34px;
+}
+.form-textarea,
+.form-input {
+    border: 1px solid #AEB9D4;
+    border-radius: 3px;
+    width: 178px;
+    padding: 7px 10px;
+}
+
+.input-w400{
+    width:378px;
+}
+.input-w520{
+    width:498px;
+}
+
+.ui-form .form-textarea{
+    width:98%;
+    height: 100px;
+    font-family: Arial,Tahoma,Verdana,sans-serif,STHeiTi;
+    overflow: auto;
+}
+
+.ui-radio,
+.ui-checkbox {
+    display: inline-block;
+    padding-left: 40px;
+    height: 36px;
+    line-height: 36px;
+    background: url('../../img/common/icon-form.png') 0 0 no-repeat;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    vertical-align: middle;
+    margin-bottom: 0;
+}
+
+.ui-radio {
+    background-position: 0 -72px;
+}
+
+ .ui-radio.ui-radio-checked {
+    background-position: 0 -108px;
+}
+
+ .ui-checkbox {
+    background-position: 0 7px;
+}
+
+.ui-checkbox.ui-checkbox-checked {
+    background-position: 0 -32px;
+}
+/* ie8 浠ヤ笅 涓嶅彲瑙� 鐐筶abel涓嶈兘瑙﹀彂checkbox*/
+ .ui-radio input[type=radio],
+ .ui-checkbox input[type=checkbox] {
+    position: absolute;
+    left:-100px;
+}
+
+ .btn-save,
+ .btn-cancel {
+    width: 90px;
+    font-size: 18px;
+    color: #fff;
+}
+.btn-add{
+    width:80px;
+    background-color: #4185f4;
+    color: #fff;
+    font-size: 18px;
+}
+.btn-add:focus,
+.btn-add:hover{
+    color: #fff;
+}
+
+
+ .btn-save {
+    background-color: #4185F3;
+}
+ .btn-h36{
+     height:36px;
+     line-height: 36px;
+ }
+.btn-save:hover {
+    background-color: #2D64BE;
+}
+ .btn-cancel {
+    background-color: #E94828;
+}
+
+.btn.btn-write{
+    border: 1px solid #C2CBDF;
+}
+.btn-upload{
+    position: relative;
+}
+.uploadify{
+    position: absolute;
+    left:0;
+    top:0;
+    text-align: left;
+}
+.btn-w120{
+    width:120px !important;
+}
+.btn-w160{
+    width:160px !important;
+}
+.btn-w180{
+    width:180px !important;
+}
+
+
+.ui-form .form-bottom .form-content {
+    border-top: 1px solid #E4E6E4;
+    padding: 30px 0;
+}
+
+.ui-form .form-item-mb{
+    margin-bottom: 20px;
+}
+
+
+/*----------瑕嗙洊select鍘熸潵鐨勬牱寮�-------------*/
+.selecter{
+    width:200px;
+    max-width: 200px;
+    background-color: #fff;
+}
+.selecter .selecter-selected{
+    border-color: #aeb9d4;
+    background-color: #fff;
+    min-height: 20px;
+}
+.selecter .selecter-options{
+    width:198px;
+    z-index: 2;
+}
+
+/* jquery file upload*/
+
+.fileinput-button {
+    position: relative;
+    overflow: hidden;
+}
+.fileinput-button input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    -ms-filter: 'alpha(opacity=0)';
+    font-size: 200px;
+    direction: ltr;
+    cursor: pointer;
+}
+.j-file-name{
+    word-break: break-all;
+    word-wrap: break-word;
+}
+/* Fixes for IE < 8 */
+@media screen\9 {
+    .fileinput-button input {
+        filter: alpha(opacity=0);
+        font-size: 100%;
+        height: 100%;
+    }
+}
+
+
+.selecter.disabled .selecter-selected,
+input:disabled,
+input[disabled]{
+    background: none repeat scroll 0 0 #fafafa;
+    border-color: #ccc;
+    color: #6d6d6d;
+    cursor: default
+}
+.btn, .thumb-img {
+    border-radius: 3px;
+}
+/*澶嶅啓涓嬫媺妗嗘牱寮�*/
+.select2-container{
+    text-align: left;
+    font-size:14px;
+}
+.select2-container--open{
+    z-index: 2000;
+}
+.select2-container .select2-selection--single{
+    height: 32px;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow{
+    height: 32px;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+    line-height: 30px;
+}
+
+.select2-container .select2-selection--multiple{
+    min-height: 34px;
+}
+
+/*富文本统一高度*/
+.edit_common_height{height: 360px;}

@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="<%-setting.filePath%>/css/bootstrap.min.css" />
+<link rel="stylesheet" href="<%-setting.filePath%>/css/bootstrapValidator.css" />
+
+<link rel="stylesheet" href="<%-setting.filePath%>/font-awesome/4.2.0/css/font-awesome.min.css" />
+
+<link rel="stylesheet" href="<%-setting.filePath%>/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+
+<!--[if lte IE 9]>
+	<link rel="stylesheet" href="<%-setting.filePath%>/css/ace-part2.min.css" class="ace-main-stylesheet" />
+<![endif]-->
+
+<!--[if lte IE 9]>
+  <link rel="stylesheet" href="<%-setting.filePath%>/css/ace-ie.min.css" />
+<![endif]-->
+
+<!-- ace settings handler -->
+<script src="<%-setting.filePath%>/js/ace-extra.min.js"></script>
+
+<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+<!--[if lte IE 8]>
+<script src="<%-setting.filePath%>/js/html5shiv.min.js"></script>
+<script src="<%-setting.filePath%>/js/respond.min.js"></script>
+<![endif]-->
+
+<script src="<%-setting.filePath%>/lib/sea.js"></script>
+<script src="<%-setting.filePath%>/lib/seajs-css.js"></script>
+<script>
+global_config = {
+	serverRoot :'<%-setting.proxyPath%>/settlement/'
+};
+seajs.config({
+	base: '<%-setting.filePath%>/modules/',
+	alias: {
+		"dialog.ace" : "jqueryui.dialog.ace.js"
+	}
+});
+</script>

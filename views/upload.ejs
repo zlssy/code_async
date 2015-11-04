@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title><%=title%></title>
+
+		<meta name="description" content="Tcl settlements" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<link href='<%-setting.filePath%>/css/jquery-ui.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/jquery-ui.custom.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/datepicker.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/bootstrap-datetimepicker.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/ui.jqgrid.css' rel="stylesheet" />
+		<%- include('public/header') %>
+		<style>
+			.lm-5{
+				margin-top: 5px;
+			}
+			.row{
+				margin: 4px 0;
+			}
+		</style>
+	</head>
+<body class="no-skin">
+<form id="form" method="post" enctype="multipart/form-data">
+<div class="form-group">
+	<div class="col-xs-12">
+		<label class="ace-file-input ace-file-multiple"><input name="file" multiple="" type="file" id="file"></label>
+	</div>
+</div>
+</form>
+<%- include('public/footscript1') %>
+<%- include('public/footscript2') %>
+
+<script src='<%-setting.filePath%>/js/jquery-ui.custom.min.js'></script>
+<script src='<%-setting.filePath%>/js/moment.min.js'></script>
+<script src='<%-setting.filePath%>/js/bootstrap-datepicker.min.js'></script>
+<script src='<%-setting.filePath%>/js/bootstrap-datetimepicker.min.js'></script>
+<script src='<%-setting.filePath%>/js/jquery.jqGrid.min.js'></script>
+<script src='<%-setting.filePath%>/js/grid.locale-cn.js'></script>
+<script src="<%-setting.filePath%>/js/jquery.fileupload.js"></script>
+
+<!-- process enter -->
+<script>
+seajs.use('upload', function(m){
+	m.init();
+});
+</script>
+<%- include('public/footer') %>

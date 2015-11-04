@@ -1,0 +1,121 @@
+{
+	"code": "0",
+	"message": "success",
+	"data": {
+		"pageCnt": "2",
+		"pageSize": 10,
+		"pageNo": 1,
+		"totalCnt": 20,
+		"pageData": [{
+			"id": "11111111",
+			"accountNumber": "11111111",
+			"settleCardStatus": "待结算",
+			"settleCardType": " 对公",
+			"issuer": " 开户行",
+			"cardNumber": " 银行账号",
+			"userName": " 开户名",
+			"priority": " 优先级",
+			"effectiveDate": "2015-08-01 12:20:23",
+			"expirationDate": "2015-08-08 12:20:23"
+		}, {
+			"id": "222222222222",
+			"accountNumber": "222222222222",
+			"settleCardStatus": "待结算",
+			"settleCardType": " 对私",
+			"issuer": " 开户行",
+			"cardNumber": " 银行账号",
+			"userName": " 开户名",
+			"priority": " 优先级",
+			"effectiveDate": "2015-08-02 12:20:23",
+			"expirationDate": "2015-08-18 12:20:23"
+		}, {
+			"id": "333",
+			"accountNumber": "333",
+			"settleCardStatus": "待结算",
+			"settleCardType": " 对公",
+			"issuer": " 开户行",
+			"cardNumber": " 银行账号",
+			"userName": " 开户名",
+			"priority": " 优先级",
+			"effectiveDate": "2015-08-01 12:20:23",
+			"expirationDate": "2015-08-08 12:20:23"
+		}, {
+			"id": "4444444",
+			"accountNumber": "4444444",
+			"settleCardStatus": "待结算",
+			"settleCardType": " 对私",
+			"issuer": " 开户行",
+			"cardNumber": " 银行账号",
+			"userName": " 开户名",
+			"priority": " 优先级",
+			"effectiveDate": "2015-08-02 12:20:23",
+			"expirationDate": "2015-08-18 12:20:23"
+		}, {
+			"id": "11111111",
+			"accountNumber": "11111111",
+			"settleCardStatus": "待结算",
+			"settleCardType": " 对公",
+			"issuer": " 开户行",
+			"cardNumber": " 银行账号",
+			"userName": " 开户名",
+			"priority": " 优先级",
+			"effectiveDate": "2015-08-01 12:20:23",
+			"expirationDate": "2015-08-08 12:20:23"
+		}, {
+			"id": "222222222222",
+			"accountNumber": "222222222222",
+			"settleCardStatus": "待结算",
+			"settleCardType": " 对私",
+			"issuer": " 开户行",
+			"cardNumber": " 银行账号",
+			"userName": " 开户名",
+			"priority": " 优先级",
+			"effectiveDate": "2015-08-02 12:20:23",
+			"expirationDate": "2015-08-18 12:20:23"
+		}, {
+			"id": "333",
+			"accountNumber": "333",
+			"settleCardStatus": "待结算",
+			"settleCardType": " 对公",
+			"issuer": " 开户行",
+			"cardNumber": " 银行账号",
+			"userName": " 开户名",
+			"priority": " 优先级",
+			"effectiveDate": "2015-08-01 12:20:23",
+			"expirationDate": "2015-08-08 12:20:23"
+		}, {
+			"id": "4444444",
+			"accountNumber": "4444444",
+			"settleCardStatus": "待结算",
+			"settleCardType": " 对私",
+			"issuer": " 开户行",
+			"cardNumber": " 银行账号",
+			"userName": " 开户名",
+			"priority": " 优先级",
+			"effectiveDate": "2015-08-02 12:20:23",
+			"expirationDate": "2015-08-18 12:20:23"
+		}, {
+			"id": "333",
+			"accountNumber": "333",
+			"settleCardStatus": "待结算",
+			"settleCardType": " 对公",
+			"issuer": " 开户行",
+			"cardNumber": " 银行账号",
+			"userName": " 开户名",
+			"priority": " 优先级",
+			"effectiveDate": "2015-08-01 12:20:23",
+			"expirationDate": "2015-08-08 12:20:23"
+		}, {
+			"id": "4444444",
+			"accountNumber": "4444444",
+			"settleCardStatus": "待结算",
+			"settleCardType": " 对私",
+			"issuer": " 开户行",
+			"cardNumber": " 银行账号",
+			"userName": " 开户名",
+			"priority": " 优先级",
+			"effectiveDate": "2015-08-02 12:20:23",
+			"expirationDate": "2015-08-18 12:20:23"
+		}]
+	}
+}

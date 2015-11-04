@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title><%=title%></title>
+
+		<meta name="description" content="Tcl settlements" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<link href='<%-setting.filePath%>/css/jquery-ui.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/jquery-ui.custom.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/datepicker.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/bootstrap-datetimepicker.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/ui.jqgrid.css' rel="stylesheet" />
+		<%- include('public/header') %>
+		<style>
+			.lm-5{
+				margin-top: 5px;
+			}
+			.row{
+				margin: 4px 0;
+			}
+		</style>
+	</head>
+<body class="no-skin">
+<%- include('public/nav')%>
+
+<div class="main-container" id="main-container">
+	<%- include('public/side') %>
+	<div class="main-content">
+		<div id="content" class="main-content-inner">
+		<div class="page-content">
+			<div class="row">
+			<div class="col-xs-12">
+				<div class="widget-box">
+					<div class="widget-header">
+						<h4 class="widget-title">搜索：</h4>
+						<div class="widget-toolbar">
+						<a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
+						</div>
+					</div>
+					<div class="widget-body">
+						<div class="widget-main">
+							<div class="row">
+								<div class="col-xs-12 col-sm-4">
+									<label class="col-sm-3 control-label no-padding lm-5" for="commercialId">商户编号:</label>
+									<div class="col-sm-9">
+										<input type="text" id="commercialId" class="form-control col-sm-5 input-sm">
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-4">
+									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="type">结算类型:</label></div>
+									<div class="col-sm-9">
+									  	<select class="form-control" id="type">
+									  		<option value="0">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-4">
+									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="status">状态:</label></div>
+									<div class="col-sm-9">
+									  	<select class="form-control" id="status">
+									  		<option value="0">全部</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 col-sm-6">
+									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="cardType">结算卡方式:</label></div>
+									<div class="col-sm-9">
+									  	<select class="form-control" id="cardType">
+									  		<option value="0">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-6">
+									<label class="col-sm-3 no-padding lm-5">创建时间:</label>
+									<div class="col-sm-9 no-padding">
+										<div class="col-sm-12">
+											<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="createTimeStart" data-date-format="yyyy-mm-dd" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+											<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+											<input type="text" class="input-sm form-control datepicker" id="createTimeEnd" data-date-format="yyyy-mm-dd" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 col-sm-6">
+								 <label class="col-sm-3 no-padding lm-5">生效时间:</label>
+								 <div class="col-sm-9 no-padding">
+								 	<div class="col-sm-12">
+								 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="effectiveDateStart" data-date-format="yyyy-mm-dd" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+								 		<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+								 		<input type="text" class="input-sm form-control datepicker" id="effectiveDateEnd" data-date-format="yyyy-mm-dd" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+								 	</div>
+								 </div>
+								</div>
+								<div class="col-xs-12 col-sm-6">
+								 <label class="col-sm-3 no-padding lm-5">失效时间:</label>
+								 <div class="col-sm-9 no-padding">
+								 	<div class="col-sm-12">
+								 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="expirationDateStart" data-date-format="yyyy-mm-dd" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+								 		<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+								 		<input type="text" class="input-sm form-control datepicker" id="expirationDateEnd" data-date-format="yyyy-mm-dd" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+								 	</div>
+								 </div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<button id="query-btn" class="btn btn-info btn-sm" type="button">
+										<i class="ace-icon fa fa-check bigger-110"></i>
+										查询
+									</button>
+									<button id="reset-btn" class="btn btn-sm" type="reset">
+										<i class="ace-icon fa fa-undo bigger-110"></i>
+										重置
+									</button>
+								</div>
+								<div class="col-md-6 align-right">
+									<button id="add-btn" class="btn btn-info btn-sm" type="button">
+										<i class="ace-icon fa fa-plus bigger-110 white"></i>
+										添加
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div><!-- end search box row -->
+
+			<div class="row">
+				<div id="grid_list" class="col-xs-12">
+				</div>
+			</div><!-- end grid row-->
+		</div>
+		</div>
+	</div>
+</div>
+<div id="mask" class="widget-box-overlay hide"></div>
+
+<script id="addEditTpl" type="text/html">
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-4 control-label no-padding lm-5" for="fmerchantId">商户编号:</label>
+		<div class="col-sm-8">
+			<input type="text" id="fmerchantId" class="form-control col-sm-5 input-sm" placeholder="必须填写" data-empty='true'>
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-4 control-label no-padding lm-5" for="faccountNumber">账户编号:</label>
+		<div class="col-sm-8">
+			<input type="text" id="faccountNumber" class="form-control col-sm-5 input-sm">
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-4 control-label no-padding lm-5" for="fruleCardMethod">交易卡类型:</label>
+		<div class="col-sm-8">
+			<select class="form-control" id="fruleCardMethod">
+			</select>
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-4 control-label no-padding lm-5" for="fminimum">起结金额:</label>
+		<div class="col-sm-8">
+			<input type="text" id="fminimum" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true">
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-4 control-label no-padding lm-5" for="fserviceCharge">结算手续费:</label>
+		<div class="col-sm-8">
+			<input type="text" id="fserviceCharge" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true">
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-6 control-label no-padding lm-5" for="fminimumFree">免手续费金额:</label>
+		<div class="col-sm-6">
+			<input type="text" id="fminimumFree" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true">
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<div class="col-sm-4 no-padding"><label class="align-right control-label no-padding lm-5" for="fruleType">结算类型:</label></div>
+		<div class="col-sm-8">
+		  	<select class="form-control" id="fruleType">
+			</select>
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<div class="col-sm-4 no-padding"><label class="align-right control-label no-padding lm-5" for="fperiod">结算周期:</label></div>
+		<div class="col-sm-8">
+		  	<input type="text" id="fperiod" class="form-control col-sm-5 input-sm" placeholder="_天" data-int="true">
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-6 control-label no-padding lm-5" for="flongestSettle">最长结算天数:</label>
+		<div class="col-sm-6">
+			<input type="text" id="flongestSettle" class="form-control col-sm-5 input-sm" placeholder="_天" data-int="true">
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-4 control-label no-padding lm-5" for="fstatus">状态:</label>
+		<div class="col-sm-8">
+			<div class="control-group">
+				<div class="col-sm-6 no-padding">
+					<label>
+						<input name="fstatus" type="radio" class="ace input-lg" checked="checked">
+						<span class="lbl bigger-100">可用</span>
+					</label>
+				</div>
+				<div class="col-sm-6 no-padding">
+					<label>
+						<input name="fstatus" type="radio" class="ace input-lg">
+						<span class="lbl bigger-100">禁用</span>
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-4 control-label no-padding lm-5" for="feffectiveDate">生效时间:</label>
+		<div class="col-sm-8 no-padding">
+			<div class="input-group" style="z-index:1060"><input type="text" class="input-sm form-control datepicker" id="feffectiveDate" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-4 control-label no-padding lm-5" for="fexpirationDate">失效时间:</label>
+		<div class="col-sm-8 no-padding">
+			<div class="input-group" style="z-index:1060"><input type="text" class="input-sm form-control datepicker" id="fexpirationDate" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-6 control-label no-padding lm-5" for="ftZeroLimit">T+0结算额度:</label>
+		<div class="col-sm-6">
+			<input type="text" id="ftZeroLimit" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true" value="0">
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-6 control-label no-padding lm-5" for="finstantLimit">即时提现额度:</label>
+		<div class="col-sm-6">
+			<input type="text" id="finstantLimit" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true" value="0">
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-6 control-label no-padding lm-5" for="ftZeroHolidayLimit">T+0假日结算额度:</label>
+		<div class="col-sm-6">
+			<input type="text" id="ftZeroHolidayLimit" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true" value="0">
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-6 control-label no-padding lm-5" for="ftOneHolidayLimit">T+1假日结算额度:</label>
+		<div class="col-sm-6">
+			<input type="text" id="ftOneHolidayLimit" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true" value="0">
+		</div>
+	</div>
+</div>
+</script>
+
+<script id="viewTpl" type="text/html">
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-4 control-label no-padding lm-5">商户编号:</label>
+		<div class="col-sm-8 lm-5"><%%= data.merchantId %></div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-4 control-label no-padding lm-5">账户编号:</label>
+		<div class="col-sm-8 lm-5"><%%= data.accountNumber %></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-4 control-label no-padding lm-5">交易卡类型:</label>
+		<div class="col-sm-8 lm-5"><%%= ruleCardType[data.ruleCardMethod] %></div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-4 control-label no-padding lm-5">起结金额:</label>
+		<div class="col-sm-8 lm-5"><%%= data.minimum %></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-4 control-label no-padding lm-5">结算手续费:</label>
+		<div class="col-sm-8 lm-5"><%%= data.serviceCharge %></div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-6 control-label no-padding lm-5">免手续费金额:</label>
+		<div class="col-sm-6 lm-5"><%%= data.minimumFree %></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<div class="col-sm-4 no-padding"><label class="align-right control-label no-padding lm-5">结算类型:</label></div>
+		<div class="col-sm-8 lm-5"><%%= ruleType[data.ruleType] %></div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<div class="col-sm-4 no-padding"><label class="align-right control-label no-padding lm-5">结算周期:</label></div>
+		<div class="col-sm-8 lm-5"><%%= data.period %></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-6 control-label no-padding lm-5">最长结算天数:</label>
+		<div class="col-sm-6 lm-5"><%%= data.longestSettle %></div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-4 control-label no-padding lm-5">状态:</label>
+		<div class="col-sm-8 lm-5"><%%= status[data.status] %></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-4 control-label no-padding lm-5">生效时间:</label>
+		<div class="col-sm-8 no-padding lm-5"><%%= data.effectiveDate %></div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-4 control-label no-padding lm-5">失效时间:</label>
+		<div class="col-sm-8 no-padding lm-5"><%%= data.expirationDate %></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-6 control-label no-padding lm-5">T+0结算额度:</label>
+		<div class="col-sm-6 lm-5"><%%= data.tranZeroLimit %></div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-6 control-label no-padding lm-5">即时提现额度:</label>
+		<div class="col-sm-6 lm-5"><%%= data.instantLimit %></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-6 control-label no-padding lm-5">T+0假日结算额度:</label>
+		<div class="col-sm-6 lm-5"><%%= data.tranZeroHolidayLimit %></div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-6 control-label no-padding lm-5">T+1节日结算额度:</label>
+		<div class="col-sm-6 lm-5"><%%= data.tranOneHolidayLimit %></div>
+	</div>
+</div>
+</script>
+
+<%- include('public/footscript1') %>
+<%- include('public/footscript2') %>
+
+<script src='<%-setting.filePath%>/js/jquery-ui.custom.min.js'></script>
+<script src='<%-setting.filePath%>/js/moment.min.js'></script>
+<script src='<%-setting.filePath%>/js/bootstrap-datepicker.min.js'></script>
+<script src='<%-setting.filePath%>/js/bootstrap-datetimepicker.min.js'></script>
+<script src='<%-setting.filePath%>/js/jquery.jqGrid.min.js'></script>
+<script src='<%-setting.filePath%>/js/grid.locale-cn.js'></script>
+
+
+<!-- process enter -->
+<script>
+seajs.use('settle-rule', function(m){
+	m.init();
+});
+</script>
+<%- include('public/footer') %>

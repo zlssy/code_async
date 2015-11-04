@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title><%=title%></title>
+
+		<meta name="description" content="Tcl settlements" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<link href='<%-setting.filePath%>/css/jquery-ui.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/jquery-ui.custom.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/bootstrap-datetimepicker.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/ui.jqgrid.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/art_dialog.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/dialog.css' rel="stylesheet" />
+		<%- include('public/header') %>
+		<style>
+			.lm-5{
+				margin-top: 5px;
+			}
+			.row{
+				margin: 4px 0;
+			}
+            .mr20 {
+                margin-right: 20px;
+            }
+            .icon_edit, .icon_trash{
+                cursor: pointer;
+            }
+		</style>
+	</head>
+<body class="no-skin">
+<%- include('public/nav')%>
+
+<div class="main-container" id="main-container">
+	<%- include('public/side') %>
+	<div class="main-content">
+		<div id="content" class="main-content-inner">
+		<div class="page-content">
+            <!--表单-->
+			<div id="form" class="row">
+                <form role="form" class="form-horizontal" id="dataForm">
+                    <div class="col-xs-12">
+                        <div class="widget-box">
+                            <div class="widget-header">
+                                <h4 class="widget-title">搜索：</h4>
+                                <div class="widget-toolbar">
+                                    <a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
+                                </div>
+                            </div>
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-4">
+                                            <label class="col-sm-3 no-padding lm-5">创建日期:</label>
+                                            <div class="col-xs-12 col-sm-9 no-padding">
+                                                <div class="input-group">
+                                                    <input type="text" class="input-sm form-control datepicker" id="startDate" name="creationDateStart" placeholder="from" data-date-format="yyyy-mm-dd hh:ii" />
+                                                    <label for="startDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+                                                    <span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+                                                    <input type="text" class="input-sm form-control datepicker" id="endDate" name="creationDateEnd" placeholder="to" data-date-format="yyyy-mm-dd hh:ii" />
+                                                    <label for="endDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-4">
+                                            <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">源币种:</label></div>
+                                            <div class="col-sm-9 no-padding">
+                                                <select class="form-control" name="srcCurrencyCode" dict-name="currencyCode">
+                                                    <option value="">全部</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-4">
+                                            <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">目标币种:</label></div>
+                                            <div class="col-sm-9 no-padding">
+                                                <select class="form-control" name="targetCurrencyCode" dict-name="currencyCode">
+                                                    <option value="">全部</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-4">
+                                            <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">状态:</label></div>
+                                            <div class="col-sm-9 no-padding">
+                                                <select class="form-control" dict-name="exchangeStatus" name="status">
+                                                    <option value="">全部</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-9 col-ys-2">
+                                            <button class="btn btn-info btn-sm" type="button" id="query-btn">
+                                                <i class="ace-icon fa fa-check bigger-110"></i>
+                                                查询
+                                            </button>
+                                            <button class="btn btn-sm" type="reset">
+                                                <i class="ace-icon fa fa-undo bigger-110"></i>
+                                                重置
+                                            </button>
+                                        </div>
+                                        <div class="col-md-3 align-right">
+                                            <button id="add-btn" class="btn btn-info btn-sm" type="button">
+                                                <i class="ace-icon fa fa-plus bigger-110 white"></i>
+                                                新增
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+			</div><!-- end search box row -->
+            <!--grid-->
+            <div class="row">
+                <div id="grid_list" class="col-xs-12">
+                </div>
+            </div>
+            <!-- end grid-->
+		</div>
+		</div>
+	</div>
+</div>
+
+<!--edit start-->
+<script type="text/html" id="tpleditItem">
+    <form class="form-horizontal" id="edit-form" onsubmit="return false;">
+        <input name="id" type="hidden" value="{{= id }}"/>
+        <div class="form-group">
+            <label class="control-label col-md-3">源币种:</label>
+
+            <div class="col-md-7">
+                <select class="form-control" name="srcCurrencyCode" required="required"
+                        data-def-value="{{= srcCurrencyCode }}" dict-name="currencyCode">
+                    <option value="">全部</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-3">目标币种:</label>
+
+            <div class="col-md-7">
+                <select class="form-control" name="targetCurrencyCode"  required="required"
+                        data-def-value="{{= targetCurrencyCode }}" dict-name="currencyCode">
+                    <option value="">全部</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-3">status:</label>
+
+            <div class="col-md-7">
+                <select data-select="language" class="form-control" dict-name="exchangeStatus"  required="required"
+                        name="status" data-def-value="{{= status }}">
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-3">汇率:</label>
+
+            <div class="col-md-7">
+                <input class="form-control" name="exchangeRate" value="{{= exchangeRate }}" required="required">
+            </div>
+        </div>
+    </form>
+</script>
+<!--end start-->
+
+<%- include('public/footscript1') %>
+<%- include('public/footscript2') %>
+<script src='<%-setting.filePath%>/js/jquery-ui.custom.min.js'></script>
+<script src='<%-setting.filePath%>/js/moment.min.js'></script>
+<script src='<%-setting.filePath%>/js/bootstrap-datetimepicker.min.js'></script>
+<script src='<%-setting.filePath%>/js/jquery.jqGrid.min.js'></script>
+<script src='<%-setting.filePath%>/js/grid.locale-cn.js'></script>
+<script src="<%-setting.filePath%>/js/art_dialog.js"></script>
+
+
+<!-- process enter -->
+<script>
+seajs.use('exchange-query', function(m){
+	m.init();
+});
+</script>
+<%- include('public/footer') %>

@@ -1,0 +1,28 @@
+<!-- load ace js file -->
+<!--[if !IE]> -->
+<script src="<%-setting.filePath%>/js/jquery.2.1.1.min.js"></script>
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script src="<%-setting.filePath%>/js/jquery.1.11.1.min.js"></script>
+<![endif]-->
+
+<!--[if !IE]> -->
+<script type="text/javascript">
+	window.jQuery || document.write("<script src='<%-setting.filePath%>/js/jquery.min.js'>"+"<"+"/script>");
+</script>
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script type="text/javascript">
+ window.jQuery || document.write("<script src='<%-setting.filePath%>/js/jquery1x.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+<script type="text/javascript">
+	if('ontouchstart' in document.documentElement) document.write("<script src='<%-setting.filePath%>/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+</script>
+<script src="<%-setting.filePath%>/js/bootstrap.min.js"></script>
+<script src="<%-setting.filePath%>/js/bootstrapValidator.js"></script>
+<!--[if lte IE 8]>
+  <script src="<%-setting.filePath%>/js/excanvas.min.js"></script>
+<![endif]-->

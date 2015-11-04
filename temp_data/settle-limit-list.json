@@ -1,0 +1,91 @@
+{
+	"code": "0",
+	"message": "success",
+	"data": {
+		"pageCnt": "1",
+		"pageSize": 10,
+		"pageNo": 1,
+		"totalCnt": 10,
+		"pageData": [{
+			"id": "11",
+			"merchantId": "11111111",
+			"merchantName": "name",
+			"businessLimit": "100",
+			"legalPersonLimit": "200",
+			"modifyUser": " 张三",
+			"modifyDate": "09/08/2015"
+		}, {
+			"id": "22",
+			"merchantId": "222222",
+			"merchantName": "name",
+			"businessLimit": "100",
+			"legalPersonLimit": "200",
+			"modifyUser": " 李四",
+			"modifyDate": "09/08/2015"
+		}, {
+			"id": "33",
+			"merchantId": "33111111",
+			"merchantName": "name",
+			"businessLimit": "100",
+			"legalPersonLimit": "200",
+			"modifyUser": " 王五",
+			"modifyDate": "09/08/2015"
+		}, {
+			"id": "44",
+			"merchantId": "44111",
+			"merchantName": "name",
+			"businessLimit": "100",
+			"legalPersonLimit": "200",
+			"modifyUser": " 张三",
+			"modifyDate": "09/08/2015"
+		}, {
+			"id": "55",
+			"merchantId": "55111111",
+			"merchantName": "name",
+			"businessLimit": "100",
+			"legalPersonLimit": "200",
+			"modifyUser": " 李四",
+			"modifyDate": "09/08/2015"
+		}, {
+			"id": "66",
+			"merchantId": "66111111",
+			"merchantName": "name",
+			"businessLimit": "100",
+			"legalPersonLimit": "200",
+			"modifyUser": " 赵六",
+			"modifyDate": "09/08/2015"
+		}, {
+			"id": "77",
+			"merchantId": "77111111",
+			"merchantName": "name",
+			"businessLimit": "100",
+			"legalPersonLimit": "200",
+			"modifyUser": " 王二",
+			"modifyDate": "09/08/2015"
+		}, {
+			"id": "88",
+			"merchantId": "88111111",
+			"merchantName": "name",
+			"businessLimit": "100",
+			"legalPersonLimit": "200",
+			"modifyUser": " 福林",
+			"modifyDate": "09/08/2015"
+		}, {
+			"id": "99",
+			"merchantId": "99111111",
+			"merchantName": "name",
+			"businessLimit": "100",
+			"legalPersonLimit": "200",
+			"modifyUser": " 张三疯",
+			"modifyDate": "09/08/2015"
+		}, {
+			"id": "00",
+			"merchantId": "00111111",
+			"merchantName": "name",
+			"businessLimit": "100",
+			"legalPersonLimit": "200",
+			"modifyUser": " 康熙",
+			"modifyDate": "09/08/2015"
+		}]
+	}
+}

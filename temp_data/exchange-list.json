@@ -1,0 +1,34 @@
+{
+	"code": "0",
+	"message": "success",
+	"data": {
+		"pageCnt": "1",
+		"pageSize": 20,
+		"pageNo": 1,
+		"pageData": [{
+			"srcCurrencyCode": "a",
+			"targetCurrencyCode": "11111111",
+			"exchangeRate": 100.00,
+			"status": 10,
+			"creationDate": 100.00
+		},{
+            "srcCurrencyCode": "a",
+            "targetCurrencyCode": "11111111",
+            "exchangeRate": 100.00,
+            "status": 10,
+            "creationDate": 100.00
+		},{
+            "srcCurrencyCode": "a",
+            "targetCurrencyCode": "11111111",
+            "exchangeRate": 100.00,
+            "status": 10,
+            "creationDate": 100.00
+		},{
+            "srcCurrencyCode": "a",
+            "targetCurrencyCode": "11111111",
+            "exchangeRate": 100.00,
+            "status": 10,
+            "creationDate": 100.00
+		}]
+	}
+}

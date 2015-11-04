@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title><%=title%></title>
+
+		<meta name="description" content="Tcl settlements" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<link href='<%-setting.filePath%>/css/jquery-ui.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/jquery-ui.custom.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/datepicker.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/bootstrap-datetimepicker.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/ui.jqgrid.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/art_dialog.css' rel="stylesheet" />
+    	<link href='<%-setting.filePath%>/css/dialog.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/jquery.fileupload.css' rel="stylesheet" />
+		<%- include('public/header') %>
+		<style>
+			.lm-5{
+				margin-top: 5px;
+			}
+			.row{
+				margin: 4px 0;
+			}
+		</style>
+	</head>
+<body class="no-skin">
+<%- include('public/nav')%>
+
+<div class="main-container" id="main-container">
+	<%- include('public/side') %>
+	<div class="main-content">
+		<div id="content" class="main-content-inner">
+		<div class="page-content">
+			<div class="row">
+			<div class="col-xs-12">
+				<div class="widget-box">
+					<div class="widget-header">
+						<h4 class="widget-title">搜索：</h4>
+						<div class="widget-toolbar">
+						<a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
+						</div>
+					</div>
+					<div class="widget-body">
+						<div class="widget-main">
+							<div class="row">
+								<div class="col-xs-12 col-sm-4">
+									<label class="col-sm-3 control-label no-padding lm-5" for="commercialIds">商户编号:</label>
+									<div class="col-sm-9">
+										<input type="text" id="commercialIds" class="form-control col-sm-5 input-sm">
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-4">
+									<label class="col-sm-3 control-label no-padding lm-5" for="cardNumber">银行账号:</label>
+									<div class="col-sm-9">
+										<input type="text" id="cardNumber" class="form-control col-sm-5 input-sm">
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-4">
+									<label class="col-sm-3 control-label no-padding lm-5" for="userName">开户名:</label>
+									<div class="col-sm-9">
+										<input type="text" id="userName" class="form-control col-sm-5 input-sm">
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 col-sm-4">
+									<label class="col-sm-3 control-label no-padding lm-5" for="issuer">开户行:</label>
+									<div class="col-sm-9">
+										<input type="text" id="issuer" class="form-control col-sm-5 input-sm">
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-4">
+									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="cardType">结算类型:</label></div>
+									<div class="col-sm-9">
+									  	<select class="form-control" id="cardType">
+									  		<option value="0">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-4">
+									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="status">状态:</label></div>
+									<div class="col-sm-9">
+									  	<select class="form-control" id="status">
+									  		<option value="0">全部</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 col-sm-6">
+								 <label class="col-sm-3 no-padding lm-5">生效时间:</label>
+								 <div class="col-sm-9 no-padding">
+								 	<div class="col-sm-12">
+								 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="effectiveDateStart" data-date-format="yyyy-mm-dd" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+								 		<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+								 		<input type="text" class="input-sm form-control datepicker" id="effectiveDateEnd" data-date-format="yyyy-mm-dd" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+								 	</div>
+								 </div>
+								</div>
+								<div class="col-xs-12 col-sm-6">
+								 <label class="col-sm-3 no-padding lm-5">失效时间:</label>
+								 <div class="col-sm-9 no-padding">
+								 	<div class="col-sm-12">
+								 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="expirationDateStart" data-date-format="yyyy-mm-dd" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+								 		<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+								 		<input type="text" class="input-sm form-control datepicker" id="expirationDateEnd" data-date-format="yyyy-mm-dd" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+								 	</div>
+								 </div>
+								</div>
+							</div>
+							<div class="row">
+								<form onsubmit="return false">
+								<div class="col-md-6">
+									<button id="query-btn" class="btn btn-info btn-sm" type="button">
+										<i class="ace-icon fa fa-check bigger-110"></i>
+										查询
+									</button>
+									<button id="reset-btn" class="btn btn-sm" type="reset">
+										<i class="ace-icon fa fa-undo bigger-110"></i>
+										重置
+									</button>
+								</div>
+								<div class="col-md-6 align-right">
+									<button id="add-btn" class="btn btn-info btn-sm" type="button">
+										<i class="ace-icon fa fa-plus bigger-110 white"></i>
+										添加
+									</button>
+									<a id="import-btn" class="btn btn-primary j-btn-upload fileinput-button btn-info btn-sm">
+										<i class="ace-icon fa fa-file-excel-o bigger-110 white"></i>
+										批量导入
+										<input type="file" name="file" tabindex="-1">
+									</a>
+									<button id="downtemplate-btn" class="btn btn-info btn-sm" type="button">
+										<i class="ace-icon fa fa-download bigger-110 white"></i>
+										下载模板
+									</button>
+								</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div><!-- end search box row -->
+
+			<div class="row">
+				<div id="grid_list" class="col-xs-12">
+				</div>
+			</div><!-- end grid row-->
+		</div>
+		</div>
+	</div>
+</div>
+<div id="mask" class="widget-box-overlay hide"></div>
+
+<script id="addEditTpl" type="text/html">
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户编号:</label>
+		<div class="col-sm-9">
+			<input type="text" id="shbh" class="form-control col-sm-5 input-sm" placeholder="必须填写" data-empty='true'>
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-3 control-label no-padding lm-5" for="yhzh">银行账号:</label>
+		<div class="col-sm-9">
+			<input type="text" id="yhzh" class="form-control col-sm-5 input-sm">
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-3 control-label no-padding lm-5" for="khm">开户名:</label>
+		<div class="col-sm-9">
+			<input type="text" id="khm" class="form-control col-sm-5 input-sm">
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-3 control-label no-padding lm-5" for="yxj">优先级:</label>
+		<div class="col-sm-9">
+			<input type="text" id="yxj" class="form-control col-sm-5 input-sm" placeholder="数字" data-int="true" value="0">
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-3 control-label no-padding lm-5" for="fissuer">开户行:</label>
+		<div class="col-sm-9">
+			<input type="text" id="fissuer" class="form-control col-sm-5 input-sm">
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<div class="col-sm-3 no-padding"><label class="align-right control-label no-padding lm-5" for="zt">状态:</label></div>
+		<div class="col-sm-9">
+		  	<select class="form-control" id="zt">
+			</select>
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<div class="col-sm-3 no-padding"><label class="align-right control-label no-padding lm-5" for="lx">结算类型:</label></div>
+		<div class="col-sm-9">
+		  	<select class="form-control" id="lx">
+			</select>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-3 control-label no-padding lm-5">生效时间:</label>
+		<div class="col-sm-9 no-padding">
+			<div class="input-group" style="z-index:1060"><input type="text" class="input-sm form-control datepicker" id="sxsj" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-3 control-label no-padding lm-5">失效时间:</label>
+		<div class="col-sm-9 no-padding">
+			<div class="input-group" style="z-index:1060"><input type="text" class="input-sm form-control datepicker" id="xxsj" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+		</div>
+	</div>
+</div>
+</script>
+
+<script id="importTpl" type="text/html">
+
+</script>
+<%- include('public/footscript1') %>
+<%- include('public/footscript2') %>
+
+<script src='<%-setting.filePath%>/js/jquery-ui.custom.min.js'></script>
+<script src='<%-setting.filePath%>/js/moment.min.js'></script>
+<script src='<%-setting.filePath%>/js/bootstrap-datepicker.min.js'></script>
+<script src='<%-setting.filePath%>/js/bootstrap-datetimepicker.min.js'></script>
+<script src='<%-setting.filePath%>/js/jquery.jqGrid.min.js'></script>
+<script src='<%-setting.filePath%>/js/grid.locale-cn.js'></script>
+<script src="<%-setting.filePath%>/js/art_dialog.js"></script>
+<script src="<%-setting.filePath%>/js/jquery.fileupload.js"></script>
+
+<!-- process enter -->
+<script>
+seajs.use('settle-card', function(m){
+	m.init();
+});
+</script>
+<%- include('public/footer') %>

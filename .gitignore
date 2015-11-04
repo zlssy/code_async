@@ -1,0 +1,12 @@
+# git ignore
+
+#folder
+/node_modules/
+/log/
+
+#file type
+
+#file
+npm-debug.log
+/.idea
+local.js

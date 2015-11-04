@@ -1,0 +1,101 @@
+{
+	"code": "0",
+	"message": "success",
+	"data": {
+		"pageCnt": "1",
+		"pageSize": 10,
+		"pageNo": 1,
+		"totalCnt": 10,
+		"pageData": [{
+			"id": "11111111",
+			"accountNumber": "11111111",
+			"settleCardMethod": "结算卡选择方式",
+			"settleRuleStatus": " 可用",
+			"settleRuleType": " 结算类型",
+			"creationDate": "20150831 12:20:23",
+			"effectiveDate": "20150831 12:20:23",
+			"expirationDate": "20150831 12:20:23"
+		}, {
+			"id": "222222",
+			"accountNumber": "222222",
+			"settleCardMethod": "结算卡选择方式",
+			"settleRuleStatus": " 可用",
+			"settleRuleType": " 结算类型",
+			"creationDate": "20150831 12:20:23",
+			"effectiveDate": "20150831 12:20:23",
+			"expirationDate": "20150831 12:20:23"
+		}, {
+			"id": "3333",
+			"accountNumber": "3333",
+			"settleCardMethod": "结算卡选择方式",
+			"settleRuleStatus": " 可用",
+			"settleRuleType": " 结算类型",
+			"creationDate": "20150831 12:20:23",
+			"effectiveDate": "20150831 12:20:23",
+			"expirationDate": "20150831 12:20:23"
+		}, {
+			"id": "444",
+			"accountNumber": "444",
+			"settleCardMethod": "结算卡选择方式",
+			"settleRuleStatus": " 可用",
+			"settleRuleType": " 结算类型",
+			"creationDate": "20150831 12:20:23",
+			"effectiveDate": "20150831 12:20:23",
+			"expirationDate": "20150831 12:20:23"
+		}, {
+			"id": "5555",
+			"accountNumber": "5555",
+			"settleCardMethod": "结算卡选择方式",
+			"settleRuleStatus": " 可用",
+			"settleRuleType": " 结算类型",
+			"creationDate": "20150831 12:20:23",
+			"effectiveDate": "20150831 12:20:23",
+			"expirationDate": "20150831 12:20:23"
+		}, {
+			"id": "6666",
+			"accountNumber": "6666",
+			"settleCardMethod": "结算卡选择方式",
+			"settleRuleStatus": " 可用",
+			"settleRuleType": " 结算类型",
+			"creationDate": "20150831 12:20:23",
+			"effectiveDate": "20150831 12:20:23",
+			"expirationDate": "20150831 12:20:23"
+		}, {
+			"id": "777777",
+			"accountNumber": "777777",
+			"settleCardMethod": "结算卡选择方式",
+			"settleRuleStatus": " 可用",
+			"settleRuleType": " 结算类型",
+			"creationDate": "20150831 12:20:23",
+			"effectiveDate": "20150831 12:20:23",
+			"expirationDate": "20150831 12:20:23"
+		}, {
+			"id": "888888",
+			"accountNumber": "888888",
+			"settleCardMethod": "结算卡选择方式",
+			"settleRuleStatus": " 可用",
+			"settleRuleType": " 结算类型",
+			"creationDate": "20150831 12:20:23",
+			"effectiveDate": "20150831 12:20:23",
+			"expirationDate": "20150831 12:20:23"
+		}, {
+			"id": "999",
+			"accountNumber": "999",
+			"settleCardMethod": "结算卡选择方式",
+			"settleRuleStatus": " 可用",
+			"settleRuleType": " 结算类型",
+			"creationDate": "20150831 12:20:23",
+			"effectiveDate": "20150831 12:20:23",
+			"expirationDate": "20150831 12:20:23"
+		}, {
+			"id": "1257548",
+			"accountNumber": "1257548",
+			"settleCardMethod": "结算卡选择方式",
+			"settleRuleStatus": " 可用",
+			"settleRuleType": " 结算类型",
+			"creationDate": "20150831 12:20:23",
+			"effectiveDate": "20150831 12:20:23",
+			"expirationDate": "20150831 12:20:23"
+		}]
+	}
+}
