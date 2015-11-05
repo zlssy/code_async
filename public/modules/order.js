@@ -10,19 +10,17 @@ define(function(require, exports, module) {
 		listContainer = $('#grid_list'),
 		userParam = {},
 		dictionaryCollection = {},
-		doms = {			
-			effectiveDateStart: $('input[name="effectiveDateStart"]'),
-			effectiveDateEnd: $('input[name="effectiveDateEnd"]'),
-			expirationDateStart: $('input[name="expirationDateStart"]'),
-			expirationDateEnd: $('input[name="expirationDateEnd"]'),
-			creationDateStart: $('input[name="creationDateStart"]'),
-			creationDateEnd: $('input[name="creationDateEnd"]'),
-			chargeServiceTypeInt: $('#chargeServiceTypeInt'),
-			chargeStatusInt: $('#chargeStatusInt'),
-			chargeSystemPropertyInt: $('#chargeSystemPropertyInt'),
-			chargeTypeInt: $('#chargeTypeInt'),
-			ownerIds: $('#ownerIds'),
-			ids: $('#ids')
+		doms = {
+			payOrderId:$('input[name="payOrderId"'),
+			outOrderId:$('input[name="outOrderId"'),
+			merchantId:$('input[name="merchantId"'),
+			payChannel: $('#payChannel'),
+			currencyType: $('#currencyType'),
+			payStatus: $('#payStatus'),
+			startPayBeginTime: $('input[name="startPayBeginTime"]'),
+			startPayEndTime: $('input[name="startPayEndTime"]'),
+			payOverBeginTime: $('input[name="payOverBeginTime"]'),
+			payOverEndTime: $('input[name="payOverEndTime"]')
 		},
 
 		_grid;
@@ -33,35 +31,38 @@ define(function(require, exports, module) {
 
 	function loadData() {
 		_grid = Grid.create({
-			key: 'id',
+			key: 'payOrderId',
 			checkbox: false,
 			cols: [{
-				name: '支付渠道名称',
-				index: 'id'
+				name: '交易订单号',
+				index: 'payOrderId'
 			}, {
-				name: '支付渠道编码',
-				index: 'ownerId'
+				name: '交易流水号',
+				index: 'tradeId'
 			}, {
-				name: '支付类型',
-				index: 'ownerName'
+				name: '商户订单号',
+				index: 'outOrderId'
 			}, {
-				name: '支付币种',
-				index: 'chargeSystemProperty'
+				name: '商户名称',
+				index: 'merchantName'
 			}, {
-				name: '接口状态',
-				index: 'chargeStatus'
+				name: '订单金额',
+				index: 'orderAmount'
 			}, {
-				name: '操作',
-				index: 'chargeType'
+				name: '货币类型',
+				index: 'currencyType'
 			}, {
-				name: '创建时间',
-				index: 'creationDate'
+				name: '支付渠道',
+				index: 'payChannel'
 			}, {
-				name: '操作',
-				index: '',
-				format: function(v) {
-					return '<div class="ui-pg-div align-center"><input type="checkbox" checked name="my-checkbox" data-size="mini"/></div>';
-				}
+				name: '订单状态',
+				index: 'payStatus'
+			}, {
+				name: '支付开始时间',
+				index: 'startPayTime'
+			}, {
+				name: '支付完成时间',
+				index: 'payOverTime'
 			}],
 			url: getUrl(),
 			pagesize: 10,
@@ -73,35 +74,15 @@ define(function(require, exports, module) {
 		});
 		listContainer.html(_grid.getHtml());		
 		_grid.load();
-		_grid.listen('renderCallback', function(){
-			$("input[name=my-checkbox]").bootstrapSwitch();
-			$('input[name="my-checkbox"]').on('switchChange.bootstrapSwitch', function(event, state) {
-			  //console.log(this); // DOM element
-			  //console.log(event); // jQuery event
-			  //console.log(state); // true | false
-			  console.log($(this).parents('tr').data('id'));
-			  setStatus();
-			  
-			});
-		})
 		registerEvents();
 	}
 	
-	//on off 操作，传递给后台
-	function setStatus(id){
-		//console.log(row);
-		/*var id = row[0].id;
-		$.ajax({
-			url: global_config.serverRoot + '/clearingCharge/history?userId=' + '&id=' + id,
-			success: function(json) {
-				console.log('a');
-			},
-			error: function(json) {
-				// some report
-			}
-		})*/
-	}
 	function registerEvents() {
+		$('.datepicker').datetimepicker({
+			autoclose: true,
+			todayHighlight: true,
+			minView: 2
+		});
 		$(document.body).on('click', function(e) {
 			var $el = $(e.target || e.srcElement),
 				cls = $el.attr('class'),
@@ -116,32 +97,7 @@ define(function(require, exports, module) {
 					_grid.setUrl(getUrl());
 					_grid.loadData();
 				}
-			}
-			if (cls && cls.indexOf('fa-undo') > -1 || (id && 'reset-btn' == id)) {
-				userParam = {};
-				doms.effectiveDateStart.val('');
-				doms.effectiveDateEnd.val('');
-				doms.expirationDateStart.val('');
-				doms.expirationDateEnd.val('');
-				doms.creationDateStart.val('');
-				doms.creationDateEnd.val('');
-				doms.chargeServiceTypeInt.val(0);
-				doms.chargeStatusInt.val(0);
-				doms.chargeSystemPropertyInt.val(0);
-				doms.chargeTypeInt.val(0);
-				doms.ownerIds.val('');
-				doms.ids.val('');
-			}
-			if ('input' == tag && 'fchargeTypeInt' == name) {
-				var val = $el.val();
-				if (val == dictionaryCollection.chargeTypeArr[1].innerValue) {
-					$('#gdPanel').addClass('hide');
-					$('#jtPanel').removeClass('hide');
-				} else {
-					$('#gdPanel').removeClass('hide');
-					$('#jtPanel').addClass('hide');
-				}
-			}
+			}			
 			if ('input' == tag && 'fchargeSystemPropertyInt' == name) {
 				var val = $el.val();
 				if (val == dictionaryCollection.chargeSystemPropertyArr[1].innerValue) {
@@ -150,68 +106,57 @@ define(function(require, exports, module) {
 					$('#fownerId').attr('placeholder', '商户ID');
 				}
 			}
-			if (cls && cls.indexOf('glyphicon-plus') > -1) {
-				$('#jtPanel .row:last').after(flTpl);
-			}
-			if (cls && cls.indexOf('glyphicon-minus') > -1) {
-				$el.parent().parent().remove();
-			}
 		});
 	}
 
 	function getParams() {
 		var newParam = {},
 			newchange = false,
-			ids = doms.ids.val(),
-			ownerIds = doms.ownerIds.val(),
-			chargeTypeInt = doms.chargeTypeInt.val(),
-			chargeSystemPropertyInt = doms.chargeSystemPropertyInt.val(),
-			chargeStatusInt = doms.chargeStatusInt.val(),
-			chargeServiceTypeInt = doms.chargeServiceTypeInt.val(),
-			effectiveDateStart = doms.effectiveDateStart.val(),
-			effectiveDateEnd = doms.effectiveDateEnd.val(),
-			expirationDateStart = doms.expirationDateStart.val(),
-			expirationDateEnd = doms.expirationDateEnd.val(),
-			creationDateStart = doms.creationDateStart.val(),
-			creationDateEnd = doms.creationDateEnd.val();
-
-		if (ids) {
-			newParam.ids = ids;
+			payOrderId = doms.payOrderId.val(),
+			outOrderId = doms.outOrderId.val(),
+			merchantId = doms.merchantId.val(),
+			payChannel = doms.payChannel.val(),
+			currencyType = doms.currencyType.val(),
+			payStatus = doms.payStatus.val(),
+			startPayBeginTime = doms.startPayBeginTime.val(),
+			startPayEndTime = doms.startPayEndTime.val(),
+			payOverBeginTime = doms.payOverBeginTime.val(),
+			payOverEndTime = doms.payOverEndTime.val();
+		if (payOrderId) {
+			newParam.payOrderId = payOrderId;
 		}
-		if (ownerIds) {
-			newParam.ownerIds = ownerIds;
+		if (outOrderId) {
+			newParam.outOrderId = outOrderId;
 		}
-		if (effectiveDateStart) {
-			newParam.effectiveDateStart = effectiveDateStart;
+		if (merchantId) {
+			newParam.merchantId = merchantId;
 		}
-		if (effectiveDateEnd) {
-			newParam.effectiveDateEnd = effectiveDateEnd;
+		if (payChannel) {
+			newParam.payChannel = payChannel;
 		}
-		if (expirationDateStart) {
-			newParam.expirationDateStart = expirationDateStart;
+		if (currencyType) {
+			newParam.currencyType = currencyType;
 		}
-		if (expirationDateEnd) {
-			newParam.expirationDateEnd = expirationDateEnd;
+		if (payStatus) {
+			newParam.payStatus = payStatus;
 		}
-		if (creationDateStart) {
-			newParam.creationDateStart = creationDateStart;
+		if (startPayBeginTime) {
+			newParam.startPayBeginTime = startPayBeginTime;
 		}
-		if (creationDateEnd) {
-			newParam.creationDateEnd = creationDateEnd;
+		if (startPayEndTime) {
+			newParam.startPayEndTime = startPayEndTime;
 		}
-		if (chargeTypeInt != '0') {
-			newParam.chargeTypeInt = chargeTypeInt;
+		if (payOverBeginTime) {
+			newParam.payOverBeginTime = payOverBeginTime;
 		}
-		if (chargeSystemPropertyInt != '0') {
-			newParam.chargeSystemPropertyInt = chargeSystemPropertyInt;
+		if (payOverEndTime) {
+			newParam.payOverEndTime = payOverEndTime;
 		}
-		if (chargeStatusInt != '0') {
-			newParam.chargeStatusInt = chargeStatusInt;
-		}
-		if (chargeServiceTypeInt != '0') {
-			newParam.chargeServiceTypeInt = chargeServiceTypeInt;
-		}
-
+		
+		/*if (payChannel != '') {
+			newParam.payChannel = payChannel;
+		}*/
+		
 		for (var k in newParam) {
 			if (newParam[k] !== userParam[k]) {
 				newchange = true;
@@ -235,7 +180,7 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + '/clearingCharge/list?userId=&' + Utils.object2param(userParam);
+		//return global_config.serverRoot + '/clearingCharge/list?userId=&' + Utils.object2param(userParam);
 	}
 
 	return {

@@ -52,31 +52,80 @@
 								<div class="col-xs-12 col-sm-4">
 									<label class="col-sm-3 control-label no-padding lm-5" for="ids">交易订单号:</label>
 									<div class="col-sm-9">
-										<input type="text" id="ids" class="form-control col-sm-5 input-sm">
+										<input type="text" id="payOrderId" class="form-control col-sm-5 input-sm">
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
 									<label class="col-sm-3 control-label no-padding lm-5" for="ownerIds">商户订单号:</label>
 									<div class="col-sm-9">
-										<input type="text" id="ownerIds" class="form-control col-sm-5 input-sm">
+										<input type="text" id="outOrderId" class="form-control col-sm-5 input-sm">
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
-									<label class="col-sm-3 control-label no-padding lm-5" for="ownerIds">商户订单号:</label>
+									<label class="col-sm-3 control-label no-padding lm-5" for="ownerIds">商户ID:</label>
 									<div class="col-sm-9">
-										<input type="text" id="ownerIds" class="form-control col-sm-5 input-sm">
+										<input type="text" id="merchantId" class="form-control col-sm-5 input-sm">
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
-									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="chargeTypeInt">支付接口类型:</label></div>
+									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="chargeTypeInt">支付渠道:</label></div>
 									<div class="col-sm-9">
-									  	<select class="form-control" id="chargeTypeInt">
-									  		<option value="-1">全部</option>
-									  		<option value="0">运营商</option>
-									  		<option value="1">第三方支付</option>
-									  		<option value="2">支付渠道</option>
-										</select>
+										<select class="form-control" id="payChannel"> 
+											<option value="">全部</option>   
+								        	<option value="CYBS">CYBS</option>
+								        	<option value="PAYPAL">PayPal</option>
+								        	<option value="FORTUMO">Fortumo</option>
+								        	<option value="AMX">AMX</option>
+								        	<option value="TIMWE">Timwe</option>
+								        	<option value="IFREE">Ifree</option>
+								        	<option value="MCOIN">MCOIN</option>
+								     	 </select>
 									</div>
+								</div>
+								<div class="col-xs-12 col-sm-4">
+									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="chargeTypeInt">支付币种:</label></div>
+									<div class="col-sm-9">
+										<select class="form-control" id="currencyType"> 
+											<option value="">全部</option>   
+								        	<option value="USD">美元</option>
+								        	<option value="EUR">欧元</option>
+								        	<option value="CNY">人民币</option>
+											<option value="RUB">卢布</option>
+											<option value="MXN">比索</option>
+								     	 </select>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-4">
+									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="chargeTypeInt">支付状态:</label></div>
+									<div class="col-sm-9">
+										<select class="form-control" id="payStatus"> 
+											<option value="">全部</option>
+											<option value="0">等待付款</option>   
+								        	<option value="1">支付成功</option>
+								        	<option value="3">支付失败</option>
+								        	<option value="5">支付关闭</option>
+								     	 </select>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-4  lm-5">
+									 <label class="col-sm-3 no-padding">支付开始时间:</label>
+									 <div class="col-sm-9">
+									  <div class="col-sm-12">
+									  	<div class="input-group"><input type="text" class="input-sm form-control datepicker" name="startPayBeginTime" placeholder="from" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+									  		<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+									  <input type="text" class="input-sm form-control datepicker" name="startPayEndTime" placeholder="to" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>								  	
+									  </div></div>
+									 </div>
+								</div>
+								<div class="col-xs-12 col-sm-4 lm-5">
+									 <label class="col-sm-3 no-padding">支付结束时间:</label>
+									 <div class="col-sm-9">
+									  <div class="col-sm-12">
+									  	<div class="input-group"><input type="text" class="input-sm form-control datepicker" name="payOverBeginTime" placeholder="from" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+									  		<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+									  <input type="text" class="input-sm form-control datepicker" name="payOverEndTime" placeholder="to" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>								  	
+									  </div></div>
+									 </div>
 								</div>
 							</div>
 							<div class="row">
@@ -117,7 +166,7 @@
 
 <!-- process enter -->
 <script>
-seajs.use('payment-channel', function(m){
+seajs.use('order', function(m){
 	m.init();
 });
 </script>

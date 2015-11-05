@@ -20,7 +20,7 @@ define(function(require, exports, module) {
 		userParam = {},
 		dictionaryCollection = {},
 		doms = {
-			effectiveDateStart: $('input[name="effectiveDateStart"]'),
+			effectiveDateStart: $('input[name="effectiveDateStart"]'),//与接口需要的参数命名相同
 			effectiveDateEnd: $('input[name="effectiveDateEnd"]'),
 			expirationDateStart: $('input[name="expirationDateStart"]'),
 			expirationDateEnd: $('input[name="expirationDateEnd"]'),
@@ -46,7 +46,7 @@ define(function(require, exports, module) {
 			checkbox: false,
 			cols: [{
 				name: '计费编号',
-				index: 'id'
+				index: 'id'//与接口返回的参数相同命名
 			}, {
 				name: '所有者编号',
 				index: 'ownerId'
