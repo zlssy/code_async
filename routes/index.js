@@ -14,6 +14,18 @@ router.all('/order', function(req, res, next){
 		req: req
 	})
 });
+router.all('/merchant-check', function(req, res, next){
+	res.render('merchant-check', {
+		title: 'TCL支付运营平台',
+		req: req
+	})
+});
+router.all('/merchant-info', function(req, res, next){
+	res.render('merchant-info', {
+		title: 'TCL支付运营平台',
+		req: req
+	})
+});
 router.get('/statement-upload', function(req, res, next){
     res.render('statement-upload', {
         title: 'TCL业务清算平台',

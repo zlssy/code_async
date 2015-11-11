@@ -11,8 +11,8 @@ define(function(require, exports, module) {
 		userParam = {},
 		dictionaryCollection = {},
 		doms = {
-			payOrderId:$('input[name="payOrderId"'),
-			outOrderId:$('input[name="outOrderId"'),
+			payOrderId: $('#payOrderId'),
+			outOrderId:$('input[name="outOrderId"'),//这里获取元素还有点问题记得修复
 			merchantId:$('input[name="merchantId"'),
 			payChannel: $('#payChannel'),
 			currencyType: $('#currencyType'),

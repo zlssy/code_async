@@ -2,14 +2,14 @@ define(function(require, exports, module) {
 	var Utils = require('utils'),
 		Grid = require('gridBootstrap'),
 		Xss = require('xss'),
-		accountCheck = require('checkAccount'),
-
-		
+		accountCheck = require('checkAccount'),		
 		Box = require('boxBootstrap'),
 		content = $('#content'),
 		listContainer = $('#grid_list'),
 		userParam = {},
 		dictionaryCollection = {},
+		infoCheckTpl = $('#infoCheckTpl').html(),
+		otherCheckTpl = $('#otherCheckTpl').html(),
 		doms = {			
 			effectiveDateStart: $('input[name="effectiveDateStart"]'),
 			effectiveDateEnd: $('input[name="effectiveDateEnd"]'),
@@ -33,39 +33,30 @@ define(function(require, exports, module) {
 
 	function loadData() {
 		_grid = Grid.create({
-			key: 'id',
+			key: 'id',//记得这里要换成现在接口的参数
 			checkbox: false,
 			cols: [{
-				name: '支付渠道名称',
-				index: 'id'
+				name: '账户编号',
+				index: 'accountName'
 			}, {
-				name: '支付渠道编码',
-				index: 'ownerId'
+				name: '账户名',
+				index: 'merchantName'
 			}, {
-				name: '支付类型',
-				index: 'ownerName'
-			}, {
-				name: '支付币种',
-				index: 'chargeSystemProperty',
+				name: '商户名称',
+				index: 'action',
 				format: function(v){
-					console.log(v);
-				          // v 是该列渲染时的值， 这里可以做变换
 				         return '[' + v + ']';
 				    }
 			}, {
-				name: '接口状态',
-				index: 'chargeStatus'
+				name: '商户ID',
+				index: 'submitTime'
+			}, {
+				name: '联系电话',
+				index: 'finishTime'
 			}, {
 				name: '操作',
-				index: 'chargeType'
-			}, {
-				name: '创建时间',
-				index: 'creationDate'
-			}, {
-				name: '操作',
-				index: '',
 				format: function(v) {
-					return '<div class="ui-pg-div align-center"><input type="checkbox" checked name="my-checkbox" data-size="mini"/></div>';
+					return '<div class="ui-pg-div align-center"><a class="blue add-edit-font" href="javascript:">查看/修改</a><span class="ui-icon ace-icon fa fa-trash-o blue" title="删除"></span></div>';
 				}
 			}],
 			url: getUrl(),
@@ -78,35 +69,104 @@ define(function(require, exports, module) {
 		});
 		listContainer.html(_grid.getHtml());		
 		_grid.load();
-		_grid.listen('renderCallback', function(){
-			$("input[name=my-checkbox]").bootstrapSwitch();
-			$('input[name="my-checkbox"]').on('switchChange.bootstrapSwitch', function(event, state) {
-			  //console.log(this); // DOM element
-			  //console.log(event); // jQuery event
-			  //console.log(state); // true | false
-			  console.log($(this).parents('tr').data('id'));
-			  setStatus();
-			  
-			});
-		})
+		_grid.listen('addCallback', function() {
+			//编辑的全show，展示的全hide
+			addAndUpdate();
+		});
+		_grid.listen('editViewCallback', function(row) {
+			addAndUpdate(row);
+		});
 		registerEvents();
 	}
 	
-	//on off 操作，传递给后台
-	function setStatus(id){
-		//console.log(row);
-		/*var id = row[0].id;
-		$.ajax({
-			url: global_config.serverRoot + '/clearingCharge/history?userId=' + '&id=' + id,
-			success: function(json) {
-				console.log('a');
-			},
-			error: function(json) {
-				// some report
+	function addAndUpdate(data)
+	{
+		var opt = {},
+			id = '';
+		
+		opt.message = '<h4><b>商户信息</b></h4><hr class="no-margin">' + infoCheckTpl;
+		if(!data)
+		{
+			opt.buttons = {			
+				"save": {
+					label: '保存',//'<i class="ace-icon fa"></i>通过',
+					className: 'btn-sm btn-success',
+					callback: function() {
+						if (!validate()) {
+							return false;
+						} else {
+							if (!submitData(data)) {
+								return false;
+							}
+						}
+					}
+				}
+			};
+		}
+				
+		showDialog(opt);
+		if(!data)
+		{
+			$("div[for=view]").addClass('hide');
+			$("div[for=addEdit]").removeClass('hide');
+			$("button[for=editSave]").hide();
+		}
+		else
+		{
+			$("div[for=view]").removeClass('hide');
+			$("div[for=addEdit]").addClass('hide');
+			$("button[for=editSave]").show();
+		}
+		
+		$("button[for=modify]").click(function(){
+			$("#edit"+$(this).attr('mod')).removeClass("hide");
+			$("#view"+$(this).attr('mod')).addClass("hide");
+		})
+		$("button[for=editSave]").click(function(){
+			$("#edit"+$(this).attr('mod')).addClass("hide");
+			$("#view"+$(this).attr('mod')).removeClass("hide");
+			//校验及保存
+			if (!validate()) {
+						return false;
+			} else {
+				if (!submitData(data)) {
+					return false;
+				}
 			}
-		})*/
+		})
+		
+		/*data && fillData(data);
+
+		$('.bootbox input, .bootbox select').on('change', function(e) {
+			validate($(this));
+		});
+		var shbh = $('#shbh'),
+			elp = shbh.parents('.form-group:first');
+		accountCheck.check({
+			el: shbh,
+			elp: elp
+		});
+
+		data && setTimeout(function() {
+			shbh.focus();
+		}, 80);*/
 	}
+	
+	//保存（新增、编辑）
+	function submitData(data)
+	{
+		
+	}
+	
+	function showDialog(opt) {
+		Box.dialog(opt);
+	}
+	
+	
 	function registerEvents() {
+		$('#add-btn').on('click', function() {
+			_grid.trigger('addCallback');
+		});
 		$(document.body).on('click', function(e) {
 			var $el = $(e.target || e.srcElement),
 				cls = $el.attr('class'),

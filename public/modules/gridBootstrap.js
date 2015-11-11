@@ -233,6 +233,7 @@ define(function(require, exports, module) {
 		$.ajax({
 			url: self.getUrl(),
 			success: function(json) {
+				console.log(json);
 				if ('0' == json.code) {
 					render.call(self, getMapData(json, self.jsonReader.root));
 					self.jsonReader.page && (self.page = getMapData(json, self.jsonReader.page));
@@ -317,8 +318,7 @@ define(function(require, exports, module) {
 						break;
 					}
 				}
-			});
-			console.log(ret);
+			});			
 		}
 		
 		return ret;
@@ -415,6 +415,24 @@ define(function(require, exports, module) {
 					return;
 				}
 			}
+			if (cls.indexOf('fa-edit') > -1) {
+				selectedRow = self.getSelectedRow();				
+				if (selectedRow.length) {
+					self.trigger('checkCallback', selectedRow, self);
+				} else {
+					alert('请先选择要审核的行.');
+					return;
+				}
+			}
+			if (cls.indexOf('add-edit-font') > -1) {
+				selectedRow = self.getSelectedRow();				
+				if (selectedRow.length) {
+					self.trigger('editViewCallback', selectedRow, self);
+				} else {
+					alert('请先选择要查看编辑的行.');
+					return;
+				}
+			}
 			if (cls.indexOf('fa-search-plus') > -1) {
 				selectedRow = self.getSelectedRow();
 				if (selectedRow.length) {
@@ -449,6 +467,24 @@ define(function(require, exports, module) {
 					self.trigger('editCallback', selectedRow, self);
 				} else {
 					alert('请先选择要编辑的行.');
+					return;
+				}
+			}
+			if (cls.indexOf('fa-edit') > -1) {
+				selectedRow = self.getSelectedRow();
+				if (selectedRow.length) {
+					self.trigger('checkCallback', selectedRow, self);
+				} else {
+					alert('请先选择要审核的行.');
+					return;
+				}
+			}
+			if (cls.indexOf('add-edit-font') > -1) {
+				selectedRow = self.getSelectedRow();
+				if (selectedRow.length) {
+					self.trigger('editViewCallback', selectedRow, self);
+				} else {
+					alert('请先选择要查看编辑的行.');
 					return;
 				}
 			}

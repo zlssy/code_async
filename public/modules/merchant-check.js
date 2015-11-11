@@ -10,6 +10,8 @@ define(function(require, exports, module) {
 		listContainer = $('#grid_list'),
 		userParam = {},
 		dictionaryCollection = {},
+		infoCheckTpl = $('#infoCheckTpl').html(),
+		otherCheckTpl = $('#otherCheckTpl').html(),
 		doms = {			
 			effectiveDateStart: $('input[name="effectiveDateStart"]'),
 			effectiveDateEnd: $('input[name="effectiveDateEnd"]'),
@@ -33,39 +35,44 @@ define(function(require, exports, module) {
 
 	function loadData() {
 		_grid = Grid.create({
-			key: 'id',
+			key: 'id',//记得这里要换成现在接口的参数
 			checkbox: false,
 			cols: [{
-				name: '支付渠道名称',
-				index: 'id'
+				name: '账户名',
+				index: 'accountName'
 			}, {
-				name: '支付渠道编码',
-				index: 'ownerId'
+				name: '商户名称',
+				index: 'merchantName'
 			}, {
-				name: '支付类型',
-				index: 'ownerName'
-			}, {
-				name: '支付币种',
-				index: 'chargeSystemProperty',
+				name: '事件',
+				index: 'action',
 				format: function(v){
-					console.log(v);
-				          // v 是该列渲染时的值， 这里可以做变换
 				         return '[' + v + ']';
 				    }
 			}, {
-				name: '接口状态',
-				index: 'chargeStatus'
+				name: '提交审核时间',
+				index: 'submitTime'
+			}, {
+				name: '完成审核时间',
+				index: 'finishTime'
+			}, {
+				name: '状态',
+				index: 'status',
+				format: function(v){
+				         return '[' + v + ']';
+				    }
+			}, {
+				name: '说明',
+				index: ''
 			}, {
 				name: '操作',
-				index: 'chargeType'
-			}, {
-				name: '创建时间',
-				index: 'creationDate'
-			}, {
-				name: '操作',
-				index: '',
+				index: 'status',
 				format: function(v) {
-					return '<div class="ui-pg-div align-center"><input type="checkbox" checked name="my-checkbox" data-size="mini"/></div>';
+					/*if(v==2)
+					{
+						
+					}*/
+					return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-edit blue" title="审核"></span></div>';
 				}
 			}],
 			url: getUrl(),
@@ -78,26 +85,72 @@ define(function(require, exports, module) {
 		});
 		listContainer.html(_grid.getHtml());		
 		_grid.load();
-		_grid.listen('renderCallback', function(){
-			$("input[name=my-checkbox]").bootstrapSwitch();
-			$('input[name="my-checkbox"]').on('switchChange.bootstrapSwitch', function(event, state) {
-			  //console.log(this); // DOM element
-			  //console.log(event); // jQuery event
-			  //console.log(state); // true | false
-			  console.log($(this).parents('tr').data('id'));
-			  setStatus();
-			  
-			});
-		})
+		_grid.listen('checkCallback', function(row) {
+			checkUpdate(row);
+		});
 		registerEvents();
 	}
 	
-	//on off 操作，传递给后台
-	function setStatus(id){
+	function checkUpdate(data)
+	{
+		var opt = {},
+			id = '';
+		/*if(data.status:注册 和修改)
+		{
+			infoCheckTpl
+		}
+		else
+		{
+			otherCheckTpl
+		}*/
+		opt.message = '<h4><b>商户审核</b></h4><hr class="no-margin">' + otherCheckTpl;
+		opt.buttons = {			
+			"save": {
+				label: '通过',//'<i class="ace-icon fa"></i>通过',
+				className: 'btn-sm btn-success',
+				callback: function() {
+					checkSubmit(data,status);
+				}
+			},
+			"cancel": {
+				label: '驳回',
+				className: 'btn-sm btn-success',
+				callback: function(){
+					checkSubmit(data,status);
+				}
+			}
+		};
+		showDialog(opt);
+		
+		/*data && fillData(data);
+
+		$('.bootbox input, .bootbox select').on('change', function(e) {
+			validate($(this));
+		});
+		var shbh = $('#shbh'),
+			elp = shbh.parents('.form-group:first');
+		accountCheck.check({
+			el: shbh,
+			elp: elp
+		});
+
+		data && setTimeout(function() {
+			shbh.focus();
+		}, 80);*/
+	}
+	
+	function showDialog(opt) {
+		Box.dialog(opt);
+	}
+	
+	/*
+	 * 审核：驳回/通过
+	 */
+	function checkSubmit(data,status){
 		//console.log(row);
 		/*var id = row[0].id;
 		$.ajax({
-			url: global_config.serverRoot + '/clearingCharge/history?userId=' + '&id=' + id,
+			url: global_config.serverRoot + '/updateMerchantCheck',
 			success: function(json) {
 				console.log('a');
 			},

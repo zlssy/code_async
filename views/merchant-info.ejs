@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title><%=title%></title>
+
+		<meta name="description" content="Tcl settlements" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<link href='<%-setting.filePath%>/css/jquery-ui.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/jquery-ui.custom.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/datepicker.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/bootstrap-datetimepicker.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/ui.jqgrid.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/bootstrap-switch.min.css' rel="stylesheet" />
+		<%- include('public/header') %>
+		<style>
+			.lm-5{
+				margin-top: 5px;
+			}
+			.row{
+				margin: 4px 0;
+			}
+			@media(min-width: 768px) {
+				.modal-dialog{
+					width: 900px!important;
+				}
+			}
+			.error-ts{color:red;}
+		</style>
+	</head>
+<body class="no-skin">
+<%- include('public/nav')%>
+
+<div class="main-container" id="main-container">
+	<%- include('public/side') %>
+	<div class="main-content">
+		<div id="content" class="main-content-inner">
+		<div class="page-content">
+			<div class="row">
+			<div class="col-xs-12">
+				<div class="widget-box">
+					<div class="widget-header">
+						<h4 class="widget-title">搜索：</h4>
+						<div class="widget-toolbar">
+						<a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
+						</div>
+					</div>
+					<div class="widget-body">
+						<div class="widget-main">
+							<div class="row">
+								<div class="col-xs-12 col-sm-4">
+									<label class="col-sm-3 control-label no-padding lm-5" for="ids">账户名:</label>
+									<div class="col-sm-9">
+										<input type="text" id="accountName" class="form-control col-sm-5 input-sm" name="accountName">
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-4">
+									<label class="col-sm-3 control-label no-padding lm-5" for="ids">账户编号:</label>
+									<div class="col-sm-9">
+										<input type="text" id="accountNo" class="form-control col-sm-5 input-sm" name="accountNo">
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-4">
+									<label class="col-sm-3 control-label no-padding lm-5" for="ids">商户ID:</label>
+									<div class="col-sm-9">
+										<input type="text" id="merchantID" class="form-control col-sm-5 input-sm" name="merchantID">
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-4 lm-5">
+									<label class="col-sm-3 control-label no-padding lm-5" for="ids">商户名称:</label>
+									<div class="col-sm-9">
+										<input type="text" id="merchantName" class="form-control col-sm-5 input-sm" name="merchantName">
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-9">
+									<button id="query-btn" class="btn btn-info btn-sm" type="button">
+										<i class="ace-icon fa fa-check bigger-110"></i>
+										查询
+									</button>
+								</div>
+								<div class="col-md-3 align-right">
+									<button id="add-btn" class="btn btn-info btn-sm" type="button">
+										<i class="ace-icon fa fa-plus bigger-110 white"></i>
+										新增
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div><!-- end search box row -->
+
+			<div class="row">
+				<div id="grid_list" class="col-xs-12">
+				</div>
+			</div><!-- end grid row-->
+		</div>
+		</div>
+	</div>
+</div>
+<div id="mask" class="widget-box-overlay hide"></div>
+<script id="infoCheckTpl" type="text/html">
+<!-- zh info -->	
+<div class="widget-box" for="view">	
+	<div class="widget-header"><h5 class="widget-title">账户信息</h5></div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">账户类别:</label>
+					<div class="col-sm-8">
+						内部用户
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">行业类别:</label>
+					<div class="col-sm-8">
+						内部用户
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>
+<div class="widget-box hide" for="addEdit"><!-- only for add -->	
+	<div class="widget-header"><h5 class="widget-title">账户信息</h5></div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">账户类别:</label>
+					<div class="col-sm-8">
+						<select class="form-control" id="accountType">
+							<option value="">内部用户</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">行业类别:</label>
+					<div class="col-sm-8">
+						<select class="form-control" id="accountType">
+							<option value="">内部用户</option>
+						</select>
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>
+<!-- base info -->
+<div class="widget-box" id="viewBaseInfo" for="view">	
+	<div class="widget-header"><h5 class="widget-title">基本信息</h5><button mod="BaseInfo" type="button" class="btn btn-sm" for="modify">修改</button></div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户名称:</label>
+					<div class="col-sm-8">
+						dddf
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户网址:</label>
+					<div class="col-sm-8">
+						fafd
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>
+<div class="widget-box hide" id="editBaseInfo" for="addEdit">	
+	<div class="widget-header"><h5 class="widget-title">基本信息</h5><button  mod="BaseInfo" type="button" class="btn btn-sm btn-success" for="editSave">保存</button></div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户名称:</label>
+					<div class="col-sm-8">
+						<input type="text" id="fownerId" class="form-control col-sm-5 input-sm" data-empty="true">
+						<span class="error-ts">请输入商户名称！</span>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">营业地址:</label>
+					<div class="col-sm-8">
+						<input type="text" id="fownerId" class="form-control col-sm-5 input-sm">
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">邮政编码:</label>
+					<div class="col-sm-8">
+						<input type="text" id="fownerId" class="form-control col-sm-5 input-sm">
+						<span class="error-ts">请输入数字!</span>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">营业执照注册地址:</label>
+					<div class="col-sm-8">
+						<input type="text" id="fownerId" class="form-control col-sm-5 input-sm">
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">营业执照注册号:</label>
+					<div class="col-sm-8">
+						<input type="text" id="fownerId" class="form-control col-sm-5 input-sm">
+						<span class="error-ts">请输入营业执照注册号！</span>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">联系人:</label>
+					<div class="col-sm-8">
+						<input type="text" id="fownerId" class="form-control col-sm-5 input-sm">
+						<span class="error-ts">请输入联系人！</span>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">联系电话:</label>
+					<div class="col-sm-8">
+						<input type="text" id="fownerId" class="form-control col-sm-5 input-sm">
+						<span class="error-ts">请输入联系电话且只能是数字！</span>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">联系邮箱:</label>
+					<div class="col-sm-8">
+						<input type="text" id="fownerId" class="form-control col-sm-5 input-sm">
+						<span class="error-ts">请输入正确格式邮箱！</span>
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>	
+</div>
+<!-- 支付产品 -->
+<div class="widget-box" id="viewPayPro" for="view">	
+	<div class="widget-header"><h5 class="widget-title">支付产品</h5><button mod="PayPro" type="button" class="btn btn-sm" for="modify">修改</button></div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户名称:</label>
+					<div class="col-sm-8">
+						<input type="checkbox" checked="" disabled/>CYBSdrerer
+						<input type="checkbox" disabled/>CYBSdrerer
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>
+<div class="widget-box" id="editPayPro" for="addEdit">	
+	<div class="widget-header"><h5 class="widget-title">支付产品</h5><button mod="PayPro" type="button" class="btn btn-sm  btn-success"  for="editSave">保存</button></div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户名称:</label>
+					<div class="col-sm-8">
+						<input type="checkbox" checked="" />CYBSdrerer
+						<input type="checkbox" />CYBSdrerer
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>
+<!-- 代扣产品 -->
+<div class="widget-box" id="viewWithHoldPro" for="view">	
+	<div class="widget-header"><h5 class="widget-title">代扣产品</h5><button mod="WithHoldPro" type="button" class="btn btn-sm" for="modify">修改</button></div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户名称:</label>
+					<div class="col-sm-8">
+						<input type="checkbox" checked="" disabled/>CYBSdrerer
+						<input type="checkbox" disabled/>CYBSdrerer
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>
+<div class="widget-box" id="editWithHoldPro" for="addEdit">	
+	<div class="widget-header"><h5 class="widget-title">代扣产品</h5><button mod="WithHoldPro" id="modify1" type="button" class="btn btn-sm  btn-success"  for="editSave">保存</button></div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户名称:</label>
+					<div class="col-sm-8">
+						<input type="checkbox" checked="" />CYBSdrerer
+						<input type="checkbox" />CYBSdrerer
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>
+</script>
+<%- include('public/footscript1') %>
+<%- include('public/footscript2') %>
+
+<script src='<%-setting.filePath%>/js/jquery-ui.custom.min.js'></script>
+<script src='<%-setting.filePath%>/js/moment.min.js'></script>
+<script src='<%-setting.filePath%>/js/bootstrap-datepicker.min.js'></script>
+<script src='<%-setting.filePath%>/js/bootstrap-datetimepicker.min.js'></script>
+<script src='<%-setting.filePath%>/js/jquery.jqGrid.min.js'></script>
+<script src='<%-setting.filePath%>/js/grid.locale-cn.js'></script>
+<script src='<%-setting.filePath%>/js/bootstrap-switch.min.js'></script>
+
+<!-- process enter -->
+<script>
+seajs.use('merchant-info', function(m){
+	m.init();
+});
+</script>
+<%- include('public/footer') %>
