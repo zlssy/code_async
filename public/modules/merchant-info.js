@@ -125,15 +125,18 @@ define(function(require, exports, module) {
 		$("button[for=editSave]").click(function(){
 			$("#edit"+$(this).attr('mod')).addClass("hide");
 			$("#view"+$(this).attr('mod')).removeClass("hide");
-			//校验及保存
-			if (!validate()) {
-						return false;
-			} else {
-				if (!submitData(data)) {
+			//校验及保存,只有基本信息模块需要校验
+			if($(this).attr('mod')=='BaseInfo'&&!validate())
+			{
+				return false;
+			}
+			if (!submitData(data)) {
 					return false;
 				}
-			}
 		})
+		$('div#editBaseInfo').on('change', function(e) {
+			validate($(this));
+		});
 		
 		/*data && fillData(data);
 
@@ -152,10 +155,117 @@ define(function(require, exports, module) {
 		}, 80);*/
 	}
 	
+	
+		/**
+	 * [validate 检验函数]
+	 * @param  {[HTML Element]} el [要校验的元素，不传递则全部检查]
+	 * @return {[Boolean]}    [description]
+	 */
+	function validate(el) {
+		var pass = true;
+		if (el) {
+			var elp = el.parents('.form-group:first'),
+				elts = el.siblings('span.error-ts');
+			if (el.data('int')) {
+				if ($.isNumeric(el.val())) {
+					elp.removeClass('has-error');
+				} else {
+					pass = false;
+					elp.addClass('has-error');
+				}
+			} else if(el.data('empty')){
+				if ('' != el.val().trim()) {
+					elp.removeClass('has-error');
+					elts.hide();
+				} else {
+					pass = false;
+					elp.addClass('has-error');
+					elts.show();
+				}
+				
+			} else if (el.data('url')&&'' != el.val().trim()) {
+				if (Utils.isUrl(el.val())) {
+					elp.removeClass('has-error');
+					elts.hide();
+				} else {
+					pass = false;
+					elp.addClass('has-error');
+					elts.show();
+				}
+			}
+
+		} else {
+			var obj = $("div#editBaseInfo").find("input");
+			pass = validBase(obj);
+			/*var obj=$('.bootbox').find("#gdPanel").find("input");//里面有很多input名字重名的在不同费率下
+			if($("input[name=fchargeTypeInt]:checked").val()=='2')
+			{
+				obj = $('.bootbox').find("#jtPanel").find("input");
+			}			
+			var pass1= validBase($('.bootbox').find("#baseInfoPanel").find("input"));//基本信息的valid判断
+			var pass2= validBase(obj);//各费率模块valid判断
+			pass = pass1 && pass2;*/
+		}		
+		//return accountCheck.isPass() && pass;
+		return pass;
+	}
+	
+	//判断有效的根基func
+	function validBase(boxObj){
+		var pass = true;
+		boxObj.each(function(i, v) {
+				var $el = $(this),
+					$p = $el.parents('.form-group:first'),
+					isInt = $el.data('int'),
+					isEmpty = $el.data('empty'),
+					isDate = $el.hasClass('datepicker');
+					isUrl = $el.data('url');
+					if(isUrl&&'' != $el.val().trim())//网址不为空时进行判断
+					{
+						if (Utils.isUrl($el.val())) {
+							$p.removeClass('has-error');
+							$el.siblings('span.error-ts').hide();
+						} else {
+							pass = false;
+							$p.addClass('has-error');
+							$el.siblings('span.error-ts').show();
+						}
+					}
+				if (isDate) {
+					if (Utils.isDate($el.val())) {
+						$p.removeClass('has-error');
+					} else {
+						pass = false;
+						$p.addClass('has-error');
+					}
+				}
+				if (isInt) {
+					if ($.isNumeric($el.val())) {
+						$p.removeClass('has-error');
+					} else {
+						pass = false;
+						$p.addClass('has-error');
+					}
+				}				
+				if (isEmpty) {
+					if ('' != $el.val().trim()) {
+						$p.removeClass('has-error');
+						$el.siblings('span.error-ts').hide();
+					} else {
+						pass = false;
+						$p.addClass('has-error');
+						$el.siblings('span.error-ts').show();
+					}
+				}
+			});
+		return pass;	
+	}
+
+	
 	//保存（新增、编辑）
 	function submitData(data)
 	{
-		
+		console.log('submit');
 	}
 	
 	function showDialog(opt) {
