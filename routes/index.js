@@ -26,6 +26,12 @@ router.all('/merchant-info', function(req, res, next){
 		req: req
 	})
 });
+router.all('/documet', function(req, res, next){
+	res.render('document', {
+		title: 'TCL支付运营平台',
+		req: req
+	})
+});
 router.get('/statement-upload', function(req, res, next){
     res.render('statement-upload', {
         title: 'TCL业务清算平台',

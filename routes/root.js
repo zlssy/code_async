@@ -22,7 +22,7 @@ router.use(function(req, res, next){
 //登陆页
 router.get('/login', function(req, res, next){
     res.render('login', {
-        title: '登录 - TCL业务清算平台'
+        title: '登录 - TCL支付运营平台'
     });
 });
 
@@ -42,7 +42,7 @@ router.post('/login', function(req, res, next){
         res.redirect(req.query.rurl || '/');
     }else{
         res.render('login', {
-            title: '登录 - TCL业务清算平台',
+            title: '登录 - TCL支付运营平台',
             errmsg: msg || '用户名或密码错误!',
             body: req.body
         });
