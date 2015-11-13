@@ -1,0 +1,28 @@
+{
+    "page": {  //分页信息
+        "index": 1,
+        "size": 15,
+        "total": 40
+    },
+    "response": 0,
+    "tclMerchantInfos": [
+        {
+            "businessAddr": "北京市牡丹园", //营业地址
+            "businessCertAddr": "北京市市政局", //营业执照注册地址
+            "businessCertCode": "100050", //营业执照注册号
+            "id": 10000000089, //ID
+            "industryType": 1, // 行业类别
+            "linkmail": "9999@qq.com", //联系邮箱
+            "linkphone": "18811124565", //联系电话
+            "loginId": "9999@qq.com", //登录邮箱
+            "loginPwd": "a8834572c3e9bf22db58fff2a082c6df", //登录密码
+            "merchantNum": "in_01000000", //账户编码
+            "merchantUrl": "www.baidu.com", //商户网址
+            "outMerchantId": "1447229279629000000000000000127",  //商户ID
+            "outMerchantName": "张三", //商户名称
+            "postalCode": "12412412", //邮政编码
+            "status": 0,  //状态 
+            "userType": 0 //账户类别
+        }
+    ]
+}
