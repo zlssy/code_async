@@ -1,13 +1,13 @@
 define(function(require, exports, module) {
 	var Box = require('boxBootstrap');
+	var D = window.D = require("dialog.ace");
 	var tool = require("why");
-	var rooturl = global_config.serverRoot.replace(/\/+$/,'');
 	var apis = {
-			update : rooturl + '/dataDictionary/addOrUpdate'
+			update : global_config.serverHost.replace(/\/+$/,'') + '/upPwd'
 		}
 	var errfun = function(e){
 		var msg = typeof e == 'object' ? e.statusText || e.msg || "未知错误!" : e;
-		Box.alert(msg);
+		D.err(msg);
 	}
 	$(function(){
 		//菜单自动定位
@@ -15,20 +15,23 @@ define(function(require, exports, module) {
 		$('#form1').on('submit',function(){
 			var form = $(this);
 			if($.trim(form.find('#form-field-1').val()) == ""){
-				Box.alert("原密码不能为空!")
+				D.err("原密码不能为空!")
 				return false;
 			}
 			if($.trim(form.find('#form-field-2').val()) == ""){
-				Box.alert("新密码不能为空!")
+				D.err("新密码不能为空!")
 				return false;
 			}
 			if(form.find('#form-field-2').val() !== form.find('#form-field-3').val()){
-				Box.alert("两次密码不一致!")
+				D.err("两次密码不一致!")
 				return false;
 			}
-			$.post(apis.update,form.serialize(),null,'json').then(function(){
-				if(data.code != 0){return $.Deferred().reject(data.message || data.msg || "未知错误!")}
-				Box.alert('操作成功!')
+			$.post(apis.update,form.serialize(),null,'json').then(function(data){
+				if(data.success){
+					D.suss('操作成功!');
+				}else{
+					return $.Deferred().reject(data.message || data.msg || "未知错误!")
+				}
 			}).then(null,errfun)
 			return false;
 		})
