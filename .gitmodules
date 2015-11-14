@@ -1,0 +1,3 @@
+[submodule "lib/passport-client"]
+	path = lib/passport-client
+	url = ssh://git@stash.lab.tclclouds.com:7999/wf/passport-client-node.git

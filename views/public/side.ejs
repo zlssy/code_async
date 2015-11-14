@@ -1,3 +1,24 @@
+<%
+	var passMunu = function(code){
+		return ~session.menuCodeList.indexOf(code);
+	}
+
+	var removeMenu = function(arr){
+		for(var i=0; i<arr.length;){
+			var menu = arr[i];
+			if(menu.code){
+				if(!passMunu(menu.code)){
+					arr.splice(i,1);
+					continue;
+				}
+			}
+			if(menu.child){
+				removeMenu(menu.child);
+			};
+			i++;
+		}
+	}
+%>
 <script type="text/javascript">
 	try{ace.settings.check('main-container' , 'fixed')}catch(e){}
 </script>
@@ -5,94 +26,104 @@
 	var url = req.url,
 		menus = [{
 			name:'商户信息管理',
+			code:'shxxgl',
 			child: [{
 				name: '商户信息',
+				code:'shxxgl-shxx',
 				url: '/merchant-info'
 			}]
 		},{
 			name:'商户审核管理',
+			code:'shshgl',
 			child: [{
 				name: '商户信息',
+				code: 'shshgl-shxx',
 				url: '/merchant-check'
 			}]
 		},{
 			name:'支付渠道管理',
+			code: 'zfqdgl',
 			child: [{
 				name: '支付渠道',
+				code: 'zfqdgl-zfqd',
 				url: '/payment-channel'
 			}]
 		},{
 			name:'订单查询',
+			code: 'ddgl',
 			child: [{
 				name: '订单',
+				code: 'ddgl-dd',
 				url: '/order'
 			}]
 		},{
 			name:'文档管理',
+			code: 'wdgl',
 			child: [{
 				name: '文档管理',
+				code: 'wdgl-wdgl',
 				url: '/documet'
 			}]
-		},{
-			name: '交易管理',
-			child: [{
-				name: '交易明细管理',
-				url: '/tradeRecord/list'
-			}]
-		},{
-			name: '清分管理',
-			child: [{
-				name: '清分单查询',
-				url: '/qingfen-list-query'
-			}]
-		},{
-			name: '结算管理',
-			child: [{
-				name: '结算卡',
-				url: '/settle-card'
-			},{
-				name: '结算规则',
-				url: '/settle-rule'
-			},{
-				name: '结算限额',
-				url: '/settle-limit'
-			},{
-				name: '结算单查询',
-				url: '/settle-query'
-			}]
-		},{
-			name: '费率管理',
-			child:[{
-				name: '费率',
-				url: '/rate'
-			}]
-		},{
-			name: '汇率管理',
-			child:[{
-				name: '汇率',
-				url: '/exchange-query'
-			}]
-		},{
-			name: '对账差错处理',
-			child:[{
-				name: '上传对账单',
-				url: '/statement-upload'
-			},{
-				name: '差错张处理',
-				url: '/statement-list'
-			}]
-		},{
-			name: '财务统计管理',
-			child:[{
-				name: '财务统计查询',
-				url: '/financial-statistics'
-			}]
-		},{
-			name: '数据字典管理',
-			child: [{
-				name: '数据字典',
-				url: '/dataDictionary/list'
-			}]
+		// },{
+		// 	name: '交易管理',
+		// 	child: [{
+		// 		name: '交易明细管理',
+		// 		url: '/tradeRecord/list'
+		// 	}]
+		// },{
+		// 	name: '清分管理',
+		// 	child: [{
+		// 		name: '清分单查询',
+		// 		url: '/qingfen-list-query'
+		// 	}]
+		// },{
+		// 	name: '结算管理',
+		// 	child: [{
+		// 		name: '结算卡',
+		// 		url: '/settle-card'
+		// 	},{
+		// 		name: '结算规则',
+		// 		url: '/settle-rule'
+		// 	},{
+		// 		name: '结算限额',
+		// 		url: '/settle-limit'
+		// 	},{
+		// 		name: '结算单查询',
+		// 		url: '/settle-query'
+		// 	}]
+		// },{
+		// 	name: '费率管理',
+		// 	child:[{
+		// 		name: '费率',
+		// 		url: '/rate'
+		// 	}]
+		// },{
+		// 	name: '汇率管理',
+		// 	child:[{
+		// 		name: '汇率',
+		// 		url: '/exchange-query'
+		// 	}]
+		// },{
+		// 	name: '对账差错处理',
+		// 	child:[{
+		// 		name: '上传对账单',
+		// 		url: '/statement-upload'
+		// 	},{
+		// 		name: '差错张处理',
+		// 		url: '/statement-list'
+		// 	}]
+		// },{
+		// 	name: '财务统计管理',
+		// 	child:[{
+		// 		name: '财务统计查询',
+		// 		url: '/financial-statistics'
+		// 	}]
+		// },{
+		// 	name: '数据字典管理',
+		// 	child: [{
+		// 		name: '数据字典',
+		// 		url: '/dataDictionary/list'
+		// 	}]
 		},{
 			name: '常用功能',
 			child: [{
@@ -103,7 +134,7 @@
 				url: '/logout'
 			}]
 		}], mm;
-
+	removeMenu(menus);
 	for(var i=0;i<menus.length;i++){
 		mm = menus[i];
 		mm.keys = mm.child.map(function(v){return v.url});

@@ -5,9 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var test_route = require('./routes/test');
+
 var _ = require('underscore');
 var local = require('./local');
 global.TCL = {
@@ -43,13 +41,8 @@ app.use(session({
 
 
 //路由开始 
-
 app.use('/', require('./routes/root')); //路径 权限等
-app.use('/', routes);
-app.use('/users', users);
-app.use('/test', test_route);
-//数据字功能路由
-app.use('/dataDictionary',require('./routes/dataDictionary'))
+app.use('/', require('./routes/index'));
 //系统功能
 app.use('/system',require('./routes/system'));
 //接口模拟

@@ -113,6 +113,6 @@ router.get('/', function(req, res, next) {
 	// 	title: 'TCL业务清算平台',
  //        req: req
 	// });
-	res.redirect('/tradeRecord/list');
+	res.redirect('/merchant-info');
 });
 module.exports = router;
