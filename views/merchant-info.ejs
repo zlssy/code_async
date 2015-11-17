@@ -104,8 +104,8 @@
 	</div>
 </div>
 <div id="mask" class="widget-box-overlay hide"></div>
-<script id="infoCheckTpl" type="text/html">
-<!-- zh info -->	
+<script id="infoViewTpl" type="text/html">
+<!-- zh info -->
 <div class="widget-box" for="view">	
 	<div class="widget-header"><h5 class="widget-title">账户信息</h5></div>
 	<div class="widget-body">
@@ -127,7 +127,87 @@
 		</div>
 	</div>
 </div>
-<div class="widget-box hide" for="addEdit"><!-- only for add -->	
+<!-- base info -->
+<div class="widget-box" id="viewBaseInfo" for="view">	
+	<div class="widget-header"><h5 class="widget-title">基本信息</h5></div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="row">
+				<div class="col-xs-12 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户名称:</label>
+					<div class="col-sm-8">
+						dddf
+					</div>
+				</div>
+				<div class="col-xs-12 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户网址:</label>
+					<div class="col-sm-8">
+						fafd
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>
+<!-- 支付产品 -->
+<div class="widget-box" id="viewPayPro" for="view">	
+	<div class="widget-header"><h5 class="widget-title">支付产品</h5></div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户名称:</label>
+					<div class="col-sm-8">
+						<input type="checkbox" checked="" disabled/>CYBSdrerer
+						<input type="checkbox" disabled/>CYBSdrerer
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>
+<!-- 代扣产品 -->
+<div class="widget-box" id="viewWithHoldPro" for="view">	
+	<div class="widget-header"><h5 class="widget-title">代扣产品</h5></div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 form-group">
+					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户名称:</label>
+					<div class="col-sm-8">
+						<input type="checkbox" checked="" disabled/>CYBSdrerer
+						<input type="checkbox" disabled/>CYBSdrerer
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>
+</script>
+<script id="infoAddEditTpl" type="text/html">
+<!-- zh info -->
+<div class="widget-box" for="edit" id="zhInfoEdit">	
+		<div class="widget-header"><h5 class="widget-title">账户信息</h5></div>
+		<div class="widget-body">
+			<div class="widget-main">
+				<div class="row">
+					<div class="col-xs-12 col-sm-6 form-group">
+						<label class="col-sm-3 control-label no-padding lm-5" for="shbh">账户类别:</label>
+						<div class="col-sm-8">
+							内部用户
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-6 form-group">
+						<label class="col-sm-3 control-label no-padding lm-5" for="shbh">行业类别:</label>
+						<div class="col-sm-8">
+							内部用户
+						</div>
+					</div>
+				</div>			
+			</div>
+		</div>
+</div>
+<div class="widget-box hide" for="add" id="zhInfoAdd"><!-- only for add -->	
 	<div class="widget-header"><h5 class="widget-title">账户信息</h5></div>
 	<div class="widget-body">
 		<div class="widget-main">
@@ -153,29 +233,8 @@
 	</div>
 </div>
 <!-- base info -->
-<div class="widget-box" id="viewBaseInfo" for="view">	
-	<div class="widget-header"><h5 class="widget-title">基本信息</h5><button mod="BaseInfo" type="button" class="btn btn-sm" for="modify">修改</button></div>
-	<div class="widget-body">
-		<div class="widget-main">
-			<div class="row">
-				<div class="col-xs-12 form-group">
-					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户名称:</label>
-					<div class="col-sm-8">
-						dddf
-					</div>
-				</div>
-				<div class="col-xs-12 form-group">
-					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户网址:</label>
-					<div class="col-sm-8">
-						fafd
-					</div>
-				</div>
-			</div>			
-		</div>
-	</div>
-</div>
-<div class="widget-box hide" id="editBaseInfo" for="addEdit">	
-	<div class="widget-header"><h5 class="widget-title">基本信息</h5><button  mod="BaseInfo" type="button" class="btn btn-sm btn-success" for="editSave">保存</button></div>
+<div class="widget-box" id="editBaseInfo" for="addEdit">	
+	<div class="widget-header"><h5 class="widget-title">基本信息</h5></div>
 	<div class="widget-body">
 		<div class="widget-main">
 			<div class="row">
@@ -239,24 +298,8 @@
 	</div>	
 </div>
 <!-- 支付产品 -->
-<div class="widget-box" id="viewPayPro" for="view">	
-	<div class="widget-header"><h5 class="widget-title">支付产品</h5><button mod="PayPro" type="button" class="btn btn-sm" for="modify">修改</button></div>
-	<div class="widget-body">
-		<div class="widget-main">
-			<div class="row">
-				<div class="col-xs-12 col-sm-6 form-group">
-					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户名称:</label>
-					<div class="col-sm-8">
-						<input type="checkbox" checked="" disabled/>CYBSdrerer
-						<input type="checkbox" disabled/>CYBSdrerer
-					</div>
-				</div>
-			</div>			
-		</div>
-	</div>
-</div>
 <div class="widget-box" id="editPayPro" for="addEdit">	
-	<div class="widget-header"><h5 class="widget-title">支付产品</h5><button mod="PayPro" type="button" class="btn btn-sm  btn-success"  for="editSave">保存</button></div>
+	<div class="widget-header"><h5 class="widget-title">支付产品</h5></div>
 	<div class="widget-body">
 		<div class="widget-main">
 			<div class="row">
@@ -272,24 +315,8 @@
 	</div>
 </div>
 <!-- 代扣产品 -->
-<div class="widget-box" id="viewWithHoldPro" for="view">	
-	<div class="widget-header"><h5 class="widget-title">代扣产品</h5><button mod="WithHoldPro" type="button" class="btn btn-sm" for="modify">修改</button></div>
-	<div class="widget-body">
-		<div class="widget-main">
-			<div class="row">
-				<div class="col-xs-12 col-sm-6 form-group">
-					<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户名称:</label>
-					<div class="col-sm-8">
-						<input type="checkbox" checked="" disabled/>CYBSdrerer
-						<input type="checkbox" disabled/>CYBSdrerer
-					</div>
-				</div>
-			</div>			
-		</div>
-	</div>
-</div>
 <div class="widget-box" id="editWithHoldPro" for="addEdit">	
-	<div class="widget-header"><h5 class="widget-title">代扣产品</h5><button mod="WithHoldPro" id="modify1" type="button" class="btn btn-sm  btn-success"  for="editSave">保存</button></div>
+	<div class="widget-header"><h5 class="widget-title">代扣产品</h5></div>
 	<div class="widget-body">
 		<div class="widget-main">
 			<div class="row">

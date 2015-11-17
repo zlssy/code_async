@@ -8,8 +8,8 @@ define(function(require, exports, module) {
 		listContainer = $('#grid_list'),
 		userParam = {},
 		dictionaryCollection = {},
-		infoCheckTpl = $('#infoCheckTpl').html(),
-		otherCheckTpl = $('#otherCheckTpl').html(),
+		infoViewTpl = $('#infoViewTpl').html(),
+		infoAddEditTpl = $('#infoAddEditTpl').html(),
 		doms = {			
 			effectiveDateStart: $('input[name="effectiveDateStart"]'),
 			effectiveDateEnd: $('input[name="effectiveDateEnd"]'),
@@ -73,19 +73,30 @@ define(function(require, exports, module) {
 			//编辑的全show，展示的全hide
 			addAndUpdate();
 		});
-		_grid.listen('editViewCallback', function(row) {
+		/*_grid.listen('editViewCallback', function(row) {
 			addAndUpdate(row);
+		});*/
+		_grid.listen('editCallback', function(row) {
+			addAndUpdate(row);
+		});
+		_grid.listen('viewCallback', function(row) {
+			view(row);
 		});
 		registerEvents();
 	}
 	
-	function addAndUpdate(data)
+	/*
+	 * cb 判断是否是查看
+	 * data ! 可以判断是否是新增
+	 */
+	function addAndUpdate(data,cb)
 	{
 		var opt = {},
-			id = '';
+			id = '',
+			tpl = ('function' == typeof cb) ? infoViewTpl:infoAddEditTpl;
+		opt.message = '<h4><b>' + (data ? ('function' == typeof cb ? '查看商户信息' : '修改商户信息') : '添加商户') + '</b></h4><hr class="no-margin">' + tpl;
 		
-		opt.message = '<h4><b>商户信息</b></h4><hr class="no-margin">' + infoCheckTpl;
-		if(!data)
+		if(!('function' == typeof cb))
 		{
 			opt.buttons = {			
 				"save": {
@@ -106,6 +117,12 @@ define(function(require, exports, module) {
 				
 		showDialog(opt);
 		if(!data)
+		{
+			$("div#zhInfoEdit").addClass('hide');
+			$("div#zhInfoAdd").removeClass('hide');
+		}
+		
+		/*if(!data)
 		{
 			$("div[for=view]").addClass('hide');
 			$("div[for=addEdit]").removeClass('hide');
@@ -133,7 +150,7 @@ define(function(require, exports, module) {
 			if (!submitData(data)) {
 					return false;
 				}
-		})
+		})*/
 		$('div#editBaseInfo input').on('change', function(e) {
 			validate($(this));
 		});
@@ -336,7 +353,14 @@ define(function(require, exports, module) {
 			});
 		return pass;	
 	}
-
+	/**
+	 * [view 查看详情]
+	 * @param  {[Array]} row [行信息]
+	 * @return {[type]}     [description]
+	 */
+	function view(row) {
+		addAndUpdate(row, function() {});
+	}
 	
 	//保存（新增、编辑）
 	function submitData(data)
