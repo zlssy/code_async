@@ -38,42 +38,23 @@ define(function(require, exports, module) {
 			key: 'id',//记得这里要换成现在接口的参数
 			checkbox: false,
 			cols: [{
-				name: '账户名',
+				name: '交易日期',
 				index: 'accountName'
 			}, {
 				name: '商户名称',
 				index: 'merchantName'
 			}, {
-				name: '事件',
+				name: 'onetouch收银台',
 				index: 'action',
 				format: function(v){
 				         return '[' + v + ']';
 				    }
 			}, {
-				name: '提交审核时间',
+				name: '支付请求',
 				index: 'submitTime'
 			}, {
-				name: '完成审核时间',
+				name: '成功',
 				index: 'finishTime'
-			}, {
-				name: '状态',
-				index: 'status',
-				format: function(v){
-				         return '[' + v + ']';
-				    }
-			}, {
-				name: '说明',
-				index: ''
-			}, {
-				name: '操作',
-				index: 'status',
-				format: function(v) {
-					/*if(v==2)
-					{
-						
-					}*/
-					return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-edit blue" title="审核"></span></div>';
-				}
 			}],
 			url: getUrl(),
 			pagesize: 10,

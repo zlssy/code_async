@@ -32,6 +32,12 @@ router.all('/documet', function(req, res, next){
 		req: req
 	})
 });
+router.all('/payment-statistics', function(req, res, next){
+	res.render('payment-statistics', {
+		title: 'TCL支付运营平台',
+		req: req
+	})
+});
 router.get('/statement-upload', function(req, res, next){
     res.render('statement-upload', {
         title: 'TCL业务清算平台',

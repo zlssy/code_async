@@ -56,7 +56,7 @@ define(function(require, exports, module) {
 			}, {
 				name: '操作',
 				format: function(v) {
-					return '<div class="ui-pg-div align-center"><a class="blue add-edit-font" href="javascript:">查看/修改</a><span class="ui-icon ace-icon fa fa-trash-o blue" title="删除"></span></div>';
+					return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-pencil blue" title="编辑"></span><span class="ui-icon ace-icon fa fa-search-plus blue" title="查看"></span><span class="ui-icon ace-icon fa fa-trash-o blue" title="删除"></span></div>';
 				}
 			}],
 			url: getUrl(),

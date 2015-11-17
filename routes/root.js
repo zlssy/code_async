@@ -19,7 +19,8 @@ var pathConfig = [
     ['/merchant-check','shshgl-shxx'],
     ['/payment-channel','zfqdgl-zfqd'],
     ['/order','ddgl-dd'],
-    ['/documet','wdgl-wdgl']
+    ['/documet','wdgl-wdgl'],
+    ['/payment-statistics','zfjd-zfjd']
     /*
     ["/abc/list,","sjzdgl-sjzd"],
     ["/abc/a,abc/b","sjzdgl-sjzd"],
