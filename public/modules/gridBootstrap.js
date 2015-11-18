@@ -235,7 +235,6 @@ define(function(require, exports, module) {
 		$.ajax({
 			url: self.getUrl(),
 			success: function(json) {
-				console.log(json);
 				if ('0' == json[self.ajaxCompleteKey]) {
 					render.call(self, getMapData(json, self.jsonReader.root));
 					self.jsonReader.page && (self.page = getMapData(json, self.jsonReader.page));

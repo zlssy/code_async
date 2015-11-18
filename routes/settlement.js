@@ -9,7 +9,7 @@ var _ = require('underscore');
 var router = express.Router();
 
 //代理
-var daili = true; //是否启用代理
+var daili = false; //是否启用代理
 var daili_url = setting.apiUrl || "http://testtclpay.tclclouds.com/settlement";
 var userid = 12345;
 
@@ -237,8 +237,9 @@ var fileapi = {
     '/exchangeRate/list':'exchange-list.json',
     '/settleLimit/list': 'settle-limit-list.json',
     '/queryWrongRecord': 'queryWrongRecord.json',
-    '/reconciliation': 'reconciliation.json',
-    '/settleLimit/history': 'settle-card-history.json'
+    '/queryBusinessTypes': 't1.json',
+    '/queryAccountTypes': 't2.json',
+    '/queryMerchantInfo':'settlement-clearing-list.json'
 };
 
 if (!daili) {
