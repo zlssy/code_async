@@ -192,7 +192,7 @@ define(function(require, exports, module) {
 					col = this.cols[j];
 					colfn = col.format;
 					colval = d[col.index];
-					xsscheck = !!colval;
+					xsscheck = col.closeXss || !!colval;
 					colval = 'function' === typeof colfn ? colfn(xsscheck ? colval : d[this.key], colval) : colval;
 					colval = colval || '';
 					html.push('<td role="gridcell" title="' + (xsscheck ? Xss.inDoubleQuotedAttr(colval) : '') + '" aria-describedby="' + this.id + '_' + col.index + '">' + (xsscheck ? Xss.inHTMLData(colval) : colval) + '</td>');
