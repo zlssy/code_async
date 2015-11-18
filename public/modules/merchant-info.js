@@ -267,21 +267,22 @@ define(function(require, exports, module) {
 	 * @param  {[HTML Element]} el [要校验的元素，不传递则全部检查]
 	 * @return {[Boolean]}    [description]
 	 */
+/**
+	 * [validate 检验函数]
+	 * @param  {[HTML Element]} el [要校验的元素，不传递则全部检查]
+	 * @return {[Boolean]}    [description]
+	 */
 	function validate(el) {
 		var pass = true;
 		if (el) {
 			var elp = el.parents('.form-group:first'),
 				elts = el.siblings('span.error-ts');
-<<<<<<< HEAD
-			if (el.data('int') || (el.data('code') && '' != el.val().trim())) {
-				if ($.isNumeric(el.val())) {
-
+			if (el.data('code')) {
+				if(el.val().trim()=='')
+				{
 					elp.removeClass('has-error');
 					elts.hide();
 				}
-<<<<<<< HEAD
-			} else if (el.data('empty')) {
-=======
 				else{
 					if ($.isNumeric(el.val())) {
 						elp.removeClass('has-error');
@@ -294,7 +295,6 @@ define(function(require, exports, module) {
 				}
 				
 			} else if(el.data('empty')){
->>>>>>> 504e3318febe788d4c79c0a3f0767bd9ca7c6dd9
 				if ('' != el.val().trim()) {
 					elp.removeClass('has-error');
 					elts.hide();
@@ -303,23 +303,13 @@ define(function(require, exports, module) {
 					elp.addClass('has-error');
 					elts.show();
 				}
-<<<<<<< HEAD
-
-			} else if (el.data('url') && '' != el.val().trim()) {
-				if (Utils.isUrl(el.val())) {
-=======
 				
 			} else if (el.data('url')) {
 				if(el.val().trim()=='')
 				{
->>>>>>> 504e3318febe788d4c79c0a3f0767bd9ca7c6dd9
 					elp.removeClass('has-error');
 					elts.hide();
 				}
-<<<<<<< HEAD
-			} else if (el.data('regist')) {
-				if (el.val().trim() == '') {
-=======
 				else
 				{
 					if (Utils.isUrl(el.val())) {
@@ -334,46 +324,39 @@ define(function(require, exports, module) {
 				
 			} else if(el.data('regist')){
 				if(el.val().trim()=='') {
->>>>>>> 504e3318febe788d4c79c0a3f0767bd9ca7c6dd9
 					pass = false;
-					elp.addClass('has-error');
-					elts.show();
+					elp.addClass('has-error');elts.show();
 					elts.html('请输入营业执照注册号！');
-				} else if (!(/^[A-Za-z0-9]*$/.test(el.val().trim()))) {
+				} else if (!(/^[A-Za-z0-9]*$/.test(el.val().trim()))){
 					pass = false;
-					elp.addClass('has-error');
-					elts.show();
+					elp.addClass('has-error');elts.show();
 					elts.html('请输入数字或字母！');
 				} else {
 					elp.removeClass('has-error');
 					elts.hide();
 				}
-
-			} else if (el.data('phone')) {
-				if (el.val().trim() == '') {
+				
+			} else if(el.data('phone')){
+				if(el.val().trim()=='') {
 					pass = false;
-					elp.addClass('has-error');
-					elts.show();
+					elp.addClass('has-error');elts.show();
 					elts.html('请输入联系电话！');
-				} else if (!$.isNumeric(el.val())) {
+				} else if (!$.isNumeric(el.val())){
 					pass = false;
-					elp.addClass('has-error');
-					elts.show();
+					elp.addClass('has-error');elts.show();
 					elts.html('请输入数字！');
 				} else {
 					elp.removeClass('has-error');
 					elts.hide();
 				}
-			} else if (el.data('email')) {
-				if (el.val().trim() == '') {
+			} else if(el.data('email')){
+				if(el.val().trim()=='') {
 					pass = false;
-					elp.addClass('has-error');
-					elts.show();
+					elp.addClass('has-error');elts.show();
 					elts.html('请输入联系邮箱！');
-				} else if (!(/^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test(el.val().trim()))) {
+				} else if (!( /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test(el.val().trim()))){
 					pass = false;
-					elp.addClass('has-error');
-					elts.show();
+					elp.addClass('has-error');elts.show();
 					elts.html('邮箱格式不正确，请重新输入！');
 				} else {
 					elp.removeClass('has-error');
@@ -386,41 +369,10 @@ define(function(require, exports, module) {
 		}
 		return pass;
 	}
-
 	//判断有效的根基func
-	function validBase(boxObj) {
+	function validBase(boxObj){
 		var pass = true;
 		boxObj.each(function(i, v) {
-<<<<<<< HEAD
-			var $el = $(this),
-				$p = $el.parents('.form-group:first'),
-				$ts = $el.siblings('span.error-ts'),
-				isInt = $el.data('int'),
-				isEmpty = $el.data('empty'),
-				isUrl = $el.data('url'),
-				isCode = $el.data('code'),
-				isRegist = $el.data('regist'),
-				isPhone = $el.data('phone'),
-				isEmail = $el.data('email');
-			if (isInt || (isCode && '' != $el.val().trim())) {
-				if ($.isNumeric($el.val())) {
-					$p.removeClass('has-error');
-					$ts.hide();
-				} else {
-					pass = false;
-					$p.addClass('has-error');
-					$ts.show();
-				}
-			}
-			if (isEmpty) {
-				if ('' != $el.val().trim()) {
-					$p.removeClass('has-error');
-					$ts.hide();
-				} else {
-					pass = false;
-					$p.addClass('has-error');
-					$ts.show();
-=======
 				var $el = $(this),
 					$p = $el.parents('.form-group:first'),
 					$ts = $el.siblings('span.error-ts'),
@@ -486,71 +438,37 @@ define(function(require, exports, module) {
 						$ts.hide();
 					}
 				
->>>>>>> 504e3318febe788d4c79c0a3f0767bd9ca7c6dd9
 				}
-			}
-			if (isUrl && '' != $el.val().trim()) //网址不为空时进行判断
-			{
-				if (Utils.isUrl($el.val())) {
-					$p.removeClass('has-error');
-					$ts.hide();
-				} else {
-					pass = false;
-					$p.addClass('has-error');
-					$ts.show();
+				if(isPhone){
+					if($el.val().trim()=='') {
+						pass = false;
+						$p.addClass('has-error');$ts.show();
+						$ts.html('请输入联系电话！');
+					} else if (!$.isNumeric($el.val())){
+						pass = false;
+						$p.addClass('has-error');$ts.show();
+						$ts.html('请输入数字！');
+					} else {
+						$p.removeClass('has-error');
+						$ts.hide();
+					}
 				}
-			}
-			if (isRegist) {
-				if ($el.val().trim() == '') {
-					pass = false;
-					$p.addClass('has-error');
-					$ts.show();
-					$ts.html('请输入营业执照注册号！');
-				} else if (!(/^[A-Za-z0-9]*$/.test($el.val().trim()))) {
-					pass = false;
-					$p.addClass('has-error');
-					elts.show();
-					$ts.html('请输入数字或字母！');
-				} else {
-					$p.removeClass('has-error');
-					$ts.hide();
+				if(isEmail){
+					if($el.val().trim()=='') {
+						pass = false;
+						$p.addClass('has-error');$ts.show();
+						$ts.html('请输入联系邮箱！');
+					} else if (!( /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test($el.val().trim()))){
+						pass = false;
+						$p.addClass('has-error');$ts.show();
+						$ts.html('邮箱格式不正确，请重新输入！');
+					} else {
+						$p.removeClass('has-error');
+						$ts.hide();
+					}
 				}
-
-			}
-			if (isPhone) {
-				if ($el.val().trim() == '') {
-					pass = false;
-					$p.addClass('has-error');
-					$ts.show();
-					$ts.html('请输入联系电话！');
-				} else if (!$.isNumeric($el.val())) {
-					pass = false;
-					$p.addClass('has-error');
-					$ts.show();
-					$ts.html('请输入数字！');
-				} else {
-					$p.removeClass('has-error');
-					$ts.hide();
-				}
-			}
-			if (isEmail) {
-				if ($el.val().trim() == '') {
-					pass = false;
-					$p.addClass('has-error');
-					$ts.show();
-					$ts.html('请输入联系邮箱！');
-				} else if (!(/^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test($el.val().trim()))) {
-					pass = false;
-					$p.addClass('has-error');
-					$ts.show();
-					$ts.html('邮箱格式不正确，请重新输入！');
-				} else {
-					$p.removeClass('has-error');
-					$ts.hide();
-				}
-			}
-		});
-		return pass;
+			});
+		return pass;	
 	}
 	/**
 	 * [view 查看详情]
