@@ -192,10 +192,10 @@ define(function(require, exports, module) {
 					col = this.cols[j];
 					colfn = col.format;
 					colval = d[col.index];
-					xsscheck = col.closeXss || !!colval;
+					xsscheck = !!colval;
 					colval = 'function' === typeof colfn ? colfn(xsscheck ? colval : d[this.key], colval) : colval;
 					colval = colval || '';
-					html.push('<td role="gridcell" title="' + (xsscheck ? Xss.inDoubleQuotedAttr(colval) : '') + '" aria-describedby="' + this.id + '_' + col.index + '">' + (xsscheck ? Xss.inHTMLData(colval) : colval) + '</td>');
+					html.push('<td role="gridcell" title="' + (xsscheck ? Xss.inDoubleQuotedAttr(colval) : '') + '" aria-describedby="' + this.id + '_' + col.index + '">' + (col.closeXss ? colval : xsscheck ? Xss.inHTMLData(colval) : colval) + '</td>');
 				}
 				html.push('</tr>');
 			};
@@ -319,9 +319,9 @@ define(function(require, exports, module) {
 						break;
 					}
 				}
-			});			
+			});
 		}
-		
+
 		return ret;
 	}
 
@@ -417,7 +417,7 @@ define(function(require, exports, module) {
 				}
 			}
 			if (cls.indexOf('fa-edit') > -1) {
-				selectedRow = self.getSelectedRow();				
+				selectedRow = self.getSelectedRow();
 				if (selectedRow.length) {
 					self.trigger('checkCallback', selectedRow, self);
 				} else {
@@ -426,7 +426,7 @@ define(function(require, exports, module) {
 				}
 			}
 			if (cls.indexOf('add-edit-font') > -1) {
-				selectedRow = self.getSelectedRow();				
+				selectedRow = self.getSelectedRow();
 				if (selectedRow.length) {
 					self.trigger('editViewCallback', selectedRow, self);
 				} else {
