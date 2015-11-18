@@ -45,6 +45,9 @@ define(function(require, exports, module) {
 			}, {
 				name: '商户名称',
 				index: 'merchantName'
+			},{
+				name: '用户编号',
+				index: ''
 			}, {
 				name: '订单金额',
 				index: 'orderAmount'
@@ -171,16 +174,12 @@ define(function(require, exports, module) {
 				break;
 			}
 		}
-		if (!newchange) {
-			Box.alert('您的查询条件并没有做任何修改.');
-			return false;
-		}
 		userParam = newParam;
 		return true;
 	}
 
 	function getUrl() {
-		//return global_config.serverRoot + '/clearingCharge/list?userId=&' + Utils.object2param(userParam);
+		return global_config.serverRoot + '/payOrderSearch?userId=&' + Utils.object2param(userParam);
 	}
 
 	return {
