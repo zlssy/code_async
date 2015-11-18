@@ -13,6 +13,7 @@ define(function(require, exports, module) {
 			pagesize: 20,
 			page: 1,
 			ajaxCompleteKey: 'code',
+			pageName: 'pageNo',
 			actions: {
 				add: false,
 				del: false,
@@ -517,7 +518,7 @@ define(function(require, exports, module) {
 
 		this.controls.firstPageBtn.off().on('click', function(e) {
 			if (!$(this).hasClass('ui-state-disabled')) {
-				self.setUrl(Utils.url.replaceParam('pageNo', 1, self.getUrl(), true));
+				self.setUrl(Utils.url.replaceParam(self.pageName, 1, self.getUrl(), true));
 				loadData.call(self);
 			}
 		});
@@ -525,7 +526,7 @@ define(function(require, exports, module) {
 			if (!$(this).hasClass('ui-state-disabled')) {
 				var page = self.page - 1;
 				if (page > 0 && page < self.totalPage) {
-					self.setUrl(Utils.url.replaceParam('pageNo', page, self.getUrl(), true));
+					self.setUrl(Utils.url.replaceParam(self.pageName, page, self.getUrl(), true));
 					loadData.call(self);
 				}
 			}
@@ -534,14 +535,14 @@ define(function(require, exports, module) {
 			if (!$(this).hasClass('ui-state-disabled')) {
 				var page = (self.page - 0) + 1;
 				if (page > 0 && page <= self.totalPage) {
-					self.setUrl(Utils.url.replaceParam('pageNo', page, self.getUrl(), true));
+					self.setUrl(Utils.url.replaceParam(self.pageName, page, self.getUrl(), true));
 					loadData.call(self);
 				}
 			}
 		});
 		this.controls.lastPageBtn.off().on('click', function(e) {
 			if (!$(this).hasClass('ui-state-disabled')) {
-				self.setUrl(Utils.url.replaceParam('pageNo', self.totalPage, self.getUrl(), true));
+				self.setUrl(Utils.url.replaceParam(self.pageName, self.totalPage, self.getUrl(), true));
 				loadData.call(self);
 			}
 		});
@@ -549,7 +550,7 @@ define(function(require, exports, module) {
 			var code = e.keyCode;
 			if (13 == code) {
 				var page = $(this).val() - 0 || 1;
-				self.setUrl(Utils.url.replaceParam('pageNo', page, self.getUrl(), true));
+				self.setUrl(Utils.url.replaceParam(self.pageName, page, self.getUrl(), true));
 				loadData.call(self);
 			}
 		});
