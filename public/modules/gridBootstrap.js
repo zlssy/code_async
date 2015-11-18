@@ -12,6 +12,7 @@ define(function(require, exports, module) {
 			checkbox: true,
 			pagesize: 20,
 			page: 1,
+			ajaxCompleteKey: 'code',
 			actions: {
 				add: false,
 				del: false,
@@ -193,6 +194,7 @@ define(function(require, exports, module) {
 					colval = d[col.index];
 					xsscheck = !!colval;
 					colval = 'function' === typeof colfn ? colfn(xsscheck ? colval : d[this.key], colval) : colval;
+					colval = colval || '';
 					html.push('<td role="gridcell" title="' + (xsscheck ? Xss.inDoubleQuotedAttr(colval) : '') + '" aria-describedby="' + this.id + '_' + col.index + '">' + (xsscheck ? Xss.inHTMLData(colval) : colval) + '</td>');
 				}
 				html.push('</tr>');
@@ -234,7 +236,7 @@ define(function(require, exports, module) {
 			url: self.getUrl(),
 			success: function(json) {
 				console.log(json);
-				if ('0' == json.code) {
+				if ('0' == json[self.ajaxCompleteKey]) {
 					render.call(self, getMapData(json, self.jsonReader.root));
 					self.jsonReader.page && (self.page = getMapData(json, self.jsonReader.page));
 					self.jsonReader.records && (self.total = getMapData(json, self.jsonReader.records));
@@ -244,7 +246,7 @@ define(function(require, exports, module) {
 						self.totalPage = 0;
 					}
 					self.updatePager();
-				} else if (-100 == json.code) {
+				} else if (-100 == json[self.ajaxCompleteKey]) {
 					location.reload();
 				} else {
 					self.page = 1;

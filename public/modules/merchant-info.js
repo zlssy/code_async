@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 	var Utils = require('utils'),
 		Grid = require('gridBootstrap'),
 		Xss = require('xss'),
-		accountCheck = require('checkAccount'),		
+		accountCheck = require('checkAccount'),
 		Box = require('boxBootstrap'),
 		content = $('#content'),
 		listContainer = $('#grid_list'),
@@ -10,7 +10,7 @@ define(function(require, exports, module) {
 		dictionaryCollection = {},
 		infoViewTpl = $('#infoViewTpl').html(),
 		infoAddEditTpl = $('#infoAddEditTpl').html(),
-		doms = {			
+		doms = {
 			effectiveDateStart: $('input[name="effectiveDateStart"]'),
 			effectiveDateEnd: $('input[name="effectiveDateEnd"]'),
 			expirationDateStart: $('input[name="expirationDateStart"]'),
@@ -33,26 +33,27 @@ define(function(require, exports, module) {
 
 	function loadData() {
 		_grid = Grid.create({
-			key: 'id',//记得这里要换成现在接口的参数
+			key: 'id', //记得这里要换成现在接口的参数
+			ajaxCompleteKey: 'response', // 表示ajax请求状态的字段
 			checkbox: false,
 			cols: [{
 				name: '账户编号',
-				index: 'accountName'
+				index: 'merchantNum'
 			}, {
 				name: '账户名',
-				index: 'merchantName'
+				index: 'loginId'
 			}, {
 				name: '商户名称',
-				index: 'action',
-				format: function(v){
-				         return '[' + v + ']';
-				    }
+				index: 'outMerchantName',
+				format: function(v) {
+					return '[' + v + ']';
+				}
 			}, {
 				name: '商户ID',
-				index: 'submitTime'
+				index: 'outMerchantId'
 			}, {
 				name: '联系电话',
-				index: 'finishTime'
+				index: 'linkphone'
 			}, {
 				name: '操作',
 				format: function(v) {
@@ -60,14 +61,14 @@ define(function(require, exports, module) {
 				}
 			}],
 			url: getUrl(),
-			pagesize: 10,
+			pagesize: 15,
 			jsonReader: {
-				root: 'data.pageData',
-				page: 'data.pageNo',
-				records: 'data.totalCnt'
+				root: 'tclMerchantInfos',
+				page: 'page.index',
+				records: 'page.total'
 			}
 		});
-		listContainer.html(_grid.getHtml());		
+		listContainer.html(_grid.getHtml());
 		_grid.load();
 		_grid.listen('addCallback', function() {
 			//编辑的全show，展示的全hide
@@ -84,23 +85,21 @@ define(function(require, exports, module) {
 		});
 		registerEvents();
 	}
-	
+
 	/*
 	 * cb 判断是否是查看
 	 * data ! 可以判断是否是新增
 	 */
-	function addAndUpdate(data,cb)
-	{
+	function addAndUpdate(data, cb) {
 		var opt = {},
 			id = '',
-			tpl = ('function' == typeof cb) ? infoViewTpl:infoAddEditTpl;
+			tpl = ('function' == typeof cb) ? infoViewTpl : infoAddEditTpl;
 		opt.message = '<h4><b>' + (data ? ('function' == typeof cb ? '查看商户信息' : '修改商户信息') : '添加商户') + '</b></h4><hr class="no-margin">' + tpl;
-		
-		if(!('function' == typeof cb))
-		{
-			opt.buttons = {			
+
+		if (!('function' == typeof cb)) {
+			opt.buttons = {
 				"save": {
-					label: '保存',//'<i class="ace-icon fa"></i>通过',
+					label: '保存', //'<i class="ace-icon fa"></i>通过',
 					className: 'btn-sm btn-success',
 					callback: function() {
 						if (!validate()) {
@@ -114,14 +113,13 @@ define(function(require, exports, module) {
 				}
 			};
 		}
-				
+
 		showDialog(opt);
-		if(!data)
-		{
+		if (!data) {
 			$("div#zhInfoEdit").addClass('hide');
 			$("div#zhInfoAdd").removeClass('hide');
 		}
-		
+
 		/*if(!data)
 		{
 			$("div[for=view]").addClass('hide');
@@ -157,7 +155,7 @@ define(function(require, exports, module) {
 		$('div#editBaseInfo input').on('blur', function(e) {
 			validate($(this));
 		});
-		
+
 		/*data && fillData(data);
 
 		$('.bootbox input, .bootbox select').on('change', function(e) {
@@ -174,8 +172,8 @@ define(function(require, exports, module) {
 			shbh.focus();
 		}, 80);*/
 	}
-	
-	
+
+
 	/**
 	 * [validate 检验函数]
 	 * @param  {[HTML Element]} el [要校验的元素，不传递则全部检查]
@@ -186,7 +184,7 @@ define(function(require, exports, module) {
 		if (el) {
 			var elp = el.parents('.form-group:first'),
 				elts = el.siblings('span.error-ts');
-			if (el.data('int')||(el.data('code')&&'' != el.val().trim())) {
+			if (el.data('int') || (el.data('code') && '' != el.val().trim())) {
 				if ($.isNumeric(el.val())) {
 					elp.removeClass('has-error');
 					elts.hide();
@@ -195,7 +193,7 @@ define(function(require, exports, module) {
 					elp.addClass('has-error');
 					elts.show();
 				}
-			} else if(el.data('empty')){
+			} else if (el.data('empty')) {
 				if ('' != el.val().trim()) {
 					elp.removeClass('has-error');
 					elts.hide();
@@ -204,8 +202,8 @@ define(function(require, exports, module) {
 					elp.addClass('has-error');
 					elts.show();
 				}
-				
-			} else if (el.data('url')&&'' != el.val().trim()) {
+
+			} else if (el.data('url') && '' != el.val().trim()) {
 				if (Utils.isUrl(el.val())) {
 					elp.removeClass('has-error');
 					elts.hide();
@@ -214,41 +212,47 @@ define(function(require, exports, module) {
 					elp.addClass('has-error');
 					elts.show();
 				}
-			} else if(el.data('regist')){
-				if(el.val().trim()=='') {
+			} else if (el.data('regist')) {
+				if (el.val().trim() == '') {
 					pass = false;
-					elp.addClass('has-error');elts.show();
+					elp.addClass('has-error');
+					elts.show();
 					elts.html('请输入营业执照注册号！');
-				} else if (!(/^[A-Za-z0-9]*$/.test(el.val().trim()))){
+				} else if (!(/^[A-Za-z0-9]*$/.test(el.val().trim()))) {
 					pass = false;
-					elp.addClass('has-error');elts.show();
+					elp.addClass('has-error');
+					elts.show();
 					elts.html('请输入数字或字母！');
 				} else {
 					elp.removeClass('has-error');
 					elts.hide();
 				}
-				
-			} else if(el.data('phone')){
-				if(el.val().trim()=='') {
+
+			} else if (el.data('phone')) {
+				if (el.val().trim() == '') {
 					pass = false;
-					elp.addClass('has-error');elts.show();
+					elp.addClass('has-error');
+					elts.show();
 					elts.html('请输入联系电话！');
-				} else if (!$.isNumeric(el.val())){
+				} else if (!$.isNumeric(el.val())) {
 					pass = false;
-					elp.addClass('has-error');elts.show();
+					elp.addClass('has-error');
+					elts.show();
 					elts.html('请输入数字！');
 				} else {
 					elp.removeClass('has-error');
 					elts.hide();
 				}
-			} else if(el.data('email')){
-				if(el.val().trim()=='') {
+			} else if (el.data('email')) {
+				if (el.val().trim() == '') {
 					pass = false;
-					elp.addClass('has-error');elts.show();
+					elp.addClass('has-error');
+					elts.show();
 					elts.html('请输入联系邮箱！');
-				} else if (!( /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test(el.val().trim()))){
+				} else if (!(/^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test(el.val().trim()))) {
 					pass = false;
-					elp.addClass('has-error');elts.show();
+					elp.addClass('has-error');
+					elts.show();
 					elts.html('邮箱格式不正确，请重新输入！');
 				} else {
 					elp.removeClass('has-error');
@@ -261,97 +265,103 @@ define(function(require, exports, module) {
 		}
 		return pass;
 	}
-	
+
 	//判断有效的根基func
-	function validBase(boxObj){
+	function validBase(boxObj) {
 		var pass = true;
 		boxObj.each(function(i, v) {
-				var $el = $(this),
-					$p = $el.parents('.form-group:first'),
-					$ts = $el.siblings('span.error-ts'),
-					isInt = $el.data('int'),
-					isEmpty = $el.data('empty'),
-					isUrl = $el.data('url'),
-					isCode = $el.data('code'),
-					isRegist = $el.data('regist'),
-					isPhone = $el.data('phone'),
-					isEmail = $el.data('email');
-				if (isInt||(isCode&&'' != $el.val().trim())) {
-					if ($.isNumeric($el.val())) {
-						$p.removeClass('has-error');
-						$ts.hide();
-					} else {
-						pass = false;
-						$p.addClass('has-error');
-						$ts.show();
-					}
-				}				
-				if (isEmpty) {
-					if ('' != $el.val().trim()) {
-						$p.removeClass('has-error');
-						$ts.hide();
-					} else {
-						pass = false;
-						$p.addClass('has-error');
-						$ts.show();
-					}
+			var $el = $(this),
+				$p = $el.parents('.form-group:first'),
+				$ts = $el.siblings('span.error-ts'),
+				isInt = $el.data('int'),
+				isEmpty = $el.data('empty'),
+				isUrl = $el.data('url'),
+				isCode = $el.data('code'),
+				isRegist = $el.data('regist'),
+				isPhone = $el.data('phone'),
+				isEmail = $el.data('email');
+			if (isInt || (isCode && '' != $el.val().trim())) {
+				if ($.isNumeric($el.val())) {
+					$p.removeClass('has-error');
+					$ts.hide();
+				} else {
+					pass = false;
+					$p.addClass('has-error');
+					$ts.show();
 				}
-				if(isUrl&&'' != $el.val().trim())//网址不为空时进行判断
-				{
-					if (Utils.isUrl($el.val())) {
-						$p.removeClass('has-error');
-						$ts.hide();
-					} else {
-						pass = false;
-						$p.addClass('has-error');
-						$ts.show();
-					}
-				}	
-				if(isRegist){
-					if($el.val().trim()=='') {
-						pass = false;
-						$p.addClass('has-error');$ts.show();
-						$ts.html('请输入营业执照注册号！');
-					} else if (!(/^[A-Za-z0-9]*$/.test($el.val().trim()))){
-						pass = false;
-						$p.addClass('has-error');elts.show();
-						$ts.html('请输入数字或字母！');
-					} else {
-						$p.removeClass('has-error');
-						$ts.hide();
-					}
-				
+			}
+			if (isEmpty) {
+				if ('' != $el.val().trim()) {
+					$p.removeClass('has-error');
+					$ts.hide();
+				} else {
+					pass = false;
+					$p.addClass('has-error');
+					$ts.show();
 				}
-				if(isPhone){
-					if($el.val().trim()=='') {
-						pass = false;
-						$p.addClass('has-error');$ts.show();
-						$ts.html('请输入联系电话！');
-					} else if (!$.isNumeric($el.val())){
-						pass = false;
-						$p.addClass('has-error');$ts.show();
-						$ts.html('请输入数字！');
-					} else {
-						$p.removeClass('has-error');
-						$ts.hide();
-					}
+			}
+			if (isUrl && '' != $el.val().trim()) //网址不为空时进行判断
+			{
+				if (Utils.isUrl($el.val())) {
+					$p.removeClass('has-error');
+					$ts.hide();
+				} else {
+					pass = false;
+					$p.addClass('has-error');
+					$ts.show();
 				}
-				if(isEmail){
-					if($el.val().trim()=='') {
-						pass = false;
-						$p.addClass('has-error');$ts.show();
-						$ts.html('请输入联系邮箱！');
-					} else if (!( /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test($el.val().trim()))){
-						pass = false;
-						$p.addClass('has-error');$ts.show();
-						$ts.html('邮箱格式不正确，请重新输入！');
-					} else {
-						$p.removeClass('has-error');
-						$ts.hide();
-					}
+			}
+			if (isRegist) {
+				if ($el.val().trim() == '') {
+					pass = false;
+					$p.addClass('has-error');
+					$ts.show();
+					$ts.html('请输入营业执照注册号！');
+				} else if (!(/^[A-Za-z0-9]*$/.test($el.val().trim()))) {
+					pass = false;
+					$p.addClass('has-error');
+					elts.show();
+					$ts.html('请输入数字或字母！');
+				} else {
+					$p.removeClass('has-error');
+					$ts.hide();
 				}
-			});
-		return pass;	
+
+			}
+			if (isPhone) {
+				if ($el.val().trim() == '') {
+					pass = false;
+					$p.addClass('has-error');
+					$ts.show();
+					$ts.html('请输入联系电话！');
+				} else if (!$.isNumeric($el.val())) {
+					pass = false;
+					$p.addClass('has-error');
+					$ts.show();
+					$ts.html('请输入数字！');
+				} else {
+					$p.removeClass('has-error');
+					$ts.hide();
+				}
+			}
+			if (isEmail) {
+				if ($el.val().trim() == '') {
+					pass = false;
+					$p.addClass('has-error');
+					$ts.show();
+					$ts.html('请输入联系邮箱！');
+				} else if (!(/^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test($el.val().trim()))) {
+					pass = false;
+					$p.addClass('has-error');
+					$ts.show();
+					$ts.html('邮箱格式不正确，请重新输入！');
+				} else {
+					$p.removeClass('has-error');
+					$ts.hide();
+				}
+			}
+		});
+		return pass;
 	}
 	/**
 	 * [view 查看详情]
@@ -361,18 +371,17 @@ define(function(require, exports, module) {
 	function view(row) {
 		addAndUpdate(row, function() {});
 	}
-	
+
 	//保存（新增、编辑）
-	function submitData(data)
-	{
+	function submitData(data) {
 		console.log('submit');
 	}
-	
+
 	function showDialog(opt) {
 		Box.dialog(opt);
 	}
-	
-	
+
+
 	function registerEvents() {
 		$('#add-btn').on('click', function() {
 			_grid.trigger('addCallback');
@@ -510,8 +519,8 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + '/clearingCharge/list?userId=&' + Utils.object2param(userParam);
-		//return global_config.serverRoot + '/queryPayChannel?payType=0';// + Utils.object2param(userParam);
+		// return global_config.serverRoot + '/clearingCharge/list?userId=&' + Utils.object2param(userParam);
+		return global_config.serverRoot + 'queryMerchantInfo?' + Utils.object2param(userParam);
 	}
 
 	return {
