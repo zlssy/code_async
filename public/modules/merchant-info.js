@@ -7,22 +7,15 @@ define(function(require, exports, module) {
 		content = $('#content'),
 		listContainer = $('#grid_list'),
 		userParam = {},
-		dictionaryCollection = {},
+		dictionaryCollection = {},//对需要后台拉取数据封装的对象
 		infoViewTpl = $('#infoViewTpl').html(),
 		infoAddEditTpl = $('#infoAddEditTpl').html(),
-		doms = {			
-			effectiveDateStart: $('input[name="effectiveDateStart"]'),
-			effectiveDateEnd: $('input[name="effectiveDateEnd"]'),
-			expirationDateStart: $('input[name="expirationDateStart"]'),
-			expirationDateEnd: $('input[name="expirationDateEnd"]'),
-			creationDateStart: $('input[name="creationDateStart"]'),
-			creationDateEnd: $('input[name="creationDateEnd"]'),
-			chargeServiceTypeInt: $('#chargeServiceTypeInt'),
-			chargeStatusInt: $('#chargeStatusInt'),
-			chargeSystemPropertyInt: $('#chargeSystemPropertyInt'),
-			chargeTypeInt: $('#chargeTypeInt'),
-			ownerIds: $('#ownerIds'),
-			ids: $('#ids')
+		dictionaryCollection = {},
+		doms = {
+			accountName: $('input[name="accountName"]'),//与接口需要的参数命名相同
+			merchantNum: $('input[name="merchantNum"]'),
+			merchantID: $('input[name="merchantID"]'),
+			merchantName: $('input[name="merchantName"]')
 		},
 
 		_grid;
@@ -37,22 +30,19 @@ define(function(require, exports, module) {
 			checkbox: false,
 			cols: [{
 				name: '账户编号',
-				index: 'accountName'
+				index: 'merchantNum'
 			}, {
 				name: '账户名',
-				index: 'merchantName'
+				index: 'loginId'
 			}, {
 				name: '商户名称',
-				index: 'action',
-				format: function(v){
-				         return '[' + v + ']';
-				    }
+				index: 'outMerchantName'
 			}, {
 				name: '商户ID',
-				index: 'submitTime'
+				index: 'outMerchantId'
 			}, {
 				name: '联系电话',
-				index: 'finishTime'
+				index: 'linkphone'
 			}, {
 				name: '操作',
 				format: function(v) {
@@ -62,9 +52,9 @@ define(function(require, exports, module) {
 			url: getUrl(),
 			pagesize: 10,
 			jsonReader: {
-				root: 'data.pageData',
-				page: 'data.pageNo',
-				records: 'data.totalCnt'
+				root: 'tclMerchantInfos',//数据
+				page: 'page.index',//当前页
+				records: 'page.total'//总数
 			}
 		});
 		listContainer.html(_grid.getHtml());		
@@ -82,7 +72,65 @@ define(function(require, exports, module) {
 		_grid.listen('viewCallback', function(row) {
 			view(row);
 		});
+		
+		//封装下拉数据
+		getDictionaryFromServer('/queryBusinessTypes',function(json) {
+			if ('0' == json.response) {
+				dictionaryCollection.businessTypesArr = json.businessTypes || [];
+				//setSelect('businessTypesArr', doms.chargeTypeInt);
+			}
+		}, function(e) {
+			// report
+		});
+		getDictionaryFromServer('/queryAccountTypes',function(json) {	
+			if ('0' == json.response) {
+				dictionaryCollection.accountTypesArr = json.accountTypes || [];
+			}
+		}, function(e) {
+			// report
+		});
 		registerEvents();
+	}
+	
+	//获取下拉数据
+	function getDictionaryFromServer(url,callback, errorback) {
+		var emptyFn = function() {},
+			cb = callback || emptyFn,
+			ecb = errorback || emptyFn;
+		$.ajax({
+			url: global_config.serverRoot + url,
+			success: cb,
+			async:false,
+			error: ecb
+		});
+	}
+	
+	/*
+	 * 下拉填充
+	 */
+	function setSelect(gArr, dom, selected) {
+		var data = dictionaryCollection[gArr],
+			s = '',
+			context = this,
+			args = Array.prototype.slice.call(arguments, 0),
+			fn = arguments.callee;
+			
+		/*if (!data) {
+			setTimeout(function() {
+				console.log('retry');
+				fn.apply(context, args);
+
+			}, 10);
+			return;
+		}*/
+		for (var i = 0; i < data.length; i++) {
+			if (selected == data[i].innerValue) {
+				s = ' selected = "selected"';
+			} else {
+				s = '';
+			}
+			dom.append('<option value="' + data[i].innerValue + '"' + s + '>' + Xss.inHTMLData(data[i].label) + '</option>');
+		}
 	}
 	
 	/*
@@ -122,59 +170,96 @@ define(function(require, exports, module) {
 			$("div#zhInfoAdd").removeClass('hide');
 		}
 		
-		/*if(!data)
-		{
-			$("div[for=view]").addClass('hide');
-			$("div[for=addEdit]").removeClass('hide');
-			$("button[for=editSave]").hide();
-		}
-		else
-		{
-			$("div[for=view]").removeClass('hide');
-			$("div[for=addEdit]").addClass('hide');
-			$("button[for=editSave]").show();
-		}
-		
-		$("button[for=modify]").click(function(){
-			$("#edit"+$(this).attr('mod')).removeClass("hide");
-			$("#view"+$(this).attr('mod')).addClass("hide");
-		})
-		$("button[for=editSave]").click(function(){
-			$("#edit"+$(this).attr('mod')).addClass("hide");
-			$("#view"+$(this).attr('mod')).removeClass("hide");
-			//校验及保存,只有基本信息模块需要校验
-			if($(this).attr('mod')=='BaseInfo'&&!validate())
-			{
-				return false;
-			}
-			if (!submitData(data)) {
-					return false;
-				}
-		})*/
 		$('div#editBaseInfo input').on('change', function(e) {
 			validate($(this));
 		});
 		$('div#editBaseInfo input').on('blur', function(e) {
 			validate($(this));
 		});
-		
-		/*data && fillData(data);
-
-		$('.bootbox input, .bootbox select').on('change', function(e) {
-			validate($(this));
-		});
-		var shbh = $('#shbh'),
-			elp = shbh.parents('.form-group:first');
-		accountCheck.check({
-			el: shbh,
-			elp: elp
-		});
-
-		data && setTimeout(function() {
-			shbh.focus();
-		}, 80);*/
+		setSelect('businessTypesArr', $('#accountType'));
+		setSelect('accountTypesArr', $('#bussinessType'));
+		data && fillData(data);//编辑和查看需要
 	}
-	
+	/**
+	 * [fillData 编辑时，填充数据]
+	 * @param  {[Object]} d [选中行数据]
+	 * @return {[type]}   [description]
+	 */
+	function fillData(d) {
+		var data = d[0] || {};
+		console.log(data);
+		/*if(dictionaryCollection['accountTypesArr']){
+			for (var i = 0; i < dictionaryCollection['accountTypesArr'].length; i++) {
+				if (data.userType == dictionaryCollection['accountTypesArr'][i].innerValue) {
+					$("div[vfor=accountType]").html(dictionaryCollection['accountTypesArr'][i].label);		
+				}
+			}			
+		}
+		if(dictionaryCollection['businessTypesArr']){
+			for (var i = 0; i < dictionaryCollection['businessTypesArr'].length; i++) {
+				if (data.userType == dictionaryCollection['businessTypesArr'][i].innerValue) {
+					$("div[vfor=bussinessType]").html(dictionaryCollection['businessTypesArr'][i].label);		
+				}
+			}	
+		}*/
+		if(data.merchantNum)
+		{
+			$("[vfor=merchantNum]").html(data.merchantNum);
+		}
+		if(data.outMerchantId)
+		{
+			$("[vfor=outMerchantId]").html(data.outMerchantId);
+		}
+		if(data.loginId)
+		{
+			$("[vfor=loginId]").html(data.loginId);
+		}
+		if(data.outMerchantName)
+		{
+			$("div#editBaseInfo input[name=merchantName]").val(data.outMerchantName);
+			$("div#viewBaseInfo [vfor=merchantName]").html(data.outMerchantName);			
+		}
+		if(data.merchantUrl)
+		{
+			$("div#editBaseInfo input[name=merchantUrl]").val(data.merchantUrl);
+			$("div#viewBaseInfo [vfor=merchantUrl]").html(data.merchantUrl);			
+		}
+		if(data.businessAddr)
+		{
+			$("div#editBaseInfo input[name=businessCertAddr]").val(data.businessAddr);
+			$("div#viewBaseInfo [vfor=businessCertAddr]").html(data.businessAddr);			
+		}
+		if(data.postalCode)
+		{
+			$("div#editBaseInfo input[name=postalCode]").val(data.postalCode);
+			$("div#viewBaseInfo [vfor=postalCode]").html(data.postalCode);			
+		}
+		if(data.businessCertAddr)
+		{
+			$("div#editBaseInfo input[name=businessCertAddr]").val(data.businessCertAddr);
+			$("div#viewBaseInfo [vfor=businessCertAddr]").html(data.businessCertAddr);			
+		}
+		if(data.businessCertCode)
+		{
+			$("div#editBaseInfo input[name=businessCertCode]").val(data.businessCertCode);
+			$("div#viewBaseInfo [vfor=businessCertCode]").html(data.businessCertCode);			
+		}
+		if(data.postalCode)
+		{
+			$("div#editBaseInfo input[name=postalCode]").val(data.postalCode);
+			$("div#viewBaseInfo [vfor=postalCode]").html(data.postalCode);			
+		}
+		if(data.postalCode)
+		{
+			$("div#editBaseInfo input[name=postalCode]").val(data.postalCode);
+			$("div#viewBaseInfo [vfor=postalCode]").html(data.postalCode);			
+		}
+		if(data.postalCode)
+		{
+			$("div#editBaseInfo input[name=postalCode]").val(data.postalCode);
+			$("div#viewBaseInfo [vfor=postalCode]").html(data.postalCode);			
+		}
+	}
 	
 	/**
 	 * [validate 检验函数]
@@ -186,15 +271,23 @@ define(function(require, exports, module) {
 		if (el) {
 			var elp = el.parents('.form-group:first'),
 				elts = el.siblings('span.error-ts');
-			if (el.data('int')||(el.data('code')&&'' != el.val().trim())) {
-				if ($.isNumeric(el.val())) {
+			if (el.data('code')) {
+				if(el.val().trim()=='')
+				{
 					elp.removeClass('has-error');
 					elts.hide();
-				} else {
-					pass = false;
-					elp.addClass('has-error');
-					elts.show();
 				}
+				else{
+					if ($.isNumeric(el.val())) {
+						elp.removeClass('has-error');
+						elts.hide();
+					} else {
+						pass = false;
+						elp.addClass('has-error');
+						elts.show();
+					}
+				}
+				
 			} else if(el.data('empty')){
 				if ('' != el.val().trim()) {
 					elp.removeClass('has-error');
@@ -205,15 +298,24 @@ define(function(require, exports, module) {
 					elts.show();
 				}
 				
-			} else if (el.data('url')&&'' != el.val().trim()) {
-				if (Utils.isUrl(el.val())) {
+			} else if (el.data('url')) {
+				if(el.val().trim()=='')
+				{
 					elp.removeClass('has-error');
 					elts.hide();
-				} else {
-					pass = false;
-					elp.addClass('has-error');
-					elts.show();
 				}
+				else
+				{
+					if (Utils.isUrl(el.val())) {
+					elp.removeClass('has-error');
+					elts.hide();
+					} else {
+						pass = false;
+						elp.addClass('has-error');
+						elts.show();
+					}
+				}
+				
 			} else if(el.data('regist')){
 				if(el.val().trim()=='') {
 					pass = false;
@@ -276,14 +378,19 @@ define(function(require, exports, module) {
 					isRegist = $el.data('regist'),
 					isPhone = $el.data('phone'),
 					isEmail = $el.data('email');
-				if (isInt||(isCode&&'' != $el.val().trim())) {
-					if ($.isNumeric($el.val())) {
+				if (isCode) {
+					if('' != $el.val().trim()){
+						if ($.isNumeric($el.val())) {
+							$p.removeClass('has-error');
+							$ts.hide();
+						} else {
+							pass = false;
+							$p.addClass('has-error');
+							$ts.show();
+						}
+					}else{
 						$p.removeClass('has-error');
 						$ts.hide();
-					} else {
-						pass = false;
-						$p.addClass('has-error');
-						$ts.show();
 					}
 				}				
 				if (isEmpty) {
@@ -296,15 +403,20 @@ define(function(require, exports, module) {
 						$ts.show();
 					}
 				}
-				if(isUrl&&'' != $el.val().trim())//网址不为空时进行判断
+				if(isUrl)//网址不为空时进行判断
 				{
-					if (Utils.isUrl($el.val())) {
+					if('' != $el.val().trim()){
+						if (Utils.isUrl($el.val())) {
+							$p.removeClass('has-error');
+							$ts.hide();
+						} else {
+							pass = false;
+							$p.addClass('has-error');
+							$ts.show();
+						}						
+					}else{
 						$p.removeClass('has-error');
 						$ts.hide();
-					} else {
-						pass = false;
-						$p.addClass('has-error');
-						$ts.show();
 					}
 				}	
 				if(isRegist){
@@ -383,30 +495,13 @@ define(function(require, exports, module) {
 				tag = $el.get(0).tagName.toLowerCase(),
 				id = $el.attr('id'),
 				name = $el.attr('name');
-			if (cls && cls.indexOf('fa-calendar') > -1) {
-				$el.parent().siblings('input').focus();
-			}
 			if (cls && cls.indexOf('fa-check') > -1 || (id && 'query-btn' == id)) {
 				if (getParams()) {
 					_grid.setUrl(getUrl());
 					_grid.loadData();
 				}
 			}
-			if (cls && cls.indexOf('fa-undo') > -1 || (id && 'reset-btn' == id)) {
-				userParam = {};
-				doms.effectiveDateStart.val('');
-				doms.effectiveDateEnd.val('');
-				doms.expirationDateStart.val('');
-				doms.expirationDateEnd.val('');
-				doms.creationDateStart.val('');
-				doms.creationDateEnd.val('');
-				doms.chargeServiceTypeInt.val(0);
-				doms.chargeStatusInt.val(0);
-				doms.chargeSystemPropertyInt.val(0);
-				doms.chargeTypeInt.val(0);
-				doms.ownerIds.val('');
-				doms.ids.val('');
-			}
+			
 			if ('input' == tag && 'fchargeTypeInt' == name) {
 				var val = $el.val();
 				if (val == dictionaryCollection.chargeTypeArr[1].innerValue) {
@@ -416,77 +511,31 @@ define(function(require, exports, module) {
 					$('#gdPanel').removeClass('hide');
 					$('#jtPanel').addClass('hide');
 				}
-			}
-			if ('input' == tag && 'fchargeSystemPropertyInt' == name) {
-				var val = $el.val();
-				if (val == dictionaryCollection.chargeSystemPropertyArr[1].innerValue) {
-					$('#fownerId').attr('placeholder', '通道ID');
-				} else if (val == dictionaryCollection.chargeSystemPropertyArr[0].innerValue) {
-					$('#fownerId').attr('placeholder', '商户ID');
-				}
-			}
-			if (cls && cls.indexOf('glyphicon-plus') > -1) {
-				$('#jtPanel .row:last').after(flTpl);
-			}
-			if (cls && cls.indexOf('glyphicon-minus') > -1) {
-				$el.parent().parent().remove();
-			}
+			}			
+			
 		});
 	}
 
 	function getParams() {
 		var newParam = {},
 			newchange = false,
-			ids = doms.ids.val(),
-			ownerIds = doms.ownerIds.val(),
-			chargeTypeInt = doms.chargeTypeInt.val(),
-			chargeSystemPropertyInt = doms.chargeSystemPropertyInt.val(),
-			chargeStatusInt = doms.chargeStatusInt.val(),
-			chargeServiceTypeInt = doms.chargeServiceTypeInt.val(),
-			effectiveDateStart = doms.effectiveDateStart.val(),
-			effectiveDateEnd = doms.effectiveDateEnd.val(),
-			expirationDateStart = doms.expirationDateStart.val(),
-			expirationDateEnd = doms.expirationDateEnd.val(),
-			creationDateStart = doms.creationDateStart.val(),
-			creationDateEnd = doms.creationDateEnd.val();
-
-		if (ids) {
-			newParam.ids = ids;
+			accountName = doms.accountName.val(),
+			merchantNum = doms.merchantNum.val(),
+			merchantID = doms.merchantID.val(),
+			merchantName = doms.merchantName.val();
+		if (accountName) {
+			newParam.accountName = accountName;
 		}
-		if (ownerIds) {
-			newParam.ownerIds = ownerIds;
+		if (merchantNum) {
+			newParam.merchantNum = merchantNum;
 		}
-		if (effectiveDateStart) {
-			newParam.effectiveDateStart = effectiveDateStart;
+		if (merchantID) {
+			newParam.merchantID = merchantID;
 		}
-		if (effectiveDateEnd) {
-			newParam.effectiveDateEnd = effectiveDateEnd;
+		if (merchantName) {
+			newParam.merchantName = merchantName;
 		}
-		if (expirationDateStart) {
-			newParam.expirationDateStart = expirationDateStart;
-		}
-		if (expirationDateEnd) {
-			newParam.expirationDateEnd = expirationDateEnd;
-		}
-		if (creationDateStart) {
-			newParam.creationDateStart = creationDateStart;
-		}
-		if (creationDateEnd) {
-			newParam.creationDateEnd = creationDateEnd;
-		}
-		if (chargeTypeInt != '0') {
-			newParam.chargeTypeInt = chargeTypeInt;
-		}
-		if (chargeSystemPropertyInt != '0') {
-			newParam.chargeSystemPropertyInt = chargeSystemPropertyInt;
-		}
-		if (chargeStatusInt != '0') {
-			newParam.chargeStatusInt = chargeStatusInt;
-		}
-		if (chargeServiceTypeInt != '0') {
-			newParam.chargeServiceTypeInt = chargeServiceTypeInt;
-		}
-
+		
 		for (var k in newParam) {
 			if (newParam[k] !== userParam[k]) {
 				newchange = true;
@@ -508,9 +557,9 @@ define(function(require, exports, module) {
 		userParam = newParam;
 		return true;
 	}
-
 	function getUrl() {
-		return global_config.serverRoot + '/clearingCharge/list?userId=&' + Utils.object2param(userParam);
+		return global_config.serverRoot+'/queryMerchantInfo'+ Utils.object2param(userParam);;
+		//return global_config.serverRoot + '/clearingCharge/list?userId=&' + Utils.object2param(userParam);
 		//return global_config.serverRoot + '/queryPayChannel?payType=0';// + Utils.object2param(userParam);
 	}
 

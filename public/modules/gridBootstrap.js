@@ -233,8 +233,7 @@ define(function(require, exports, module) {
 		$.ajax({
 			url: self.getUrl(),
 			success: function(json) {
-				console.log(json);
-				if ('0' == json.code) {
+				if ('0' == json.response) {
 					render.call(self, getMapData(json, self.jsonReader.root));
 					self.jsonReader.page && (self.page = getMapData(json, self.jsonReader.page));
 					self.jsonReader.records && (self.total = getMapData(json, self.jsonReader.records));
@@ -244,7 +243,7 @@ define(function(require, exports, module) {
 						self.totalPage = 0;
 					}
 					self.updatePager();
-				} else if (-100 == json.code) {
+				} else if (-100 == json.response) {
 					location.reload();
 				} else {
 					self.page = 1;
