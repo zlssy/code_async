@@ -14,6 +14,8 @@
 		<link href='<%-setting.filePath%>/css/bootstrap-datetimepicker.min.css' rel="stylesheet" />
 		<link href='<%-setting.filePath%>/css/ui.jqgrid.css' rel="stylesheet" />
 		<link href='<%-setting.filePath%>/css/bootstrap-switch.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/dialog.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/art_dialog.css' rel="stylesheet" />
 		<link href='<%-setting.filePath%>/css/jquery.fileupload.css' rel="stylesheet" />
 		<%- include('public/header') %>
 		<style>
@@ -42,20 +44,20 @@
 					<div class="widget-body">
 						<div class="widget-main">
 							<div class="row">
-								<div class="col-xs-12 col-sm-4">
-									<label class="col-sm-2 control-label no-padding lm-5" for="ids">版本：</label>
-									<div class="col-sm-9">
-										<select class="select">   
-								        	<option value="">中文</option>
-								        	<option value="">英文</option>
+								<div class="col-xs-12 col-sm-12">
+									<label class="col-sm-1 control-label no-padding lm-5" for="ids">版本：</label>
+									<div class="col-sm-10">
+										<select class="select" name="type">   
+								        	<option value="0">中文</option>
+								        	<option value="1">英文</option>
 								     	 </select>
 									</div>
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-xs-12 col-sm-4">
-									<label class="col-sm-2 control-label no-padding lm-5" for="ids">文件：</label>
-									<div class="col-sm-9">
+								<div class="col-xs-12 col-sm-12">
+									<label class="col-sm-1 control-label no-padding lm-5" for="ids">文件：</label>
+									<div class="col-sm-10">
 										<input type="text" />
 										<a class="btn btn-primary j-btn-upload fileinput-button" id="uploadFile">上传<input type="file" name="file" tabindex="-1"></a>
 									</div>
@@ -94,6 +96,8 @@
 <script src='<%-setting.filePath%>/js/jquery.jqGrid.min.js'></script>
 <script src='<%-setting.filePath%>/js/grid.locale-cn.js'></script>
 <script src='<%-setting.filePath%>/js/bootstrap-switch.min.js'></script>
+<script src="<%-setting.filePath%>/js/art_dialog.js"></script>
+<script src="<%-setting.filePath%>/js/jquery.fileupload.js"></script>
 
 <!-- process enter -->
 <script>

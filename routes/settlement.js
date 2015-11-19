@@ -15,7 +15,7 @@ var userid = 12345;
 
 if (daili) {
     var downFiles = [
-        '/clearing/export'
+        '/fileUpload'
         ,'/settleStatement/export'
         ,'/downloadStatisticalRecord'
         ,'/downloadTradeRecord'

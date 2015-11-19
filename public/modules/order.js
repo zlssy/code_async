@@ -181,7 +181,7 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + 'payOrderSearch?size=15&' + Utils.object2param(userParam) + '&t=' + Math.random();
+		return global_config.serverRoot + 'payOrderSearch?size=15&index=1&' + Utils.object2param(userParam) + '&t=' + Math.random();
 	}
 
 	return {
