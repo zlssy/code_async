@@ -9,8 +9,8 @@ var _ = require('underscore');
 var router = express.Router();
 
 //代理
-var daili = false; //是否启用代理
-var daili_url = setting.apiUrl || "http://testtclpay.tclclouds.com/settlement";
+var daili = true; //是否启用代理
+var daili_url = setting.apiUrl || "http://testtclpay.tclclouds.com/operationtest";
 var userid = 12345;
 
 if (daili) {

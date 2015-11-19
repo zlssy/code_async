@@ -4,7 +4,7 @@ define(function(require, exports, module) {
 		Xss = require('xss'),
 		accountCheck = require('checkAccount'),
 
-		
+
 		Box = require('boxBootstrap'),
 		content = $('#content'),
 		listContainer = $('#grid_list'),
@@ -12,8 +12,8 @@ define(function(require, exports, module) {
 		dictionaryCollection = {},
 		doms = {
 			payOrderId: $('#payOrderId'),
-			outOrderId:$('input[name="outOrderId"'),//这里获取元素还有点问题记得修复
-			merchantId:$('input[name="merchantId"'),
+			outOrderId: $('input[name="outOrderId"'), //这里获取元素还有点问题记得修复
+			merchantId: $('input[name="merchantId"'),
 			payChannel: $('#payChannel'),
 			currencyType: $('#currencyType'),
 			payStatus: $('#payStatus'),
@@ -33,6 +33,8 @@ define(function(require, exports, module) {
 		_grid = Grid.create({
 			key: 'payOrderId',
 			checkbox: false,
+			ajaxCompleteKey: 'response',
+			pageName: 'index',
 			cols: [{
 				name: '交易订单号',
 				index: 'payOrderId'
@@ -45,7 +47,7 @@ define(function(require, exports, module) {
 			}, {
 				name: '商户名称',
 				index: 'merchantName'
-			},{
+			}, {
 				name: '用户编号',
 				index: ''
 			}, {
@@ -68,18 +70,18 @@ define(function(require, exports, module) {
 				index: 'payOverTime'
 			}],
 			url: getUrl(),
-			pagesize: 10,
+			pagesize: 15,
 			jsonReader: {
-				root: 'data.pageData',
-				page: 'data.pageNo',
-				records: 'data.totalCnt'
+				root: 'payOrderList',
+				page: 'page.index',
+				records: 'page.total'
 			}
 		});
-		listContainer.html(_grid.getHtml());		
+		listContainer.html(_grid.getHtml());
 		_grid.load();
 		registerEvents();
 	}
-	
+
 	function registerEvents() {
 		$('.datepicker').datetimepicker({
 			autoclose: true,
@@ -100,7 +102,7 @@ define(function(require, exports, module) {
 					_grid.setUrl(getUrl());
 					_grid.loadData();
 				}
-			}			
+			}
 			if ('input' == tag && 'fchargeSystemPropertyInt' == name) {
 				var val = $el.val();
 				if (val == dictionaryCollection.chargeSystemPropertyArr[1].innerValue) {
@@ -155,11 +157,11 @@ define(function(require, exports, module) {
 		if (payOverEndTime) {
 			newParam.payOverEndTime = payOverEndTime;
 		}
-		
+
 		/*if (payChannel != '') {
 			newParam.payChannel = payChannel;
 		}*/
-		
+
 		for (var k in newParam) {
 			if (newParam[k] !== userParam[k]) {
 				newchange = true;
@@ -179,7 +181,7 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + '/payOrderSearch?userId=&' + Utils.object2param(userParam);
+		return global_config.serverRoot + 'payOrderSearch?size=15&' + Utils.object2param(userParam) + '&t=' + Math.random();
 	}
 
 	return {

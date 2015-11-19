@@ -327,7 +327,11 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return this.url;
+		var url = this.url;
+		if (url.indexOf(this.pageName) < 0) {
+			url += (url.indexOf('?') > -1 ? '&' : '?') + this.pageName + '=' + this.page;
+		}
+		return url;
 	}
 
 	function setUrl(url) {

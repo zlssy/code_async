@@ -563,7 +563,7 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + 'queryMerchantInfo?' + Utils.object2param(userParam);
+		return global_config.serverRoot + 'queryMerchantInfo?size=15&' + Utils.object2param(userParam);
 	}
 
 	return {
