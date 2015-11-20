@@ -72,7 +72,7 @@ define(function(require, exports, module) {
 			pageName:'index',
 			jsonReader: {
 				root: 'merchantCheckVos',
-				page: 'page.size',
+				page: 'page.index',
 				records: 'page.total'
 			}
 		});
@@ -99,14 +99,14 @@ define(function(require, exports, module) {
 				label: '通过',
 				className: 'btn-sm btn-success',
 				callback: function() {
-					checkSubmit(data,status);
+					checkSubmit(data,0);
 				}
 			},
 			"cancel": {
 				label: '驳回',
 				className: 'btn-sm btn-success',
 				callback: function(){
-					checkSubmit(data,status);
+					checkSubmit(data,1);
 				}
 			}
 		};
@@ -121,79 +121,106 @@ define(function(require, exports, module) {
 	function fillData(d)
 	{
 		var data = d[0] || {};
-		//data.action:0/2/4;1\3
 		if(data.merchantName)
 		{
 			$("[vfor=merchantName]").html(data.merchantName);
 		}
-		if(data.merchantVO['linkmail'])
+		//data.action:0/2/4;1\3
+		if(data.action==0||data.action==2||data.action==4)
 		{
-			$("[vfor=linkmail]").html(data.merchantVO['linkmail']);
+			
+			if(data.merchantVO)
+			{
+				if(data.merchantVO['linkmail'])
+				{
+					$("[vfor=linkmail]").html(data.merchantVO['linkmail']);
+				}
+				if(data.merchantVO['businessAddr'])
+				{
+					$("[vfor=businessAddr]").html(data.merchantVO['businessAddr']);
+				}
+				if(data.merchantVO['postalCode'])
+				{
+					$("[vfor=postalCode]").html(data.merchantVO['postalCode']);
+				}
+				if(data.merchantVO['businessCertAddr'])
+				{
+					$("[vfor=businessCertAddr]").html(data.merchantVO['businessCertAddr']);
+				}
+				if(data.merchantVO['businessCertCode'])
+				{
+					$("[vfor=businessCertCode]").html(data.merchantVO['businessCertCode']);
+				}
+				if(data.merchantVO['linkman'])
+				{
+					$("[vfor=linkman]").html(data.merchantVO['linkman']);
+				}
+				if(data.merchantVO['linkphone'])
+				{
+					$("[vfor=linkphone]").html(data.merchantVO['linkphone']);
+				}
+				if(data.merchantVO['merchantUrl'])
+				{
+					$("[vfor=merchantUrl]").html(data.merchantVO['merchantUrl']);
+				}
+			}
+			
+			if(data.merchantSettlementVO)
+			{
+				if(data.merchantSettlementVO['settlementBillTitle'])
+				{
+					$("[vfor=settlementBillTitle]").html(data.merchantSettlementVO['settlementBillTitle']);
+				}
+				if(data.merchantSettlementVO['depositBank'])
+				{
+					$("[vfor=depositBank]").html(data.merchantSettlementVO['depositBank']);
+				}
+				if(data.merchantSettlementVO['depositBankBranch'])
+				{
+					$("[vfor=depositBankBranch]").html(data.merchantSettlementVO['depositBankBranch']);
+				}
+				if(data.merchantSettlementVO['bankAccountName'])
+				{
+					$("[vfor=bankAccountName]").html(data.merchantSettlementVO['bankAccountName']);
+				}
+				if(data.merchantSettlementVO['bankAccount'])
+				{
+					$("[vfor=bankAccount]").html(data.merchantSettlementVO['bankAccount']);
+				}
+			}
 		}
-		if(data.merchantVO['businessAddr'])
+		else if(data.action==1||data.action==3)
 		{
-			$("[vfor=businessAddr]").html(data.merchantVO['businessAddr']);
+			if(data.tools)
+			{
+				var strTool = '';
+				for(var i=0;i<data.tools.length;i++)
+				{
+					strTool += '<div class="col-xs-12 col-sm-2"><input type="checkbox" '+(data.tools[i]['tool']?'checked':'')+' disabled/>'+data.tools[i]['tool']+'</div>';
+				}
+				$("[vfor=tools]").html(strTool);
+			}
 		}
-		if(data.merchantVO['postalCode'])
-		{
-			$("[vfor=postalCode]").html(data.merchantVO['postalCode']);
-		}
-		if(data.merchantVO['businessCertAddr'])
-		{
-			$("[vfor=businessCertAddr]").html(data.merchantVO['businessCertAddr']);
-		}
-		if(data.merchantVO['businessCertCode'])
-		{
-			$("[vfor=businessCertCode]").html(data.merchantVO['businessCertCode']);
-		}
-		if(data.merchantVO['linkman'])
-		{
-			$("[vfor=linkman]").html(data.merchantVO['linkman']);
-		}
-		if(data.merchantVO['linkphone'])
-		{
-			$("[vfor=linkphone]").html(data.merchantVO['linkphone']);
-		}
-		if(data.merchantVO['merchantUrl'])
-		{
-			$("[vfor=merchantUrl]").html(data.merchantVO['merchantUrl']);
-		}
-		if(data.merchantSettlementVO['settlementBillTitle'])
-		{
-			$("[vfor=settlementBillTitle]").html(data.merchantSettlementVO['settlementBillTitle']);
-		}
-		if(data.merchantSettlementVO['depositBank'])
-		{
-			$("[vfor=depositBank]").html(data.merchantSettlementVO['depositBank']);
-		}
-		if(data.merchantSettlementVO['depositBankBranch'])
-		{
-			$("[vfor=depositBankBranch]").html(data.merchantSettlementVO['depositBankBranch']);
-		}
-		if(data.merchantSettlementVO['bankAccountName'])
-		{
-			$("[vfor=bankAccountName]").html(data.merchantSettlementVO['bankAccountName']);
-		}
-		if(data.merchantSettlementVO['bankAccount'])
-		{
-			$("[vfor=bankAccount]").html(data.merchantSettlementVO['bankAccount']);
-		}
+		
 	}
 	/*
 	 * 审核：驳回/通过
+	 * status:0 通过 1 驳回
 	 */
 	function checkSubmit(data,status){
-		//console.log(row);
-		/*var id = row[0].id;
+		//console.log(data);
+		var id = data[0].id;
 		$.ajax({
 			url: global_config.serverRoot + '/updateMerchantCheck',
-			success: function(json) {
-				console.log('a');
+			type:'post',
+			data:{'id':data[0].id,'status':status,'explanation':$("#explanation").val()},
+			success: function(res) {
+				console.log(res);
 			},
 			error: function(json) {
 				// some report
 			}
-		})*/
+		})
 	}
 	function registerEvents() {
 		$('.datepicker').datetimepicker({
