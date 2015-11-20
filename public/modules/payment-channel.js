@@ -112,18 +112,6 @@ define(function(require, exports, module) {
 					_grid.loadData();
 				}
 			}
-			
-			if ('input' == tag && 'fchargeTypeInt' == name) {
-				var val = $el.val();
-				if (val == dictionaryCollection.chargeTypeArr[1].innerValue) {
-					$('#gdPanel').addClass('hide');
-					$('#jtPanel').removeClass('hide');
-				} else {
-					$('#gdPanel').removeClass('hide');
-					$('#jtPanel').addClass('hide');
-				}
-			}
-			
 		});
 	}
 
@@ -167,7 +155,7 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + '/queryPayChannel'+ Utils.object2param(userParam);
+		return global_config.serverRoot + '/queryPayChannel?size=15&index=1&'+ Utils.object2param(userParam)+ '&t=' + Math.random();
 	}
 
 	return {

@@ -297,8 +297,7 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + '/queryMerchantCheck?' + Utils.object2param(userParam);
-		//return global_config.serverRoot + '/queryPayChannel?payType=0';// + Utils.object2param(userParam);
+		return global_config.serverRoot + '/queryMerchantCheck?size=15&index=1&' + Utils.object2param(userParam)+ '&t=' + Math.random();
 	}
 
 	return {
