@@ -238,8 +238,8 @@ define(function(require, exports, module) {
 			success: function(json) {
 				if ('0' == json[self.ajaxCompleteKey]) {
 					render.call(self, getMapData(json, self.jsonReader.root));
-					self.jsonReader.page && (self.page = getMapData(json, self.jsonReader.page));
-					self.jsonReader.records && (self.total = getMapData(json, self.jsonReader.records));
+					self.jsonReader.page && (self.page = getMapData(json, self.jsonReader.page) || 1);
+					self.jsonReader.records && (self.total = getMapData(json, self.jsonReader.records) || 0);
 					if (self.total) {
 						self.totalPage = Math.ceil(self.total / self.pagesize);
 					} else {
@@ -327,7 +327,11 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return this.url;
+		var url = this.url;
+		if (url.indexOf(this.pageName) < 0) {
+			url += (url.indexOf('&') < 0 ? url.indexOf('?') < 0 ? '?' : '' : '&') + this.pageName + '=' + this.page;
+		}
+		return url;
 	}
 
 	function setUrl(url) {
