@@ -16,15 +16,6 @@ var userid = 12345;
 if (daili) {
     var downFiles = [
         '/fileUpload'
-        ,'/settleStatement/export'
-        ,'/downloadStatisticalRecord'
-        ,'/downloadTradeRecord'
-        ,'/downloadWrongRecord'
-        ,'/settleCard/template'
-        ,'/settleCard/import'
-        ,'/settleCard/importReturnJson'
-        ,'/reconciliation'
-        ,"/test"
     ]
 
     var conditions = [
@@ -110,6 +101,7 @@ if (daili) {
                 res.json(json);
             }catch(e){
                 //res.set('Content-Type','application/json; charset=utf-8');
+                console.log('---------------parse json error ----------------', e)
                 res.send(data);
             }
         }, function(err) {

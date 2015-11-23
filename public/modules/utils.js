@@ -289,24 +289,32 @@ define(function(require, exports, module) {
 		}
 		return r;
 	}
-	
+
 	/*
 	 * 检查是否是正确网址
 	 */
-	function isUrl(str_url)
-	{
-	    var strRegex="^((https|http|ftp|rtsp|mms)?://)"  
-	    + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" // ftp的user@  
-	    + "(([0-9]{1,3}\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184  
-	    + "|" // 允许IP和DOMAIN（域名）  
-	    + "([0-9a-z_!~*'()-]+\.)*" // 域名- www.  
-	    + "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\." // 二级域名  
-	    + "[a-z]{2,6})" // first level domain- .com or .museum  
-	    + "(:[0-9]{1,4})?" // 端口- :80  
-	    + "((/?)|" // a slash isn't required if there is no file name  
-	    + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$"; 
-	    var re=new RegExp(strRegex); 
-	    return re.test(str_url); 
+	function isUrl(str_url) {
+		var strRegex = "^((https|http|ftp|rtsp|mms)?://)" + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" // ftp的user@  
+			+ "(([0-9]{1,3}\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184  
+			+ "|" // 允许IP和DOMAIN（域名）  
+			+ "([0-9a-z_!~*'()-]+\.)*" // 域名- www.  
+			+ "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\." // 二级域名  
+			+ "[a-z]{2,6})" // first level domain- .com or .museum  
+			+ "(:[0-9]{1,4})?" // 端口- :80  
+			+ "((/?)|" // a slash isn't required if there is no file name  
+			+ "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
+		var re = new RegExp(strRegex);
+		return re.test(str_url);
+	}
+
+	/**
+	 * [is 校验是否是某种类型]
+	 * @param  {[type]}  type [类型字符串]
+	 * @param  {[type]}  v    [值]
+	 * @return {Boolean}      [结果]
+	 */
+	function is(type, v) {
+		return ('[object ' + type + ']') === Object.prototype.toString.call(v);
 	}
 
 	/**
@@ -342,6 +350,7 @@ define(function(require, exports, module) {
 		loadJsonp: loadJsonp,
 		isDate: isDate,
 		isUrl: isUrl,
-		once: once
+		once: once,
+		is: is
 	};
 });
