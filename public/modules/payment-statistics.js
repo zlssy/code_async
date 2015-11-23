@@ -11,7 +11,7 @@ define(function(require, exports, module) {
 		infoCheckTpl = $('#infoCheckTpl').html(),
 		otherCheckTpl = $('#otherCheckTpl').html(),
 		doms = {			
-			merchantId: $('input[name="merchantId"]'),
+			merchantId: $('#merchantId'),
 			createTime: $('input[name="createTime"]')
 		},
 		_grid;
@@ -41,18 +41,56 @@ define(function(require, exports, module) {
 				index: 'payOkCount'
 			}],
 			url: getUrl(),
-			pagesize: 20,
+			pagesize: 15,
+			pageName:'index',
 			jsonReader: {
 				root: 'payCountList',
-				page: 'data.index',
-				records: 'data.total'
+				page: 'page.index',
+				records: 'page.total'
 			}
 		});
 		listContainer.html(_grid.getHtml());		
-		_grid.load();	
+		_grid.load();
+		getDictionaryFromServer(function(json) {
+			if ('0' == json.code) {
+				dictionaryCollection.merchantIdArr = json.merchantInfoMap;
+				setSelect('merchantIdArr', doms.merchantId);
+			}
+		}, function(e) {
+			// report
+		});
 		registerEvents();
 	}
-	
+	function getDictionaryFromServer(callback, errorback) {		
+		var emptyFn = function() {},
+			cb = callback || emptyFn,
+			ecb = errorback || emptyFn;
+		$.ajax({
+			url: global_config.serverRoot + '/payCountSearch',
+			success: cb,
+			error: ecb
+		});
+	}
+	function setSelect(gArr, dom, selected) {
+		var data = dictionaryCollection[gArr],
+			s = '',
+			context = this,
+			args = Array.prototype.slice.call(arguments, 0),
+			fn = arguments.callee;
+		if (!data) {
+			setTimeout(function() {
+				console.log('retry');
+				fn.apply(context, args);
+
+			}, 10);
+			return;
+		}
+		for(var e in data)
+		{
+			dom.append('<option value="' + e + '">' + Xss.inHTMLData(data[e]) + '</option>');
+		}
+		
+	}
 	function registerEvents() {
 		$('.datepicker').datetimepicker({
 			autoclose: true,
