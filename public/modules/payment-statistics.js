@@ -110,7 +110,18 @@ define(function(require, exports, module) {
 					_grid.setUrl(getUrl());
 					_grid.loadData();
 				}
-			}	
+			}
+			//刷新页面时，清空查询条件
+			var _s="close";
+			window.onunload = function(){
+			   if(_s=="fresh")
+			    userParam = {};
+				doms.createTime.val('');
+				doms.merchantId.val(-1);
+			}
+			window.onbeforeunload = function(){
+			   _s="fresh";
+			}
 		});
 	}
 

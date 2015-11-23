@@ -241,16 +241,19 @@ define(function(require, exports, module) {
 					_grid.setUrl(getUrl());
 					_grid.loadData();
 				}
-			}			
-			if ('input' == tag && 'fchargeTypeInt' == name) {
-				var val = $el.val();
-				if (val == dictionaryCollection.chargeTypeArr[1].innerValue) {
-					$('#gdPanel').addClass('hide');
-					$('#jtPanel').removeClass('hide');
-				} else {
-					$('#gdPanel').removeClass('hide');
-					$('#jtPanel').addClass('hide');
-				}
+			}	
+			//刷新页面时，清空查询条件
+			var _s="close";
+			window.onunload = function(){
+			   if(_s=="fresh")
+			    userParam = {};
+				doms.startTime.val('');
+				doms.endTime.val('');
+				doms.action.val(-1);
+				doms.status.val(-1);
+			}
+			window.onbeforeunload = function(){
+			   _s="fresh";
 			}
 		});
 	}
@@ -268,10 +271,10 @@ define(function(require, exports, module) {
 		if (endTime) {
 			newParam.endTime = endTime;
 		}
-		if (action!=='') {
+		if (action!=='-1') {
 			newParam.action = action;
 		}
-		if (status!=='') {
+		if (status!=='-1') {
 			newParam.status = status;
 		}
 		for (var k in newParam) {
