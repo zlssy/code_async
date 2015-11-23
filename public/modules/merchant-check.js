@@ -9,24 +9,15 @@ define(function(require, exports, module) {
 		content = $('#content'),
 		listContainer = $('#grid_list'),
 		userParam = {},
-		dictionaryCollection = {},
+		dictionaryCollection = {'status':{'0':'审核通过','1':'审核拒绝','2':'待审核'},'action':{'0':'注册事件','1':'支付接入','2':'修改信息','3':'代扣申请','4':'删除信息'}},
 		infoCheckTpl = $('#infoCheckTpl').html(),
 		otherCheckTpl = $('#otherCheckTpl').html(),
 		doms = {			
-			effectiveDateStart: $('input[name="effectiveDateStart"]'),
-			effectiveDateEnd: $('input[name="effectiveDateEnd"]'),
-			expirationDateStart: $('input[name="expirationDateStart"]'),
-			expirationDateEnd: $('input[name="expirationDateEnd"]'),
-			creationDateStart: $('input[name="creationDateStart"]'),
-			creationDateEnd: $('input[name="creationDateEnd"]'),
-			chargeServiceTypeInt: $('#chargeServiceTypeInt'),
-			chargeStatusInt: $('#chargeStatusInt'),
-			chargeSystemPropertyInt: $('#chargeSystemPropertyInt'),
-			chargeTypeInt: $('#chargeTypeInt'),
-			ownerIds: $('#ownerIds'),
-			ids: $('#ids')
+			startTime: $('input[name="startTime"]'),
+			endTime: $('input[name="endTime"]'),
+			action: $('#action'),
+			status: $('#status')
 		},
-
 		_grid;
 
 	function init() {
@@ -47,7 +38,7 @@ define(function(require, exports, module) {
 				name: '事件',
 				index: 'action',
 				format: function(v){
-				         return '[' + v + ']';
+				         return dictionaryCollection['action'][v];
 				    }
 			}, {
 				name: '提交审核时间',
@@ -59,28 +50,30 @@ define(function(require, exports, module) {
 				name: '状态',
 				index: 'status',
 				format: function(v){
-				         return '[' + v + ']';
+				         return dictionaryCollection['status'][v];
 				    }
 			}, {
 				name: '说明',
-				index: ''
+				index: 'explanation'
 			}, {
 				name: '操作',
 				index: 'status',
+				closeXss: true,
 				format: function(v) {
-					/*if(v==2)
+					if(v==2)
 					{
-						
-					}*/
-					return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-edit blue" title="审核"></span></div>';
+						return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-edit blue" title="审核"></span></div>';
+					}
+					//return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-edit blue" title="审核"></span></div>';
 				}
 			}],
 			url: getUrl(),
-			pagesize: 10,
+			pagesize: 15,
+			pageName:'index',
 			jsonReader: {
-				root: 'data.pageData',
-				page: 'data.pageNo',
-				records: 'data.totalCnt'
+				root: 'merchantCheckVos',
+				page: 'page.index',
+				records: 'page.total'
 			}
 		});
 		listContainer.html(_grid.getHtml());		
@@ -94,76 +87,145 @@ define(function(require, exports, module) {
 	function checkUpdate(data)
 	{
 		var opt = {},
-			id = '';
-		/*if(data.status:注册 和修改)
+			id = '',
+			tpl = infoCheckTpl;
+		if(data[0].action=='1'||data[0].action=='3')
 		{
-			infoCheckTpl
+			tpl = otherCheckTpl;
 		}
-		else
-		{
-			otherCheckTpl
-		}*/
-		opt.message = '<h4><b>商户审核</b></h4><hr class="no-margin">' + otherCheckTpl;
+		opt.message = '<h4><b>商户审核</b></h4><hr class="no-margin">' + tpl;
 		opt.buttons = {			
 			"save": {
-				label: '通过',//'<i class="ace-icon fa"></i>通过',
+				label: '通过',
 				className: 'btn-sm btn-success',
 				callback: function() {
-					checkSubmit(data,status);
+					checkSubmit(data,0);
 				}
 			},
 			"cancel": {
 				label: '驳回',
 				className: 'btn-sm btn-success',
 				callback: function(){
-					checkSubmit(data,status);
+					checkSubmit(data,1);
 				}
 			}
 		};
-		showDialog(opt);
-		
-		/*data && fillData(data);
-
-		$('.bootbox input, .bootbox select').on('change', function(e) {
-			validate($(this));
-		});
-		var shbh = $('#shbh'),
-			elp = shbh.parents('.form-group:first');
-		accountCheck.check({
-			el: shbh,
-			elp: elp
-		});
-
-		data && setTimeout(function() {
-			shbh.focus();
-		}, 80);*/
+		showDialog(opt);		
+		data && fillData(data);
 	}
 	
 	function showDialog(opt) {
 		Box.dialog(opt);
 	}
 	
+	function fillData(d)
+	{
+		var data = d[0] || {};
+		if(data.merchantName)
+		{
+			$("[vfor=merchantName]").html(data.merchantName);
+		}
+		//data.action:0/2/4;1\3
+		if(data.action==0||data.action==2||data.action==4)
+		{
+			
+			if(data.merchantVO)
+			{
+				if(data.merchantVO['linkmail'])
+				{
+					$("[vfor=linkmail]").html(data.merchantVO['linkmail']);
+				}
+				if(data.merchantVO['businessAddr'])
+				{
+					$("[vfor=businessAddr]").html(data.merchantVO['businessAddr']);
+				}
+				if(data.merchantVO['postalCode'])
+				{
+					$("[vfor=postalCode]").html(data.merchantVO['postalCode']);
+				}
+				if(data.merchantVO['businessCertAddr'])
+				{
+					$("[vfor=businessCertAddr]").html(data.merchantVO['businessCertAddr']);
+				}
+				if(data.merchantVO['businessCertCode'])
+				{
+					$("[vfor=businessCertCode]").html(data.merchantVO['businessCertCode']);
+				}
+				if(data.merchantVO['linkman'])
+				{
+					$("[vfor=linkman]").html(data.merchantVO['linkman']);
+				}
+				if(data.merchantVO['linkphone'])
+				{
+					$("[vfor=linkphone]").html(data.merchantVO['linkphone']);
+				}
+				if(data.merchantVO['merchantUrl'])
+				{
+					$("[vfor=merchantUrl]").html(data.merchantVO['merchantUrl']);
+				}
+			}
+			
+			if(data.merchantSettlementVO)
+			{
+				if(data.merchantSettlementVO['settlementBillTitle'])
+				{
+					$("[vfor=settlementBillTitle]").html(data.merchantSettlementVO['settlementBillTitle']);
+				}
+				if(data.merchantSettlementVO['depositBank'])
+				{
+					$("[vfor=depositBank]").html(data.merchantSettlementVO['depositBank']);
+				}
+				if(data.merchantSettlementVO['depositBankBranch'])
+				{
+					$("[vfor=depositBankBranch]").html(data.merchantSettlementVO['depositBankBranch']);
+				}
+				if(data.merchantSettlementVO['bankAccountName'])
+				{
+					$("[vfor=bankAccountName]").html(data.merchantSettlementVO['bankAccountName']);
+				}
+				if(data.merchantSettlementVO['bankAccount'])
+				{
+					$("[vfor=bankAccount]").html(data.merchantSettlementVO['bankAccount']);
+				}
+			}
+		}
+		else if(data.action==1||data.action==3)
+		{
+			if(data.tools)
+			{
+				var strTool = '';
+				for(var i=0;i<data.tools.length;i++)
+				{
+					strTool += '<div class="col-xs-12 col-sm-2"><input type="checkbox" '+(data.tools[i]['tool']?'checked':'')+' disabled/>'+data.tools[i]['tool']+'</div>';
+				}
+				$("[vfor=tools]").html(strTool);
+			}
+		}
+		
+	}
 	/*
 	 * 审核：驳回/通过
+	 * status:0 通过 1 驳回
 	 */
 	function checkSubmit(data,status){
-		//console.log(row);
-		/*var id = row[0].id;
+		//console.log(data);
+		var id = data[0].id;
 		$.ajax({
 			url: global_config.serverRoot + '/updateMerchantCheck',
-			success: function(json) {
-				console.log('a');
+			type:'post',
+			data:{'id':data[0].id,'status':status,'explanation':$("#explanation").val()},
+			success: function(res) {
+				console.log(res);
 			},
 			error: function(json) {
 				// some report
 			}
-		})*/
+		})
 	}
 	function registerEvents() {
 		$('.datepicker').datetimepicker({
 			autoclose: true,
-			todayHighlight: true,
-			minView: 2
+			todayHighlight: true
 		});
 		$(document.body).on('click', function(e) {
 			var $el = $(e.target || e.srcElement),
@@ -179,22 +241,7 @@ define(function(require, exports, module) {
 					_grid.setUrl(getUrl());
 					_grid.loadData();
 				}
-			}
-			if (cls && cls.indexOf('fa-undo') > -1 || (id && 'reset-btn' == id)) {
-				userParam = {};
-				doms.effectiveDateStart.val('');
-				doms.effectiveDateEnd.val('');
-				doms.expirationDateStart.val('');
-				doms.expirationDateEnd.val('');
-				doms.creationDateStart.val('');
-				doms.creationDateEnd.val('');
-				doms.chargeServiceTypeInt.val(0);
-				doms.chargeStatusInt.val(0);
-				doms.chargeSystemPropertyInt.val(0);
-				doms.chargeTypeInt.val(0);
-				doms.ownerIds.val('');
-				doms.ids.val('');
-			}
+			}			
 			if ('input' == tag && 'fchargeTypeInt' == name) {
 				var val = $el.val();
 				if (val == dictionaryCollection.chargeTypeArr[1].innerValue) {
@@ -205,76 +252,28 @@ define(function(require, exports, module) {
 					$('#jtPanel').addClass('hide');
 				}
 			}
-			if ('input' == tag && 'fchargeSystemPropertyInt' == name) {
-				var val = $el.val();
-				if (val == dictionaryCollection.chargeSystemPropertyArr[1].innerValue) {
-					$('#fownerId').attr('placeholder', '通道ID');
-				} else if (val == dictionaryCollection.chargeSystemPropertyArr[0].innerValue) {
-					$('#fownerId').attr('placeholder', '商户ID');
-				}
-			}
-			if (cls && cls.indexOf('glyphicon-plus') > -1) {
-				$('#jtPanel .row:last').after(flTpl);
-			}
-			if (cls && cls.indexOf('glyphicon-minus') > -1) {
-				$el.parent().parent().remove();
-			}
 		});
 	}
 
 	function getParams() {
 		var newParam = {},
 			newchange = false,
-			ids = doms.ids.val(),
-			ownerIds = doms.ownerIds.val(),
-			chargeTypeInt = doms.chargeTypeInt.val(),
-			chargeSystemPropertyInt = doms.chargeSystemPropertyInt.val(),
-			chargeStatusInt = doms.chargeStatusInt.val(),
-			chargeServiceTypeInt = doms.chargeServiceTypeInt.val(),
-			effectiveDateStart = doms.effectiveDateStart.val(),
-			effectiveDateEnd = doms.effectiveDateEnd.val(),
-			expirationDateStart = doms.expirationDateStart.val(),
-			expirationDateEnd = doms.expirationDateEnd.val(),
-			creationDateStart = doms.creationDateStart.val(),
-			creationDateEnd = doms.creationDateEnd.val();
-
-		if (ids) {
-			newParam.ids = ids;
+			startTime = doms.startTime.val(),
+			endTime = doms.endTime.val(),
+			action = doms.action.val(),
+			status = doms.status.val();
+		if (startTime) {
+			newParam.startTime = startTime;
 		}
-		if (ownerIds) {
-			newParam.ownerIds = ownerIds;
+		if (endTime) {
+			newParam.endTime = endTime;
 		}
-		if (effectiveDateStart) {
-			newParam.effectiveDateStart = effectiveDateStart;
+		if (action!=='') {
+			newParam.action = action;
 		}
-		if (effectiveDateEnd) {
-			newParam.effectiveDateEnd = effectiveDateEnd;
+		if (status!=='') {
+			newParam.status = status;
 		}
-		if (expirationDateStart) {
-			newParam.expirationDateStart = expirationDateStart;
-		}
-		if (expirationDateEnd) {
-			newParam.expirationDateEnd = expirationDateEnd;
-		}
-		if (creationDateStart) {
-			newParam.creationDateStart = creationDateStart;
-		}
-		if (creationDateEnd) {
-			newParam.creationDateEnd = creationDateEnd;
-		}
-		if (chargeTypeInt != '0') {
-			newParam.chargeTypeInt = chargeTypeInt;
-		}
-		if (chargeSystemPropertyInt != '0') {
-			newParam.chargeSystemPropertyInt = chargeSystemPropertyInt;
-		}
-		if (chargeStatusInt != '0') {
-			newParam.chargeStatusInt = chargeStatusInt;
-		}
-		if (chargeServiceTypeInt != '0') {
-			newParam.chargeServiceTypeInt = chargeServiceTypeInt;
-		}
-
 		for (var k in newParam) {
 			if (newParam[k] !== userParam[k]) {
 				newchange = true;
@@ -298,8 +297,7 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + '/clearingCharge/list?userId=&' + Utils.object2param(userParam);
-		//return global_config.serverRoot + '/queryPayChannel?payType=0';// + Utils.object2param(userParam);
+		return global_config.serverRoot + '/queryMerchantCheck?size=15&index=1&' + Utils.object2param(userParam)+ '&t=' + Math.random();
 	}
 
 	return {

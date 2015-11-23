@@ -50,10 +50,10 @@
 						<div class="widget-main">
 							<div class="row">
 								<div class="col-xs-12 col-sm-2">
-									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="chargeTypeInt">商户ID:</label></div>
+									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5">商户ID:</label></div>
 									<div class="col-sm-9">
-										<select class="select" id="audit"> 
-											<option value="">无</option>   
+										<select class="select" id="merchantId"> 
+											<option value="-1">无</option>   
 								        	<option value="2">待审核</option>
 								        	<option value="0">审核通过</option>
 								        	<option value="1">审核拒绝</option>
@@ -65,7 +65,7 @@
 									 <div class="col-sm-8">
 									  <div class="col-sm-12">
 									  	<div class="input-group">
-									  		<input type="text" class="input-sm form-control datepicker" name="endtime" placeholder="from" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+									  		<input type="text" class="input-sm form-control datepicker" name="createTime" placeholder="from" data-date-format="yyyy-mm-dd hh:ii" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
 									    </div>
 									  </div>
 									 </div>
