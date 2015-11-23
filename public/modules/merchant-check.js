@@ -123,7 +123,11 @@ define(function(require, exports, module) {
 		var data = d[0] || {};
 		if(data.merchantName)
 		{
-			$("[vfor=merchantName]").html(data.merchantName);
+			$("[vfor=merchantName]").html(data.accountName);
+		}
+		if(data.accountName)
+		{
+			$("[vfor=accountName]").html(data.accountName);
 		}
 		//data.action:0/2/4;1\3
 		if(data.action==0||data.action==2||data.action==4)
@@ -215,7 +219,9 @@ define(function(require, exports, module) {
 			type:'post',
 			data:{'id':data[0].id,'status':status,'explanation':$("#explanation").val()},
 			success: function(res) {
-				console.log(res);
+				$("tr[data-id="+id+"]").find("td:eq(5)").html(dictionaryCollection['status'][status]);
+				$("tr[data-id="+id+"]").find("td:eq(6)").html($("#explanation").val());
+				$("tr[data-id="+id+"]").find("td:last").children('div').remove();
 			},
 			error: function(json) {
 				// some report
