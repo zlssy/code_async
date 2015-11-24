@@ -24,7 +24,18 @@ define(function(require, exports, module) {
 			merchantName: $('#merchantName')
 		},
 
-		_grid;
+		_grid,
+		PAY_STATUS = {
+			'0':'待付款',
+			'1':'全款已支付',
+			'2':'部分已支付',
+			'3':'付款失败',
+			'4':'付款中',
+			'5':'退款中',
+			'6':'退款失败',
+			'7':'退款成功',
+			'8':'订单关闭'
+		};
 
 	function init() {
 		loadData();
@@ -62,7 +73,10 @@ define(function(require, exports, module) {
 				index: 'payChannel'
 			}, {
 				name: '订单状态',
-				index: 'payStatus'
+				index: 'payStatus',
+				format: function(v){
+					return PAY_STATUS[v] || '';
+				}
 			}, {
 				name: '支付开始时间',
 				index: 'startPayTime'
