@@ -278,8 +278,8 @@ define(function(require, exports, module) {
 			$("div#viewBaseInfo [vfor=merchantUrl]").html(data.merchantUrl);
 		}
 		if (data.businessAddr) {
-			$("div#editBaseInfo input[name=businessCertAddr]").val(data.businessAddr);
-			$("div#viewBaseInfo [vfor=businessCertAddr]").html(data.businessAddr);
+			$("div#editBaseInfo input[name=businessAddr]").val(data.businessAddr);
+			$("div#viewBaseInfo [vfor=businessAddr]").html(data.businessAddr);
 		}
 		if (data.postalCode) {
 			$("div#editBaseInfo input[name=postalCode]").val(data.postalCode);
@@ -308,18 +308,18 @@ define(function(require, exports, module) {
 		var el;
 		if (data.payChannel && data.payChannel.length) {
 			for (var i = 0; i < data.payChannel.length; i++) {
-				el = $('input[name="zfcp"][value="' + data.payChannel[i].channelId + '"]');
+				el = $('input[name="zfcp"][value="' + data.payChannel[i].id + '"]');
 				el && el.prop('checked', false);
 				if (el && data.payChannel[i].checked) {
 					el.trigger('click');
 				}
 			}
 		}
-		if(data.withHoldingChannel && data.withHoldingChannel.length){
-			$('input[name="dkcp"]').prop('checked', false);
-			for(var i=0;i<data.withHoldingChannel.length;i++){
-				if(data.withHoldingChannel[i].checked){
-					$('input[name="dkcp"][value="'+data.withHoldingChannel[i].channelId+'"]').prop('checked', true);
+		$('input[name="dkcp"]').prop('checked', false);
+		if (data.withHoldingChannel && data.withHoldingChannel.length) {
+			for (var i = 0; i < data.withHoldingChannel.length; i++) {
+				if (data.withHoldingChannel[i].checked) {
+					$('input[name="dkcp"][value="' + data.withHoldingChannel[i].id + '"]').prop('checked', true);
 				}
 			}
 		}
@@ -546,7 +546,9 @@ define(function(require, exports, module) {
 	 * @return {[type]}     [description]
 	 */
 	function view(row) {
-		addAndUpdate(row, function() {});
+		addAndUpdate(row, function() {
+			$('div[vfor="zf"] input, div[vfor="dk"] input').prop('disabled', true);
+		});
 	}
 
 	//保存（新增、编辑）
@@ -644,6 +646,7 @@ define(function(require, exports, module) {
 
 			if ('input' == tag && 'zfcp' == name) {
 				var $dk = $('#dk');
+				!$dk.size() && ($dk = $('div[vfor="dk"]'));
 				if ($el.prop('checked')) {
 					var node = $el.parent().clone();
 					node.find('input').attr('name', 'dkcp');
