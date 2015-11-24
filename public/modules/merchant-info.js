@@ -29,6 +29,7 @@ define(function(require, exports, module) {
 			key: 'id', //记得这里要换成现在接口的参数
 			ajaxCompleteKey: 'response', // 表示ajax请求状态的字段
 			checkbox: false,
+			pageName: 'index',
 			cols: [{
 				name: '商户编码',
 				index: 'merchantNum'
@@ -664,7 +665,6 @@ define(function(require, exports, module) {
 
 	function getParams() {
 		var newParam = {},
-			newchange = false,
 			accountName = doms.accountName.val(),
 			merchantNum = doms.merchantNum.val(),
 			merchantID = doms.merchantID.val(),
@@ -696,16 +696,12 @@ define(function(require, exports, module) {
 				break;
 			}
 		}
-		if (!newchange) {
-			Box.alert('您的查询条件并没有做任何修改.');
-			return false;
-		}
 		userParam = newParam;
 		return true;
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + 'queryMerchantInfo?size=15&' + Utils.object2param(userParam) + '&t=' + Math.random();
+		return global_config.serverRoot + 'queryMerchantInfo?size=15&index=1&' + Utils.object2param(userParam) + '&t=' + Math.random();
 	}
 
 	return {

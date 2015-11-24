@@ -20,7 +20,8 @@ define(function(require, exports, module) {
 			startPayBeginTime: $('input[name="startPayBeginTime"]'),
 			startPayEndTime: $('input[name="startPayEndTime"]'),
 			payOverBeginTime: $('input[name="payOverBeginTime"]'),
-			payOverEndTime: $('input[name="payOverEndTime"]')
+			payOverEndTime: $('input[name="payOverEndTime"]'),
+			merchantName: $('#merchantName')
 		},
 
 		_grid;
@@ -49,7 +50,7 @@ define(function(require, exports, module) {
 				index: 'merchantName'
 			}, {
 				name: '用户编号',
-				index: ''
+				index: 'payer'
 			}, {
 				name: '订单金额',
 				index: 'orderAmount'
@@ -68,6 +69,27 @@ define(function(require, exports, module) {
 			}, {
 				name: '支付完成时间',
 				index: 'payOverTime'
+			}, {
+				name: '北京时间',
+				index: 'startPayTimeBJ'
+			}, {
+				name: '失败原因',
+				index: 'message',
+				format: function(v) {
+					return v || '';
+				}
+			}, {
+				name: '操作',
+				index: '',
+				format: function(v, i, row) {
+					var html = '<div class="align-right">';
+					if ('1' == row.payStatus && ('CYBS' == row.payChannel || 'PAYPAL' == row.payChannel)) {
+						html += '<a href="javascript:void(0)" class="refund">退款</a>&nbsp;';
+					}
+					html += '<a href="javascript:void(0)" class="history">操作历史</a>';
+					html += '</div>';
+					return html;
+				}
 			}],
 			url: getUrl(),
 			pagesize: 15,
@@ -78,9 +100,98 @@ define(function(require, exports, module) {
 			}
 		});
 		listContainer.html(_grid.getHtml());
+		_grid.listen('renderCallback', function() {
+			$('.ui-jqgrid-bdiv').on('click', '.refund', function(e) {
+				Box.confirm('确认退款', function(v) {
+					if (v) {
+						var row = _grid.getSelectedRow();
+						row.length && $.ajax({
+							url: global_config.serverRoot + 'refund',
+							data: {
+								payOrderId: row[0].payOrderId,
+								amount: row[0].orderAmount,
+								operator: global_info.username || '',
+								type: 0
+							},
+							success: function(json) {
+								if ('32000' == json.code) {
+									Box.alert('退款成功~');
+									_grid.loadData();
+								} else {
+									Box.alert('退款失败~');
+								}
+							},
+							error: function(e) {
+								Box.alert('退款失败~');
+							}
+						});
+					}
+				});
+			}).on('click', '.history', function(e) {
+				setTimeout(function() {
+					viewHistory(_grid.getSelectedRow());
+				}, 0);
+			});
+		});
 		_grid.load();
 		registerEvents();
 	}
+
+	/**
+	 * [viewHistory 查看历史记录]
+	 * @param  {[Array]} row [选中行的数组]
+	 * @return {[type]}     [description]
+	 */
+	function viewHistory(row) {
+		var id = row[0].payOrderId;
+		$.ajax({
+			url: global_config.serverRoot + 'queryRefundHistory?payOrderId=' + id,
+			success: function(json) {
+				if ('0' == json.code) {
+					showHistory(json.refundHistory);
+				} else if (-100 == json.code) {
+					location.reload();
+				}
+			},
+			error: function(json) {
+				// some report
+			}
+		})
+	}
+
+	/**
+	 * [showHistory 展示历史操作信息]
+	 * @param  {[Array]} data [要展示的数据]
+	 * @return {[type]}      [description]
+	 */
+	function showHistory(data) {
+		var html = ['<h4><b>操作历史</b></h4><hr class="no-margin">'],
+			d;
+		html.push('<table class="table table-striped table-bordered table-hover">');
+		html.push('<thead><tr><th>操作人</th><th>操作日期</th><th>操作类型</th></tr></thead>');
+		html.push('<tbody>');
+		for (var i = 0; i < data.length; i++) {
+			d = data[i];
+			html.push('<tr>');
+			html.push('<td>' + (d.operator) + '</td>');
+			html.push('<td>' + d.createDateStr + '</td>');
+			html.push('<td>' + getOperationTypeStr(d.type) + '</td>');
+			html.push('</tr>');
+		}
+		html.push('</tbody></table>');
+
+		Box.alert(html.join(''));
+	}
+
+	function getOperationTypeStr(v) {
+		if ('1' == v) {
+			return '补单';
+		} else if ('0' == v) {
+			return '退款';
+		}
+		return '';
+	}
+
 
 	function registerEvents() {
 		$('.datepicker').datetimepicker({
@@ -126,7 +237,9 @@ define(function(require, exports, module) {
 			startPayBeginTime = doms.startPayBeginTime.val(),
 			startPayEndTime = doms.startPayEndTime.val(),
 			payOverBeginTime = doms.payOverBeginTime.val(),
-			payOverEndTime = doms.payOverEndTime.val();
+			payOverEndTime = doms.payOverEndTime.val(),
+			merchantName = doms.merchantName.val();
+
 		if (payOrderId) {
 			newParam.payOrderId = payOrderId;
 		}
@@ -156,6 +269,9 @@ define(function(require, exports, module) {
 		}
 		if (payOverEndTime) {
 			newParam.payOverEndTime = payOverEndTime;
+		}
+		if (merchantName) {
+			newParam.merchantName = merchantName;
 		}
 
 		/*if (payChannel != '') {

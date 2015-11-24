@@ -30,6 +30,9 @@ global_config = {
 	serverHost :'<%-setting.proxyPath%>',
 	serverRoot :'<%-setting.proxyPath%>/operationtest/'
 };
+global_info = {
+	username: '<%= locals._userName%>'	
+};
 seajs.config({
 	base: '<%-setting.filePath%>/modules/',
 	alias: {
