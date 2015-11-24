@@ -73,7 +73,7 @@
 									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5">状态:</label></div>
 									<div class="col-sm-9">
 										<select class="select" id="status"> 
-											<option value="">无</option>   
+											<option value="-1">无</option>   
 								        	<option value="2">待审核</option>
 								        	<option value="0">审核通过</option>
 								        	<option value="1">审核拒绝</option>
@@ -84,7 +84,7 @@
 									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5">事件:</label></div>
 									<div class="col-sm-9">
 										<select class="select" id="action">  
-											<option value="">无</option> 
+											<option value="-1">无</option> 
 								        	<option value="0">注册账户</option>
 								        	<option value="1">支付接入</option>
 								        	<option value="2">修改信息</option>
@@ -229,7 +229,7 @@
 </script>
 <script id="otherCheckTpl" type="text/html">
 <div class="widget-box">	
-	<div class="widget-header"><h5 class="widget-title">账户名：<span vfor="merchantName"></span></h5></div>
+	<div class="widget-header"><h5 class="widget-title">账户名：<span vfor="accountName"></span></h5></div>
 	<div class="widget-body">
 		<div class="widget-main">
 			<div class="row" vfor="tools">				

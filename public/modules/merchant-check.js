@@ -123,7 +123,11 @@ define(function(require, exports, module) {
 		var data = d[0] || {};
 		if(data.merchantName)
 		{
-			$("[vfor=merchantName]").html(data.merchantName);
+			$("[vfor=merchantName]").html(data.accountName);
+		}
+		if(data.accountName)
+		{
+			$("[vfor=accountName]").html(data.accountName);
 		}
 		//data.action:0/2/4;1\3
 		if(data.action==0||data.action==2||data.action==4)
@@ -215,7 +219,9 @@ define(function(require, exports, module) {
 			type:'post',
 			data:{'id':data[0].id,'status':status,'explanation':$("#explanation").val()},
 			success: function(res) {
-				console.log(res);
+				$("tr[data-id="+id+"]").find("td:eq(5)").html(dictionaryCollection['status'][status]);
+				$("tr[data-id="+id+"]").find("td:eq(6)").html($("#explanation").val());
+				$("tr[data-id="+id+"]").find("td:last").children('div').remove();
 			},
 			error: function(json) {
 				// some report
@@ -241,16 +247,19 @@ define(function(require, exports, module) {
 					_grid.setUrl(getUrl());
 					_grid.loadData();
 				}
-			}			
-			if ('input' == tag && 'fchargeTypeInt' == name) {
-				var val = $el.val();
-				if (val == dictionaryCollection.chargeTypeArr[1].innerValue) {
-					$('#gdPanel').addClass('hide');
-					$('#jtPanel').removeClass('hide');
-				} else {
-					$('#gdPanel').removeClass('hide');
-					$('#jtPanel').addClass('hide');
-				}
+			}	
+			//刷新页面时，清空查询条件
+			var _s="close";
+			window.onunload = function(){
+			   if(_s=="fresh")
+			    userParam = {};
+				doms.startTime.val('');
+				doms.endTime.val('');
+				doms.action.val(-1);
+				doms.status.val(-1);
+			}
+			window.onbeforeunload = function(){
+			   _s="fresh";
 			}
 		});
 	}
@@ -268,10 +277,10 @@ define(function(require, exports, module) {
 		if (endTime) {
 			newParam.endTime = endTime;
 		}
-		if (action!=='') {
+		if (action!=='-1') {
 			newParam.action = action;
 		}
-		if (status!=='') {
+		if (status!=='-1') {
 			newParam.status = status;
 		}
 		for (var k in newParam) {

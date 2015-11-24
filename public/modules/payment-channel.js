@@ -54,12 +54,12 @@ define(function(require, exports, module) {
 				}
 			}],
 			url: getUrl(),
-			pagesize: 10,
+			pagesize: 15,
 			pageName:'index',
 			jsonReader: {
 				root: 'payChannelVos',
-				page: '1',//'data.index',
-				records: '15'//data.total'
+				page: 'page.index',//'data.index',
+				records: 'page.total'//data.total'
 			}
 		});
 		listContainer.html(_grid.getHtml());		
@@ -111,6 +111,18 @@ define(function(require, exports, module) {
 					_grid.setUrl(getUrl());
 					_grid.loadData();
 				}
+			}
+			//刷新页面时，清空查询条件
+			var _s="close";
+			window.onunload = function(){
+			   if(_s=="fresh")
+			      userParam = {};
+			      doms.payChannelName.val('');
+					doms.payChannelNumber.val('');
+					doms.payType.val(-1);
+			}
+			window.onbeforeunload = function(){
+			   _s="fresh";
 			}
 		});
 	}
