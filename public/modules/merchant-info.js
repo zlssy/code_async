@@ -30,7 +30,7 @@ define(function(require, exports, module) {
 			ajaxCompleteKey: 'response', // 表示ajax请求状态的字段
 			checkbox: false,
 			cols: [{
-				name: '账户编号',
+				name: '商户编码',
 				index: 'merchantNum'
 			}, {
 				name: '账户名',
@@ -39,7 +39,8 @@ define(function(require, exports, module) {
 				name: '商户名称',
 				index: 'outMerchantName',
 				format: function(v) {
-					return '[' + v + ']';
+					if (v)
+						return '[' + v + ']';
 				}
 			}, {
 				name: '商户ID',
@@ -49,8 +50,14 @@ define(function(require, exports, module) {
 				index: 'linkphone'
 			}, {
 				name: '操作',
-				format: function(v) {
-					return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-pencil blue" title="编辑"></span><span class="ui-icon ace-icon fa fa-search-plus blue" title="查看"></span><span class="ui-icon ace-icon fa fa-trash-o blue" title="删除"></span></div>';
+				format: function(v, index, row) {
+					var html = ['<span class="ui-icon ace-icon fa fa-search-plus blue" title="查看"></span>'];
+
+					if ('0' == row.status) {
+						html.unshift('<span class="ui-icon ace-icon fa fa-pencil blue" title="编辑"></span>');
+						html.push('<span class="ui-icon ace-icon fa fa-trash-o blue" title="删除"></span>');
+					}
+					return '<div class="ui-pg-div align-center">' + html.join('') + '</div>';
 				}
 			}],
 			url: getUrl(),
@@ -75,6 +82,30 @@ define(function(require, exports, module) {
 		});
 		_grid.listen('viewCallback', function(row) {
 			view(row);
+		});
+		_grid.listen('delCallback', function(row) {
+			var id = row && row[0].loginId || 0;
+			console.log(row);
+			if (id) {
+				Box.confirm('是否确实要删除？', function(v) {
+					if (v) {
+						$.ajax({
+							url: global_config.serverRoot + 'deleteMerchant',
+							method: 'post',
+							data: {
+								loginId: id
+							},
+							success: function(json) {
+								if ('0' != json.response) {
+									Box.alert('删除失败！');
+								} else {
+									_grid.loadData();
+								}
+							}
+						});
+					}
+				});
+			}
 		});
 
 		//封装下拉数据
@@ -156,7 +187,8 @@ define(function(require, exports, module) {
 	function addAndUpdate(data, cb) {
 		var opt = {},
 			id = '',
-			tpl = ('function' == typeof cb) ? infoViewTpl : infoAddEditTpl;
+			tpl = ('function' == typeof cb) ? infoViewTpl : infoAddEditTpl,
+			theDialog;
 		opt.message = '<h4><b>' + (data ? ('function' == typeof cb ? '查看商户信息' : '修改商户信息') : '添加商户') + '</b></h4><hr class="no-margin">' + tpl;
 
 		if (!('function' == typeof cb)) {
@@ -168,16 +200,14 @@ define(function(require, exports, module) {
 						if (!validate()) {
 							return false;
 						} else {
-							if (!submitData(data)) {
-								return false;
-							}
+							submitData(data, theDialog);
 						}
 					}
 				}
 			};
 		}
 
-		showDialog(opt);
+		theDialog = showDialog(opt);
 		if (!data) {
 			$("div#zhInfoEdit").addClass('hide');
 			$("div#zhInfoAdd").removeClass('hide');
@@ -189,8 +219,8 @@ define(function(require, exports, module) {
 		$('div#editBaseInfo input').on('blur', function(e) {
 			validate($(this));
 		});
-		setSelect('businessTypesArr', $('#accountType'));
-		setSelect('accountTypesArr', $('#bussinessType'), null, 'key', 'value');
+		setSelect('accountTypesArr', $('#accountType'), 0, 'key', 'value');
+		setSelect('businessTypesArr', $('#businessType'));
 		/** 设置支付产品选项 */
 		if (dictionaryCollection.payTypeArr && dictionaryCollection.payTypeArr.length) {
 			var html = [],
@@ -201,30 +231,34 @@ define(function(require, exports, module) {
 			}
 			$('#zf').html(html.join(''));
 		}
-		data && fillData(data); //编辑和查看需要
+		data && getRowDetail(data[0].loginId, cb);; //编辑和查看需要
 	}
+
+	function getRowDetail(id, cb) {
+		$.ajax({
+			url: global_config.serverRoot + 'queryMerchantInfoDetail?loginId=' + id + '&t=' + Math.random(),
+			success: function(json) {
+				if ('0' == json.response) {
+					fillData(json.tclMerchantInfo);
+					'function' == typeof cb && cb.call();
+				} else if (-100 == json.code) {
+					location.reload();
+				}
+			},
+			error: function(e) {
+				// report
+			}
+		});
+	}
+
 	/**
 	 * [fillData 编辑时，填充数据]
 	 * @param  {[Object]} d [选中行数据]
 	 * @return {[type]}   [description]
 	 */
 	function fillData(d) {
-		var data = d[0] || {};
+		var data = Utils.is('Array', d) ? d[0] : d;
 		console.log(data);
-		/*if(dictionaryCollection['accountTypesArr']){
-			for (var i = 0; i < dictionaryCollection['accountTypesArr'].length; i++) {
-				if (data.userType == dictionaryCollection['accountTypesArr'][i].innerValue) {
-					$("div[vfor=accountType]").html(dictionaryCollection['accountTypesArr'][i].label);		
-				}
-			}			
-		}
-		if(dictionaryCollection['businessTypesArr']){
-			for (var i = 0; i < dictionaryCollection['businessTypesArr'].length; i++) {
-				if (data.userType == dictionaryCollection['businessTypesArr'][i].innerValue) {
-					$("div[vfor=bussinessType]").html(dictionaryCollection['businessTypesArr'][i].label);		
-				}
-			}	
-		}*/
 		if (data.merchantNum) {
 			$("[vfor=merchantNum]").html(data.merchantNum);
 		}
@@ -258,17 +292,17 @@ define(function(require, exports, module) {
 			$("div#editBaseInfo input[name=businessCertCode]").val(data.businessCertCode);
 			$("div#viewBaseInfo [vfor=businessCertCode]").html(data.businessCertCode);
 		}
-		if (data.postalCode) {
-			$("div#editBaseInfo input[name=postalCode]").val(data.postalCode);
-			$("div#viewBaseInfo [vfor=postalCode]").html(data.postalCode);
+		if (data.linkman) {
+			$("div#editBaseInfo input[name=linkman]").val(data.linkman);
+			$("div#viewBaseInfo [vfor=linkman]").html(data.linkman);
 		}
-		if (data.postalCode) {
-			$("div#editBaseInfo input[name=postalCode]").val(data.postalCode);
-			$("div#viewBaseInfo [vfor=postalCode]").html(data.postalCode);
+		if (data.linkmail) {
+			$("div#editBaseInfo input[name=linkmail]").val(data.linkmail);
+			$("div#viewBaseInfo [vfor=linkmail]").html(data.linkmail);
 		}
-		if (data.postalCode) {
-			$("div#editBaseInfo input[name=postalCode]").val(data.postalCode);
-			$("div#viewBaseInfo [vfor=postalCode]").html(data.postalCode);
+		if (data.linkphone) {
+			$("div#editBaseInfo input[name=linkphone]").val(data.linkphone);
+			$("div#viewBaseInfo [vfor=linkphone]").html(data.linkphone);
 		}
 	}
 
@@ -497,29 +531,67 @@ define(function(require, exports, module) {
 	}
 
 	//保存（新增、编辑）
-	function submitData(data) {
+	function submitData(d) {
 		var data = {},
+			action = 'insertMerchant',
 			accountType = $('#accountType').val(),
 			businessType = $('#businessType').val(),
-			merchantName = $('input[name="merchantName"]').val(),
+			merchantName = $('div#editBaseInfo input[name=merchantName]').val(),
 			merchantUrl = $('input[name="merchantUrl"]').val(),
 			businessAddr = $('input[name="businessAddr"]').val(),
 			postalCode = $('input[name="postalCode"]').val(),
 			businessCertAddr = $('input[name="businessCertAddr"]').val(),
 			businessCertCode = $('input[name="businessCertCode"]').val(),
-			linkman = $('input[name="linkman"]'),
-			linkphone = $('input[name="linkphone"]'),
-			linkmail = $('input[name="linkmail"]'),
+			linkman = $('input[name="linkman"]').val(),
+			linkphone = $('input[name="linkphone"]').val(),
+			linkmail = $('input[name="linkmail"]').val(),
 			zfcp = $('input[name="zfcp"]:checked').map(function() {
 				return $(this).val()
-			}).get(),
+			}).get() || [],
 			dkcp = $('input[name="dkcp"]:checked').map(function() {
 				return $(this).val()
-			}).get();
+			}).get() || [];
+
+		data.accountType = accountType;
+		data.businessType = businessType;
+		data.merchantName = merchantName;
+		data.merchantUrl = merchantUrl;
+		data.businessAddr = businessAddr;
+		data.postalCode = postalCode;
+		data.businessCertAddr = businessCertAddr;
+		data.businessCertCode = businessCertCode;
+		data.linkman = linkman;
+		data.linkphone = linkphone;
+		data.linkmail = linkmail;
+		data.payChannelNumbers = zfcp.join(',');
+		data.withholdIds = dkcp.join(',');
+
+		if(d && d[0].loginId){
+			data.loginId = d[0].loginId;
+			action = 'updateMerchant';
+		}
+
+		// console.log(data);
+
+		$.ajax({
+			url: global_config.serverRoot + action,
+			data: data,
+			method: 'post',
+			success: function(json) {
+				if ('0' == json.response) {
+					alert('数据保存成功!');
+				} else {
+					alert('数据保存失败~');
+				}
+			},
+			error: function(e) {
+				alert('数据保存失败~~~');
+			}
+		});
 	}
 
 	function showDialog(opt) {
-		Box.dialog(opt);
+		return Box.dialog(opt);
 	}
 
 
@@ -611,7 +683,7 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + 'queryMerchantInfo?size=15&' + Utils.object2param(userParam);
+		return global_config.serverRoot + 'queryMerchantInfo?size=15&' + Utils.object2param(userParam) + '&t=' + Math.random();
 	}
 
 	return {
