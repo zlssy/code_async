@@ -230,6 +230,7 @@ define(function(require, exports, module) {
 				html.push('<span><input type="checkbox" name="zfcp" id="zfcp' + di.id + '" value="' + di.id + '" /><label for="zfcp' + di.id + '">' + di.tool + '</label>&nbsp;&nbsp;</span>');
 			}
 			$('#zf').html(html.join(''));
+			$('div[vfor="zf"]').html(html.join(''));
 		}
 		data && getRowDetail(data[0].loginId, cb);; //编辑和查看需要
 	}
@@ -303,6 +304,24 @@ define(function(require, exports, module) {
 		if (data.linkphone) {
 			$("div#editBaseInfo input[name=linkphone]").val(data.linkphone);
 			$("div#viewBaseInfo [vfor=linkphone]").html(data.linkphone);
+		}
+		var el;
+		if (data.payChannel && data.payChannel.length) {
+			for (var i = 0; i < data.payChannel.length; i++) {
+				el = $('input[name="zfcp"][value="' + data.payChannel[i].channelId + '"]');
+				el && el.prop('checked', false);
+				if (el && data.payChannel[i].checked) {
+					el.trigger('click');
+				}
+			}
+		}
+		if(data.withHoldingChannel && data.withHoldingChannel.length){
+			$('input[name="dkcp"]').prop('checked', false);
+			for(var i=0;i<data.withHoldingChannel.length;i++){
+				if(data.withHoldingChannel[i].checked){
+					$('input[name="dkcp"][value="'+data.withHoldingChannel[i].channelId+'"]').prop('checked', true);
+				}
+			}
 		}
 	}
 
@@ -566,7 +585,7 @@ define(function(require, exports, module) {
 		data.payChannelNumbers = zfcp.join(',');
 		data.withholdIds = dkcp.join(',');
 
-		if(d && d[0].loginId){
+		if (d && d[0].loginId) {
 			data.loginId = d[0].loginId;
 			action = 'updateMerchant';
 		}
