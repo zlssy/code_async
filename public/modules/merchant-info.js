@@ -602,7 +602,9 @@ define(function(require, exports, module) {
 			success: function(json) {
 				if ('0' == json.response) {
 					alert('数据保存成功!');
-				} else {
+				}else if ('2' == json.response) {
+					alert('该商户已存在!');
+				}else {
 					alert('数据保存失败~');
 				}
 			},
