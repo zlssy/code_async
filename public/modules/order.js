@@ -25,16 +25,17 @@ define(function(require, exports, module) {
 		},
 
 		_grid,
+		idle = true, // 当前空闲，可操作
 		PAY_STATUS = {
-			'0':'待付款',
-			'1':'全款已支付',
-			'2':'部分已支付',
-			'3':'付款失败',
-			'4':'付款中',
-			'5':'退款中',
-			'6':'退款失败',
-			'7':'退款成功',
-			'8':'订单关闭'
+			'0': '待付款',
+			'1': '全款已支付',
+			'2': '部分已支付',
+			'3': '付款失败',
+			'4': '付款中',
+			'5': '退款中',
+			'6': '退款失败',
+			'7': '退款成功',
+			'8': '订单关闭'
 		};
 
 	function init() {
@@ -74,7 +75,7 @@ define(function(require, exports, module) {
 			}, {
 				name: '订单状态',
 				index: 'payStatus',
-				format: function(v){
+				format: function(v) {
 					return PAY_STATUS[v] || '';
 				}
 			}, {
@@ -115,8 +116,8 @@ define(function(require, exports, module) {
 		});
 		listContainer.html(_grid.getHtml());
 		_grid.listen('renderCallback', function() {
-			$('.ui-jqgrid-bdiv').on('click', '.refund', function(e) {
-				Box.confirm('确认退款', function(v) {
+			$('.ui-jqgrid-bdiv').off('click').on('click', '.refund', function(e) {
+				idle && (idle = false, Box.confirm('确认退款', function(v) {
 					if (v) {
 						var row = _grid.getSelectedRow();
 						row.length && $.ajax({
@@ -140,7 +141,10 @@ define(function(require, exports, module) {
 							}
 						});
 					}
-				});
+				}));
+				setTimeout(function() {
+					idle = true;
+				}, 1000);
 			}).on('click', '.history', function(e) {
 				setTimeout(function() {
 					viewHistory(_grid.getSelectedRow());
