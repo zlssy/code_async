@@ -655,9 +655,12 @@ define(function(require, exports, module) {
 				var $dk = $('#dk');
 				!$dk.size() && ($dk = $('div[vfor="dk"]'));
 				if ($el.prop('checked')) {
-					var node = $el.parent().clone();
-					node.find('input').attr('name', 'dkcp');
-					$dk.append(node);
+					if($el.val()=='10000000000'||$el.val()=='10000000001')//暂时只支持VISA/MasterCard、PayPAL有代扣产品
+					{
+						var node = $el.parent().clone();
+						node.find('input').attr('name', 'dkcp');
+						$dk.append(node);
+					}					
 				} else {
 					var rre = $dk.find('#' + $el.attr('id'));
 					if (rre) {

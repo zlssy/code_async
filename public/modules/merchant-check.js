@@ -131,8 +131,7 @@ define(function(require, exports, module) {
 		}
 		//data.action:0/2/4;1\3
 		if(data.action==0||data.action==2||data.action==4)
-		{
-			
+		{			
 			if(data.merchantVO)
 			{
 				if(data.merchantVO['linkmail'])
@@ -166,30 +165,6 @@ define(function(require, exports, module) {
 				if(data.merchantVO['merchantUrl'])
 				{
 					$("[vfor=merchantUrl]").html(data.merchantVO['merchantUrl']);
-				}
-			}
-			
-			if(data.merchantSettlementVO)
-			{
-				if(data.merchantSettlementVO['settlementBillTitle'])
-				{
-					$("[vfor=settlementBillTitle]").html(data.merchantSettlementVO['settlementBillTitle']);
-				}
-				if(data.merchantSettlementVO['depositBank'])
-				{
-					$("[vfor=depositBank]").html(data.merchantSettlementVO['depositBank']);
-				}
-				if(data.merchantSettlementVO['depositBankBranch'])
-				{
-					$("[vfor=depositBankBranch]").html(data.merchantSettlementVO['depositBankBranch']);
-				}
-				if(data.merchantSettlementVO['bankAccountName'])
-				{
-					$("[vfor=bankAccountName]").html(data.merchantSettlementVO['bankAccountName']);
-				}
-				if(data.merchantSettlementVO['bankAccount'])
-				{
-					$("[vfor=bankAccount]").html(data.merchantSettlementVO['bankAccount']);
 				}
 			}
 		}
