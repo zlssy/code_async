@@ -12,8 +12,8 @@ define(function(require, exports, module) {
 		dictionaryCollection = {},
 		doms = {
 			payOrderId: $('#payOrderId'),
-			outOrderId: $('input[name="outOrderId"'), //这里获取元素还有点问题记得修复
-			merchantId: $('input[name="merchantId"'),
+			outOrderId: $('input[name="outOrderId"]'), //这里获取元素还有点问题记得修复
+			merchantId: $('input[name="merchantId"]'),
 			payChannel: $('#payChannel'),
 			currencyType: $('#currencyType'),
 			payStatus: $('#payStatus'),

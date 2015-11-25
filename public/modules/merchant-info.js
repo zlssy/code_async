@@ -75,6 +75,11 @@ define(function(require, exports, module) {
 			//编辑的全show，展示的全hide
 			addAndUpdate();
 		});
+		_grid.listen('renderCallback', function(){
+			$('.ui-pg-div *[title]').tooltip({
+				container: 'body'
+			});
+		});
 		/*_grid.listen('editViewCallback', function(row) {
 			addAndUpdate(row);
 		});*/
@@ -86,7 +91,6 @@ define(function(require, exports, module) {
 		});
 		_grid.listen('delCallback', function(row) {
 			var id = row && row[0].loginId || 0;
-			console.log(row);
 			if (id) {
 				Box.confirm('是否确实要删除？', function(v) {
 					if (v) {
