@@ -12,21 +12,6 @@ define(function(require, exports, module) {
 		dictionaryCollection = {},
 		$uploadFile = $('#uploadFile'),
 		delTpl = $('#delTpl').html(),
-		doms = {
-			effectiveDateStart: $('input[name="effectiveDateStart"]'),
-			effectiveDateEnd: $('input[name="effectiveDateEnd"]'),
-			expirationDateStart: $('input[name="expirationDateStart"]'),
-			expirationDateEnd: $('input[name="expirationDateEnd"]'),
-			creationDateStart: $('input[name="creationDateStart"]'),
-			creationDateEnd: $('input[name="creationDateEnd"]'),
-			chargeServiceTypeInt: $('#chargeServiceTypeInt'),
-			chargeStatusInt: $('#chargeStatusInt'),
-			chargeSystemPropertyInt: $('#chargeSystemPropertyInt'),
-			chargeTypeInt: $('#chargeTypeInt'),
-			ownerIds: $('#ownerIds'),
-			ids: $('#ids')
-		},
-
 		_grid;
 
 	function init() {
@@ -49,11 +34,11 @@ define(function(require, exports, module) {
 				name: '版本',
 				index: 'type',
 				format: function(v) {
-					return '[' + (0 == v ? '中文': '英文')+ ']';
+					return (0 == v ? '中文': '英文');
 				}
 			}, {
 				name: '上传日期',
-				index: '2015-11-03'
+				index: 'createTimeStr'
 			}, {
 				name: '地址',
 				index: 'url'
