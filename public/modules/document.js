@@ -45,11 +45,11 @@ define(function(require, exports, module) {
 			}, {
 				name: '操作',
 				format: function() {
-					return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-trash-o blue" title="删除"></span></div>';
+					return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-trash-o blue" title="删除"></span>&nbsp;<span class="ui-icon ace-icon fa fa-download blue" title="下载"></span></div>';
 				}
 			}],
 			url: getUrl(),
-			pagesize: 10,
+			pagesize: 100,
 			jsonReader: {
 				root: 'docList',
 				page: 'index',
@@ -61,11 +61,29 @@ define(function(require, exports, module) {
 		_grid.listen('delCallback', function(row) {
 			delFile(row);
 		});
+		_grid.listen('renderCallback', function() {
+			$('.ui-pg-div *[title]').tooltip({
+				container: 'body'
+			});
+		});
 		registerEvents();
 	}
 
 	function showDialog(opt) {
 		Box.dialog(opt);
+	}
+
+	function download(url) {
+		var a = document.createElement('a');
+		a.href = url;
+		a.target = '_blank';
+		a.height = 0;
+		a.width = 0;
+		document.body.appendChild(a);
+		var e = document.createEvent('MouseEvents');
+		e.initEvent('click', true, false);
+		a.dispatchEvent(e);
+		a.remove();
 	}
 
 	function delFile(data) {
@@ -131,6 +149,13 @@ define(function(require, exports, module) {
 				}
 			}
 
+			if (cls && cls.indexOf('fa-download') > -1) {
+				var row = _grid.getSelectedRow(),
+					url = row && row[0].url || '';
+				if (url) {
+					download(url);
+				}
+			}
 
 		});
 
@@ -177,7 +202,7 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + 'fileList?' + Utils.object2param(userParam) + '&t=' + Math.random();
+		return global_config.serverRoot + 'fileList?size=100&index=1&' + Utils.object2param(userParam) + '&t=' + Math.random();
 	}
 
 	return {
