@@ -49,11 +49,12 @@ define(function(require, exports, module) {
 				}
 			}],
 			url: getUrl(),
-			pagesize: 100,
+			pagesize: 20,
+			pageName:'index',
 			jsonReader: {
 				root: 'docList',
-				page: 'index',
-				records: 'total'
+				page: 'page.index',
+				records: 'page.total'
 			}
 		});
 		listContainer.html(_grid.getHtml());
@@ -202,7 +203,7 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + 'fileList?size=100&index=1&' + Utils.object2param(userParam) + '&t=' + Math.random();
+		return global_config.serverRoot + 'fileList?size=20&index=1&' + Utils.object2param(userParam) + '&t=' + Math.random();
 	}
 
 	return {
