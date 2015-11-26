@@ -132,7 +132,14 @@ define(function(require, exports, module) {
 								if ('32000' == json.code) {
 									Box.alert('退款成功~');
 									_grid.loadData();
-								} else {
+								} else if('32101' == json.code){
+									Box.alert('订单无效~');
+								}else if('32102' == json.code){
+									Box.alert('重复退款~');
+								}else if('32103' == json.code){
+									Box.alert('网络问题，请稍后再试~');
+								}
+								else {
 									Box.alert('退款失败~');
 								}
 							},
