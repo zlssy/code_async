@@ -41,7 +41,7 @@ define(function(require, exports, module) {
 				index: 'outMerchantName',
 				format: function(v) {
 					if (v)
-						return '[' + v + ']';
+						return v;
 				}
 			}, {
 				name: '商户ID',

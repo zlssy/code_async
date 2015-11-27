@@ -175,7 +175,7 @@ define(function(require, exports, module) {
 				var strTool = '';
 				for(var i=0;i<data.tools.length;i++)
 				{
-					strTool += '<div class="col-xs-12 col-sm-2"><input type="checkbox" '+(data.tools[i]['tool']?'checked':'')+' disabled/>'+data.tools[i]['tool']+'</div>';
+					strTool += '<div class="col-xs-12 col-sm-2"><input type="checkbox" '+(data.tools[i]['checked']?'checked':'')+' disabled/>'+data.tools[i]['tool']+'</div>';
 				}
 				$("[vfor=tools]").html(strTool);
 			}
