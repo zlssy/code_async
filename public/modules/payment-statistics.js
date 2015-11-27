@@ -11,7 +11,7 @@ define(function(require, exports, module) {
 		infoCheckTpl = $('#infoCheckTpl').html(),
 		otherCheckTpl = $('#otherCheckTpl').html(),
 		doms = {			
-			merchantId: $('#merchantId'),
+			merchantName: $('#merchantName'),
 			createTime: $('input[name="createTime"]')
 		},
 		_grid;
@@ -91,10 +91,10 @@ define(function(require, exports, module) {
 	function getParams() {
 		var newParam = {},
 			newchange = false,
-			merchantId = doms.merchantId.val(),
+			merchantName = doms.merchantName.val(),
 			createTime = doms.createTime.val();
-		if (merchantId) {
-			newParam.merchantId = merchantId;
+		if (merchantName) {
+			newParam.merchantName = merchantName;
 		}
 		if (createTime) {
 			newParam.createTime = createTime;
