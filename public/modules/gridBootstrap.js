@@ -38,9 +38,9 @@ define(function(require, exports, module) {
 		html.push('	<div class="loading ui-state-default ui-state-active" id="' + this.id + '_loading" style="display: none;">读取中...</div>');
 		html.push('	<div class="ui-jqgrid-view" id="' + this.id + '_view" style="width: 100%;' + (this.have_scroll ? "overflow:auto;" : "") + '">');
 		html.push('		<div class="ui-jqgrid-titlebar ui-jqgrid-caption ui-widget-header ui-corner-top ui-helper-clearfix" style="display: none;"><a role="link" class="ui-jqgrid-titlebar-close ui-corner-all HeaderButton" style="right: 0px;"><span class="ui-icon ui-icon-circle-triangle-n"></span></a><span class="ui-jqgrid-title"></span></div>');
-		html.push('		<div class="ui-state-default ui-jqgrid-hdiv" style="width: 100%;' + (this.have_scroll ? "overflow:initial;" : "") + '">');
-		html.push('			<div class="ui-jqgrid-hbox" style="padding:0">');
-		html.push('				<table class="ui-jqgrid-htable" style="' + (this.have_scroll ? "width:" + this.fixed_table_width + "px" : "width:100%;") + '" role="grid" aria-labelledby="gbox_grid" cellspacing="0" cellpadding="0" border="0">');
+		html.push('		<div id="' + this.id + '_hdiv" class="ui-state-default ui-jqgrid-hdiv" ' + (this.have_scroll ? "overflow:initial;" : "") + '">');
+		html.push('			<div class="ui-jqgrid-hbox">');
+		html.push('				<table id="' + this.id + '_header" class="ui-jqgrid-htable" style="' + (this.have_scroll ? "width:" + this.fixed_table_width + "px" : "width:100%;") + '" role="grid" aria-labelledby="gbox_grid" cellspacing="0" cellpadding="0" border="0">');
 		html.push('					<thead>');
 		html.push('						<tr class="ui-jqgrid-labels" role="rowheader">');
 		html.push(getHeader.call(this));
@@ -49,7 +49,7 @@ define(function(require, exports, module) {
 		html.push('				</table>');
 		html.push('			</div>');
 		html.push('		</div>');
-		html.push('		<div class="ui-jqgrid-bdiv" style="height: ' + this.height + 'px; width:100%;' + (this.have_scroll ? "overflow:initial;" : "") + '">');
+		html.push('		<div id="' + this.id + '_bdiv" class="ui-jqgrid-bdiv" style="height: ' + this.height + 'px; width:100%;' + (this.have_scroll ? "overflow:initial;" : "") + '">');
 		html.push('			<div style="position:relative;">');
 		html.push('				<div class="ui-jqgrid-hbox" style="padding: 0">');
 		html.push('				<table id="' + this.id + '_listbox" tabindex="0" cellspacing="0" cellpadding="0" border="0" role="grid" aria-multiselectable="true" aria-labelledby="gbox_grid" class="ui-jqgrid-btable" style="' + (this.have_scroll ? "width:" + this.fixed_table_width + "px" : "width:100%;") + '">');
@@ -194,9 +194,9 @@ define(function(require, exports, module) {
 					colfn = col.format;
 					colval = d[col.index];
 					xsscheck = !!colval;
-					colval = 'function' === typeof colfn ? colfn(colval , d[this.key], d) : colval;
+					colval = 'function' === typeof colfn ? colfn(colval, d[this.key], d) : colval;
 					colval = colval || '';
-					html.push('<td role="gridcell" title="' + (xsscheck ? Xss.inDoubleQuotedAttr(colval) : '') + '" aria-describedby="' + this.id + '_' + col.index + '">' + (col.closeXss ? colval : xsscheck ? Xss.inHTMLData(colval) : colval) + '</td>');
+					html.push('<td style="word-wrap:break-word;word-break:break-all;white-space: pre-wrap;" role="gridcell" title="' + (xsscheck ? Xss.inDoubleQuotedAttr(colval) : '') + '" aria-describedby="' + this.id + '_' + col.index + '">' + (col.closeXss ? colval : xsscheck ? Xss.inHTMLData(colval) : colval) + '</td>');
 				}
 				html.push('</tr>');
 			};
@@ -205,6 +205,7 @@ define(function(require, exports, module) {
 			html.push('<tr><td colspan="' + colNum + '" style="height:40px; line-height:40px;"><p class="text-info center">当前条件下没有检索到数据</p></td></tr>')
 		}
 		this.setContent(html.join(''));
+		syncFirstRowWidth();
 		this.trigger('renderCallback', this);
 	}
 
@@ -227,8 +228,42 @@ define(function(require, exports, module) {
 	function load() {
 		getControls.call(this);
 		loadData.call(this);
+		resize.call(this);
 		registerEvents.call(this);
 		this.trigger('loadCallback', this);
+	}
+
+	function resize() {
+		var width = this.controls.box.width(),
+			avg = 0,
+			last = 0;
+		if (width > 0) {
+			this.controls.header.width(width);
+			this.controls.listbox.width(width);
+			this.controls.hdiv.width(width);
+			this.controls.bdiv.width(width);
+
+			// 平均分配宽度
+			if (this.checkbox) {
+				width -= 25;
+			}
+			avg = Math.floor(width / this.cols.length);
+			last = width - (avg * (this.cols.length-1));
+			console.log(width, avg, last, this.cols.length);
+			if (this.checkbox) {
+				$('.ui-th-ltr:not(:last):not(:first)').width(avg-5);
+				$('.ui-th-ltr:last').width(last-25);
+			} else {
+				$('.ui-th-ltr:not(:last)').width(avg-5);
+				$('.ui-th-ltr:last').width(last-25);
+			}
+		}
+	}
+
+	function syncFirstRowWidth() {
+		$('.jqgfirstrow td').each(function(i, v) {
+			$(v).width($('.ui-th-ltr').eq(i).width());
+		});
 	}
 
 	function loadData() {
@@ -265,6 +300,10 @@ define(function(require, exports, module) {
 	function getControls() {
 		this.controls = {
 			box: $('#' + this.id),
+			header: $('#' + this.id + '_header'),
+			listbox: $('#' + this.id + '_listbox'),
+			hdiv: $('#' + this.id + '_hdiv'),
+			bdiv: $('#' + this.id + '_bdiv'),
 			layer: $('#' + this.id + '_layer'),
 			loading: $('#' + this.id + '_loading'),
 			list: $('#' + this.id + '_list'),
@@ -561,6 +600,18 @@ define(function(require, exports, module) {
 
 		$('.ui-pg-button').tooltip({
 			container: 'body'
+		});
+
+		// 监听列表滚动
+		var bdiv = this.controls.bdiv,
+			hdiv = this.controls.hdiv;
+		bdiv.on('scroll', Utils.delay(function(e) {
+			var sl = bdiv.scrollLeft();
+			hdiv.scrollLeft(sl);
+		}, 10));
+
+		$(window).on('resize', function(){
+			resize.call(self);
 		});
 	}
 

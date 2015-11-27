@@ -329,6 +329,22 @@ define(function(require, exports, module) {
 		}
 	}
 
+	function delay(f, t) {
+		var now = Date.now,
+			last = 0,
+			ctx, args, exec = function() {
+				last = now();
+				f.apply(ctx, args)
+			};
+		return function() {
+			cur = now();
+			ctx = this, args = arguments;
+			if (cur - last > t) {
+				exec();
+			}
+		}
+	}
+
 	return {
 		object2param: object2param,
 		cookie: {
@@ -351,6 +367,7 @@ define(function(require, exports, module) {
 		isDate: isDate,
 		isUrl: isUrl,
 		once: once,
-		is: is
+		is: is,
+		delay: delay
 	};
 });
