@@ -51,45 +51,8 @@ define(function(require, exports, module) {
 		});
 		listContainer.html(_grid.getHtml());		
 		_grid.load();
-		getDictionaryFromServer(function(json) {
-			if ('0' == json.code) {
-				dictionaryCollection.merchantIdArr = json.merchantInfoMap;
-				setSelect('merchantIdArr', doms.merchantId);
-			}
-		}, function(e) {
-			// report
-		});
-		registerEvents();
-	}
-	function getDictionaryFromServer(callback, errorback) {		
-		var emptyFn = function() {},
-			cb = callback || emptyFn,
-			ecb = errorback || emptyFn;
-		$.ajax({
-			url: global_config.serverRoot + '/payCountSearch',
-			success: cb,
-			error: ecb
-		});
-	}
-	function setSelect(gArr, dom, selected) {
-		var data = dictionaryCollection[gArr],
-			s = '',
-			context = this,
-			args = Array.prototype.slice.call(arguments, 0),
-			fn = arguments.callee;
-		if (!data) {
-			setTimeout(function() {
-				console.log('retry');
-				fn.apply(context, args);
-
-			}, 10);
-			return;
-		}
-		for(var e in data)
-		{
-			dom.append('<option value="' + e + '">' + Xss.inHTMLData(data[e]) + '</option>');
-		}
 		
+		registerEvents();
 	}
 	function registerEvents() {
 		$('.datepicker').datetimepicker({
@@ -130,7 +93,7 @@ define(function(require, exports, module) {
 			newchange = false,
 			merchantId = doms.merchantId.val(),
 			createTime = doms.createTime.val();
-		if (merchantId!='-1') {
+		if (merchantId) {
 			newParam.merchantId = merchantId;
 		}
 		if (createTime) {
