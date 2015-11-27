@@ -238,15 +238,7 @@ define(function(require, exports, module) {
 					_grid.setUrl(getUrl());
 					_grid.loadData();
 				}
-			}
-			if ('input' == tag && 'fchargeSystemPropertyInt' == name) {
-				var val = $el.val();
-				if (val == dictionaryCollection.chargeSystemPropertyArr[1].innerValue) {
-					$('#fownerId').attr('placeholder', '通道ID');
-				} else if (val == dictionaryCollection.chargeSystemPropertyArr[0].innerValue) {
-					$('#fownerId').attr('placeholder', '商户ID');
-				}
-			}
+			}			
 		});
 	}
 
