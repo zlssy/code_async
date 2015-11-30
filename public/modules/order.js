@@ -229,9 +229,9 @@ define(function(require, exports, module) {
 				tag = $el.get(0).tagName.toLowerCase(),
 				id = $el.attr('id'),
 				name = $el.attr('name');
-			if (cls && cls.indexOf('fa-calendar') > -1) {
-				$el.parent().siblings('input').focus();
-			}
+//			if (cls && cls.indexOf('fa-calendar') > -1) {
+//				$el.parent().siblings('input').focus();
+//			}
 			if (cls && cls.indexOf('fa-check') > -1 || (id && 'query-btn' == id)) {
 				if (getParams()) {
 					_grid.setUrl(getUrl());
