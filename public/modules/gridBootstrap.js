@@ -248,14 +248,14 @@ define(function(require, exports, module) {
 				width -= 25;
 			}
 			avg = Math.floor(width / this.cols.length);
-			last = width - (avg * (this.cols.length-1));
+			last = width - (avg * (this.cols.length - 1));
 			console.log(width, avg, last, this.cols.length);
 			if (this.checkbox) {
-				$('.ui-th-ltr:not(:last):not(:first)').width(avg-5);
-				$('.ui-th-ltr:last').width(last-25);
+				$('.ui-th-ltr:not(:last):not(:first)').width(avg - 5);
+				$('.ui-th-ltr:last').width(last - 25);
 			} else {
-				$('.ui-th-ltr:not(:last)').width(avg-5);
-				$('.ui-th-ltr:last').width(last-25);
+				$('.ui-th-ltr:not(:last)').width(avg - 5);
+				$('.ui-th-ltr:last').width(last - 25);
 			}
 		}
 	}
@@ -268,6 +268,7 @@ define(function(require, exports, module) {
 
 	function loadData() {
 		var self = this;
+		this.setContent('<tr><td colspan="' + (this.cols.length + (this.checkbox ? 1 : 0)) + '" align="center" valign="middle" height="' + this.height + '"><i class="ace-icon fa fa-spinner fa-spin blue bigger-125"></i> 数据正在拼命加载中...</td></tr>');
 		$.ajax({
 			url: self.getUrl(),
 			success: function(json) {
@@ -610,7 +611,7 @@ define(function(require, exports, module) {
 			hdiv.scrollLeft(sl);
 		}, 10));
 
-		$(window).on('resize', function(){
+		$(window).on('resize', function() {
 			resize.call(self);
 		});
 	}
