@@ -63,6 +63,10 @@ define(function(require, exports, module) {
 				width: 120,
 
 			}, {
+				name: '源交易订单',
+				index: 'sourcePayOrderId',
+				width: 200
+			}, {
 				name: '商户名称',
 				index: 'merchantName',
 				width: 150
@@ -71,7 +75,13 @@ define(function(require, exports, module) {
 				index: 'payer'
 			}, {
 				name: '订单金额',
-				index: 'orderAmount'
+				index: 'orderAmount',
+				format: function(v){
+					if(/\d+(\.\d+)?/.test(v)){
+						return v.toFixed(2);
+					}
+					return v;
+				}
 			}, {
 				name: '货币类型',
 				index: 'currencyType'
@@ -106,7 +116,7 @@ define(function(require, exports, module) {
 				format: function(v, i, row) {
 					var html = '<div class="">';
 					html += '<a href="javascript:void(0)" class="history">操作历史</a>&nbsp;';
-					if ('1' == row.payStatus && ('CYBS' == row.payChannel || 'PAYPAL' == row.payChannel)) {
+					if ('1' != row.payStatus && ('CYBS' == row.payChannel || 'PAYPAL' == row.payChannel) && ('5' != row.refundStatus && '7' != row.refundStatus)) {
 						html += '<a href="javascript:void(0)" class="refund">退款</a>&nbsp;';
 					}
 					html += '</div>';
@@ -211,14 +221,16 @@ define(function(require, exports, module) {
 		var html = ['<h4><b>操作历史</b></h4><hr class="no-margin">'],
 			d;
 		html.push('<table class="table table-striped table-bordered table-hover">');
-		html.push('<thead><tr><th>操作人</th><th>操作日期</th><th>操作类型</th></tr></thead>');
+		html.push('<thead><tr><th>操作人</th><th>操作日期</th><th>操作类型</th><th>操作结果</th><th>退款金额</th></tr></thead>');
 		html.push('<tbody>');
 		for (var i = 0; i < data.length; i++) {
 			d = data[i];
 			html.push('<tr>');
 			html.push('<td>' + (d.operator) + '</td>');
 			html.push('<td>' + d.createDateStr + '</td>');
-			html.push('<td>' + getOperationTypeStr(d.type) + '</td>');
+			html.push('<td>' + getOperationTypeStr(d.type) + '</td>');			
+			html.push('<td>' + '成功' + '</td>');
+			html.push('<td>' + d.amount + '</td>');
 			html.push('</tr>');
 		}
 		html.push('</tbody></table>');
