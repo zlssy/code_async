@@ -26,6 +26,7 @@ define(function(require, exports, module) {
 
 		_grid,
 		idle = true, // 当前空闲，可操作
+		wait = 1000, // 控制用户操作频率，2个操作间需要等待的时间
 		PAY_STATUS = {
 			'0': '待付款',
 			'1': '全款已支付',
@@ -131,16 +132,16 @@ define(function(require, exports, module) {
 							success: function(json) {
 								if ('32000' == json.code) {
 									Box.alert('退款成功~');
-									_grid.loadData();
-								} else if('32101' == json.code) {
+								} else if ('32101' == json.code) {
 									Box.alert('无效订单，退款失败~');
-								} else if('32102' == json.code){
+								} else if ('32102' == json.code) {
 									Box.alert('您已经申请过退款了，我们正在审核，请耐心等候~');
-								} else if('32103' == json.code){
+								} else if ('32103' == json.code) {
 									Box.alert('网络好像不给力~');
 								} else {
 									Box.alert('退款失败~');
 								}
+								_grid.loadData(); // 无论成功失败，都进行重新加载
 							},
 							error: function(e) {
 								Box.alert('退款失败~');
@@ -150,11 +151,14 @@ define(function(require, exports, module) {
 				}));
 				setTimeout(function() {
 					idle = true;
-				}, 1000);
+				}, wait);
 			}).on('click', '.history', function(e) {
-				setTimeout(function() {
+				idle && (idle = false, setTimeout(function() {
+					setTimeout(function() {
+						idle = true
+					}, wait);
 					viewHistory(_grid.getSelectedRow());
-				}, 0);
+				}, 0));
 			});
 		});
 		_grid.load();
@@ -229,15 +233,15 @@ define(function(require, exports, module) {
 				tag = $el.get(0).tagName.toLowerCase(),
 				id = $el.attr('id'),
 				name = $el.attr('name');
-			if (cls && cls.indexOf('fa-calendar') > -1) {
-				$el.parent().siblings('input').focus();
-			}
+			//			if (cls && cls.indexOf('fa-calendar') > -1) {
+			//				$el.parent().siblings('input').focus();
+			//			}
 			if (cls && cls.indexOf('fa-check') > -1 || (id && 'query-btn' == id)) {
 				if (getParams()) {
 					_grid.setUrl(getUrl());
 					_grid.loadData();
 				}
-			}			
+			}
 		});
 	}
 

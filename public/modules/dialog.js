@@ -57,7 +57,7 @@ define(function(require, exports, module) {
         },
         loading:{
             start:function(txt){
-                var con = '<img style="width:22px;height: 22px;vertical-align: middle" src="../css/images/loading.gif"/> ';
+                var con = '<img style="width:22px;height: 22px;vertical-align: middle" src="' + global_config.serverHost + '/css/images/loading.gif"/> ';
                 con += txt || "please wait";
                 this.loadingDialog = dialog({
                     id:'loading',

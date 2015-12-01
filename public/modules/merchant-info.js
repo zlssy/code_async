@@ -611,6 +611,7 @@ define(function(require, exports, module) {
 				}else {
 					alert('数据保存失败~');
 				}
+                _grid.loadData();
 			},
 			error: function(e) {
 				alert('数据保存失败~~~');
