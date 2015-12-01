@@ -35,12 +35,12 @@ define(function(require, exports, module) {
 		var html = [];
 		html.push('<div id="' + this.id + '" class="ui-jqgrid ui-widget ui-widget-content ui-corner-all" dir="ltr" style="width: 100%;">');
 		html.push('	<div class="ui-widget-overlay jqgrid-overlay" id="' + this.id + '_layer"></div>');
-		html.push('	<div class="loading ui-state-default ui-state-active" id="' + this.id + '_loading" style="display: none;">读取中...</div>');
-		html.push('	<div class="ui-jqgrid-view" id="' + this.id + '_view" style="width: 100%;' + (this.have_scroll ? "overflow:auto;" : "") + '">');
+		html.push('	<div class="loading ui-state-default ui-state-active" id="' + this.id + '_loading"><i class="ace-icon fa fa-spinner fa-spin green bigger-125"></i><span>处理中...</span></div>');
+		html.push('	<div class="ui-jqgrid-view" id="' + this.id + '_view">');
 		html.push('		<div class="ui-jqgrid-titlebar ui-jqgrid-caption ui-widget-header ui-corner-top ui-helper-clearfix" style="display: none;"><a role="link" class="ui-jqgrid-titlebar-close ui-corner-all HeaderButton" style="right: 0px;"><span class="ui-icon ui-icon-circle-triangle-n"></span></a><span class="ui-jqgrid-title"></span></div>');
 		html.push('		<div id="' + this.id + '_hdiv" class="ui-state-default ui-jqgrid-hdiv" ' + (this.have_scroll ? "overflow:initial;" : "") + '">');
 		html.push('			<div class="ui-jqgrid-hbox">');
-		html.push('				<table id="' + this.id + '_header" class="ui-jqgrid-htable" style="' + (this.have_scroll ? "width:" + this.fixed_table_width + "px" : "width:100%;") + '" role="grid" aria-labelledby="gbox_grid" cellspacing="0" cellpadding="0" border="0">');
+		html.push('				<table id="' + this.id + '_header" class="ui-jqgrid-htable" role="grid" aria-labelledby="gbox_grid" cellspacing="0" cellpadding="0" border="0">');
 		html.push('					<thead>');
 		html.push('						<tr class="ui-jqgrid-labels" role="rowheader">');
 		html.push(getHeader.call(this));
@@ -49,10 +49,10 @@ define(function(require, exports, module) {
 		html.push('				</table>');
 		html.push('			</div>');
 		html.push('		</div>');
-		html.push('		<div id="' + this.id + '_bdiv" class="ui-jqgrid-bdiv" style="height: ' + this.height + 'px; width:100%;' + (this.have_scroll ? "overflow:initial;" : "") + '">');
+		html.push('		<div id="' + this.id + '_bdiv" class="ui-jqgrid-bdiv" style="height: ' + this.height + 'px; ' + (this.have_scroll ? "overflow:initial;" : "") + '">');
 		html.push('			<div style="position:relative;">');
 		html.push('				<div class="ui-jqgrid-hbox" style="padding: 0">');
-		html.push('				<table id="' + this.id + '_listbox" tabindex="0" cellspacing="0" cellpadding="0" border="0" role="grid" aria-multiselectable="true" aria-labelledby="gbox_grid" class="ui-jqgrid-btable" style="' + (this.have_scroll ? "width:" + this.fixed_table_width + "px" : "width:100%;") + '">');
+		html.push('				<table id="' + this.id + '_listbox" tabindex="0" cellspacing="0" cellpadding="0" border="0" role="grid" aria-multiselectable="true" aria-labelledby="gbox_grid" class="ui-jqgrid-btable">');
 		html.push('				<tbody id="' + this.id + '_list">');
 		html.push('				</tbody>');
 		html.push(getFirstRow.call(this));
@@ -136,7 +136,7 @@ define(function(require, exports, module) {
 				colid = col.id || 'col' + (++guid);
 				colwidth = col.width || this.col_average_width;
 				colvalue = col.name || '&nbsp;';
-				wstr = i != this.colLen - 1 ? 'style="width: ' + colwidth + '%;"' : '';
+				wstr = ''; //i != this.colLen - 1 ? 'style="width: ' + colwidth + '%;"' : '';
 				html.push('<th id="' + id + '_' + colid + '" role="columnheader" class="ui-state-default ui-th-column ui-th-ltr" ' + wstr + '><span class="ui-jqgrid-resize ui-jqgrid-resize-ltr" style="cursor:default">&nbsp;</span><div id="' + id + '_h_' + colid + '" class="ui-jqgrid-sortable">' + colvalue + '<span class="s-ico" style="display:none"><span sort="asc" class="ui-grid-ico-sort ui-icon-asc ui-state-disabled ui-icon ui-icon-triangle-1-n ui-sort-ltr"></span><span sort="desc" class="ui-grid-ico-sort ui-icon-desc ui-state-disabled ui-icon ui-icon-triangle-1-s ui-sort-ltr"></span></span></div></th>');
 			}
 		};
@@ -155,7 +155,7 @@ define(function(require, exports, module) {
 			col = this.cols[i];
 			if (col) {
 				colwidth = col.width || this.col_average_width;
-				wstr = i != this.colLen - 1 ? 'width: ' + colwidth + '%;' : '';
+				wstr = ''; //i != this.colLen - 1 ? 'width: ' + colwidth + '%;' : '';
 				html.push('<td role="gridcell" style="height: 0px; ' + wstr + '"></td>');
 			}
 		}
@@ -235,28 +235,46 @@ define(function(require, exports, module) {
 
 	function resize() {
 		var width = this.controls.box.width(),
+			tableWidth = width - 18, // 为滚动条预留位置
 			avg = 0,
-			last = 0;
+			last = 0,
+			offset = 5, // jq的 table css中有左右两像素的填充，还有1像素边框，需要减掉，否则宽度会溢出
+			indexOffset = 0,
+			cellWidth = 0;
+
 		if (width > 0) {
-			this.controls.header.width(width);
-			this.controls.listbox.width(width);
 			this.controls.hdiv.width(width);
 			this.controls.bdiv.width(width);
+			this.controls.view.width(width);
 
 			// 平均分配宽度
 			if (this.checkbox) {
-				width -= 25;
+				tableWidth -= 25;
 			}
-			avg = Math.floor(width / this.cols.length);
-			last = width - (avg * (this.cols.length - 1));
-			console.log(width, avg, last, this.cols.length);
+			avg = Math.floor(tableWidth / this.cols.length);
+			last = tableWidth - (avg * (this.cols.length - 1));
+			// console.log(tableWidth, avg, last, this.cols.length);
 			if (this.checkbox) {
-				$('.ui-th-ltr:not(:last):not(:first)').width(avg - 5);
-				$('.ui-th-ltr:last').width(last - 25);
+				$('.ui-th-ltr:not(:last):not(:first)').width(avg - offset);
+				$('.ui-th-ltr:last').width(last - offset);
+				indexOffset = 1;
 			} else {
-				$('.ui-th-ltr:not(:last)').width(avg - 5);
-				$('.ui-th-ltr:last').width(last - 25);
+				$('.ui-th-ltr:not(:last)').width(avg - offset);
+				$('.ui-th-ltr:last').width(last - offset);
 			}
+
+			// 进行用户设定
+			for (var i = 0; i < this.cols.length; i++) {
+				cellWidth = this.cols[i].width;
+				if (cellWidth) {
+					$('.ui-th-ltr').eq(i + indexOffset).width(cellWidth);
+					cellWidth > avg && (tableWidth += cellWidth - avg);
+				}
+			}
+
+			this.controls.header.width(tableWidth);
+			this.controls.listbox.width(tableWidth);
+			syncFirstRowWidth();
 		}
 	}
 
@@ -307,6 +325,7 @@ define(function(require, exports, module) {
 			bdiv: $('#' + this.id + '_bdiv'),
 			layer: $('#' + this.id + '_layer'),
 			loading: $('#' + this.id + '_loading'),
+			view: $('#' + this.id + '_view'),
 			list: $('#' + this.id + '_list'),
 			mark: $('#' + this.id + '_resizemark'),
 			pager: $('#' + this.id + '_pager'),
@@ -614,6 +633,32 @@ define(function(require, exports, module) {
 		$(window).on('resize', function() {
 			resize.call(self);
 		});
+
+		// 注册ajax请求错误
+		this.listen('ajaxError', function(){
+			fail.call(self);
+		});
+	}
+
+	function fail(){
+		this.setContent('<tr><td colspan="' + (this.cols.length + (this.checkbox ? 1 : 0)) + '" align="center" valign="middle" height="' + this.height + '">加载数据失败，稍后刷新试试~~~</td></tr>');
+	}
+
+	function showLayer(){
+		this.controls.layer.show();
+	}
+
+	function hideLayer(){
+		this.controls.layer.hide();
+	}
+
+	function showLoading(str){
+		str && this.controls.loading.find('span').html(str);
+		this.controls.loading.show();
+	}
+
+	function hideLoading(){
+		this.controls.loading.hide().find('span').html('处理中...');
 	}
 
 	return {
@@ -629,6 +674,10 @@ define(function(require, exports, module) {
 		setContent: setContent, // 设置tboby的内容
 		load: load, // 加载入口
 		loadData: loadData, // 载入数据
-		updatePager: updatePager //刷新页码
+		updatePager: updatePager, //刷新页码
+		showLayer: showLayer,
+		hideLayer: hideLayer,
+		showLoading: showLoading,
+		hideLoading: hideLoading
 	};
 });

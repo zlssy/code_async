@@ -51,16 +51,21 @@ define(function(require, exports, module) {
 			pageName: 'index',
 			cols: [{
 				name: '交易订单号',
-				index: 'payOrderId'
+				index: 'payOrderId',
+				width: 200
 			}, {
 				name: '交易流水号',
-				index: 'tradeId'
+				index: 'tradeId',
+				width: 200
 			}, {
 				name: '商户订单号',
-				index: 'outOrderId'
+				index: 'outOrderId',
+				width: 120,
+
 			}, {
 				name: '商户名称',
-				index: 'merchantName'
+				index: 'merchantName',
+				width: 150
 			}, {
 				name: '用户编号',
 				index: 'payer'
@@ -97,12 +102,13 @@ define(function(require, exports, module) {
 			}, {
 				name: '操作',
 				index: '',
+				width: 150,
 				format: function(v, i, row) {
-					var html = '<div class="align-right">';
+					var html = '<div class="">';
+					html += '<a href="javascript:void(0)" class="history">操作历史</a>&nbsp;';
 					if ('1' == row.payStatus && ('CYBS' == row.payChannel || 'PAYPAL' == row.payChannel)) {
 						html += '<a href="javascript:void(0)" class="refund">退款</a>&nbsp;';
 					}
-					html += '<a href="javascript:void(0)" class="history">操作历史</a>';
 					html += '</div>';
 					return html;
 				}
@@ -121,32 +127,41 @@ define(function(require, exports, module) {
 				idle && (idle = false, Box.confirm('确认退款', function(v) {
 					if (v) {
 						var row = _grid.getSelectedRow();
-						row.length && $.ajax({
-							url: global_config.serverRoot + 'refund',
-							data: {
-								payOrderId: row[0].payOrderId,
-								amount: row[0].orderAmount,
-								operator: global_info.username || '',
-								type: 0
-							},
-							success: function(json) {
-								if ('32000' == json.code) {
-									Box.alert('退款成功~');
-								} else if ('32101' == json.code) {
-									Box.alert('无效订单，退款失败~');
-								} else if ('32102' == json.code) {
-									Box.alert('您已经申请过退款了，我们正在审核，请耐心等候~');
-								} else if ('32103' == json.code) {
-									Box.alert('网络好像不给力~');
-								} else {
+
+						if (row.length) {
+							_grid.showLayer();
+							_grid.showLoading();
+							$.ajax({
+								url: global_config.serverRoot + 'refund',
+								data: {
+									payOrderId: row[0].payOrderId,
+									amount: row[0].orderAmount,
+									operator: global_info.username || '',
+									type: 0
+								},
+								success: function(json) {
+									if ('32000' == json.code) {
+										Box.alert('退款成功~');
+									} else if ('32101' == json.code) {
+										Box.alert('无效订单，退款失败~');
+									} else if ('32102' == json.code) {
+										Box.alert('您已经申请过退款了，我们正在审核，请耐心等候~');
+									} else if ('32103' == json.code) {
+										Box.alert('网络好像不给力~');
+									} else {
+										Box.alert('退款失败~');
+									}
+									_grid.loadData(); // 无论成功失败，都进行重新加载
+									_grid.hideLayer();
+									_grid.hideLoading();
+								},
+								error: function(e) {
+									_grid.hideLayer();
+									_grid.hideLoading();
 									Box.alert('退款失败~');
 								}
-								_grid.loadData(); // 无论成功失败，都进行重新加载
-							},
-							error: function(e) {
-								Box.alert('退款失败~');
-							}
-						});
+							});
+						}
 					}
 				}));
 				setTimeout(function() {

@@ -14,4 +14,12 @@ $('.nav-list').on('click', 'a', function(e) {
 //seajs.use('why',function(a){
 //	a.autonav('#sidebar ul.submenu>li','active').parents('ul.submenu').parent().addClass('active open');
 //})
+
+// 配置全局ajax
+$(document).ajaxSuccess(function(){
+	var res = arguments[3];
+	if(res && '-100' == res.code){
+		location.reload();
+	}
+});
 </script>
