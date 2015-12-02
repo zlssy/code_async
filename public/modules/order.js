@@ -52,11 +52,11 @@ define(function(require, exports, module) {
 			cols: [{
 				name: '交易订单号',
 				index: 'payOrderId',
-				width: 200
+				width: 100
 			}, {
 				name: '交易流水号',
 				index: 'tradeId',
-				width: 200
+				width: 100
 			}, {
 				name: '商户订单号',
 				index: 'outOrderId',
@@ -65,7 +65,7 @@ define(function(require, exports, module) {
 			}, {
 				name: '源交易订单',
 				index: 'sourcePayOrderId',
-				width: 200
+				width: 100
 			}, {
 				name: '商户名称',
 				index: 'merchantName',
@@ -91,21 +91,26 @@ define(function(require, exports, module) {
 			}, {
 				name: '订单状态',
 				index: 'payStatus',
+				width: 90,
 				format: function(v) {
 					return PAY_STATUS[v] || '';
 				}
 			}, {
 				name: '支付开始时间',
-				index: 'startPayTime'
+				index: 'startPayTime',
+				width: 85
 			}, {
 				name: '支付完成时间',
-				index: 'payOverTime'
+				index: 'payOverTime',
+				width: 85
 			}, {
 				name: '北京时间',
-				index: 'startPayTimeBJ'
+				index: 'startPayTimeBJ',
+				width: 85
 			}, {
 				name: '失败原因',
 				index: 'message',
+				width: 90,
 				format: function(v) {
 					return v || '';
 				}

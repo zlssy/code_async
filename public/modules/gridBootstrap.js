@@ -35,7 +35,7 @@ define(function(require, exports, module) {
 		var html = [];
 		html.push('<div id="' + this.id + '" class="ui-jqgrid ui-widget ui-widget-content ui-corner-all" dir="ltr" style="width: 100%;">');
 		html.push('	<div class="ui-widget-overlay jqgrid-overlay" id="' + this.id + '_layer"></div>');
-		html.push('	<div class="loading ui-state-default ui-state-active" id="' + this.id + '_loading"><i class="ace-icon fa fa-spinner fa-spin green bigger-125"></i><span>处理中...</span></div>');
+		html.push('	<div class="loading ui-state-default ui-state-active" id="' + this.id + '_loading"><i class="ace-icon fa fa-spinner fa-spin blue bigger-125"></i>&nbsp;<span>处理中...</span></div>');
 		html.push('	<div class="ui-jqgrid-view" id="' + this.id + '_view">');
 		html.push('		<div class="ui-jqgrid-titlebar ui-jqgrid-caption ui-widget-header ui-corner-top ui-helper-clearfix" style="display: none;"><a role="link" class="ui-jqgrid-titlebar-close ui-corner-all HeaderButton" style="right: 0px;"><span class="ui-icon ui-icon-circle-triangle-n"></span></a><span class="ui-jqgrid-title"></span></div>');
 		html.push('		<div id="' + this.id + '_hdiv" class="ui-state-default ui-jqgrid-hdiv" ' + (this.have_scroll ? "overflow:initial;" : "") + '">');
@@ -286,10 +286,12 @@ define(function(require, exports, module) {
 
 	function loadData() {
 		var self = this;
-		this.setContent('<tr><td colspan="' + (this.cols.length + (this.checkbox ? 1 : 0)) + '" align="center" valign="middle" height="' + this.height + '"><i class="ace-icon fa fa-spinner fa-spin blue bigger-125"></i> 数据正在拼命加载中...</td></tr>');
+		this.setContent('');
+		showLoading.call(this, '数据正在拼命加载中...');
 		$.ajax({
 			url: self.getUrl(),
 			success: function(json) {
+				hideLoading.call(self);
 				if ('0' == json[self.ajaxCompleteKey]) {
 					render.call(self, getMapData(json, self.jsonReader.root));
 					self.jsonReader.page && (self.page = getMapData(json, self.jsonReader.page) || 1);
