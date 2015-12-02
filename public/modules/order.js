@@ -78,7 +78,7 @@ define(function(require, exports, module) {
 				index: 'orderAmount',
 				format: function(v){
 					if(/\d+(\.\d+)?/.test(v)){
-						return v.toFixed(2);
+						return new Number(v).toFixed(2);
 					}
 					return v;
 				}
@@ -229,7 +229,7 @@ define(function(require, exports, module) {
 			html.push('<td>' + (d.operator) + '</td>');
 			html.push('<td>' + d.createDateStr + '</td>');
 			html.push('<td>' + getOperationTypeStr(d.type) + '</td>');			
-			html.push('<td>' + '成功' + '</td>');
+			html.push('<td>' + (d.result || '') + '</td>');
 			html.push('<td>' + d.amount + '</td>');
 			html.push('</tr>');
 		}
