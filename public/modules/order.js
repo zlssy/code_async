@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 		Grid = require('gridBootstrap'),
 		Xss = require('xss'),
 		accountCheck = require('checkAccount'),
-
+		Tips = require('tips'),
 
 		Box = require('boxBootstrap'),
 		content = $('#content'),
@@ -37,7 +37,8 @@ define(function(require, exports, module) {
 			'6': '退款失败',
 			'7': '退款成功',
 			'8': '支付关闭'
-		};
+		},
+		_tips = new Tips.Tips();
 
 	function init() {
 		loadData();
@@ -76,8 +77,8 @@ define(function(require, exports, module) {
 			}, {
 				name: '订单金额',
 				index: 'orderAmount',
-				format: function(v){
-					if(/\d+(\.\d+)?/.test(v)){
+				format: function(v) {
+					if (/\d+(\.\d+)?/.test(v)) {
 						return new Number(v).toFixed(2);
 					}
 					return v;
@@ -120,7 +121,9 @@ define(function(require, exports, module) {
 				width: 150,
 				format: function(v, i, row) {
 					var html = '<div class="">';
-					html += '<a href="javascript:void(0)" class="history">操作历史</a>&nbsp;';
+					if ('' == row.sourcePayOrderId) {
+						html += '<a href="javascript:void(0)" class="history">操作历史</a>&nbsp;';
+					}
 					if ('1' == row.payStatus && ('CYBS' == row.payChannel || 'PAYPAL' == row.payChannel) && ('5' != row.refundStatus && '7' != row.refundStatus)) {
 						html += '<a href="javascript:void(0)" class="refund">退款</a>&nbsp;';
 					}
@@ -145,7 +148,7 @@ define(function(require, exports, module) {
 
 						if (row.length) {
 							_grid.showLayer();
-							_grid.showLoading();
+							_tips.show('正在退款...');
 							$.ajax({
 								url: global_config.serverRoot + 'refund',
 								data: {
@@ -168,11 +171,11 @@ define(function(require, exports, module) {
 									}
 									_grid.loadData(); // 无论成功失败，都进行重新加载
 									_grid.hideLayer();
-									_grid.hideLoading();
+									_tips.hide();
 								},
 								error: function(e) {
 									_grid.hideLayer();
-									_grid.hideLoading();
+									_tips.hide()
 									Box.alert('退款失败~');
 								}
 							});
@@ -233,7 +236,7 @@ define(function(require, exports, module) {
 			html.push('<tr>');
 			html.push('<td>' + (d.operator) + '</td>');
 			html.push('<td>' + d.createDateStr + '</td>');
-			html.push('<td>' + getOperationTypeStr(d.type) + '</td>');			
+			html.push('<td>' + getOperationTypeStr(d.type) + '</td>');
 			html.push('<td>' + (d.result || '') + '</td>');
 			html.push('<td>' + d.amount + '</td>');
 			html.push('</tr>');
