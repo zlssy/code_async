@@ -121,7 +121,7 @@ define(function(require, exports, module) {
 				width: 150,
 				format: function(v, i, row) {
 					var html = '<div class="">';
-					if ('' == row.sourcePayOrderId) {
+					if (row.hasOwnProperty('sourcePayOrderId') && '' == row.sourcePayOrderId) {
 						html += '<a href="javascript:void(0)" class="history">操作历史</a>&nbsp;';
 					}
 					if ('1' == row.payStatus && ('CYBS' == row.payChannel || 'PAYPAL' == row.payChannel) && ('5' != row.refundStatus && '7' != row.refundStatus)) {
