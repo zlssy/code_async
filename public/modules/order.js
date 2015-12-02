@@ -28,15 +28,15 @@ define(function(require, exports, module) {
 		idle = true, // 当前空闲，可操作
 		wait = 1000, // 控制用户操作频率，2个操作间需要等待的时间
 		PAY_STATUS = {
-			'0': '待付款',
-			'1': '全款已支付',
+			'0': '待支付',
+			'1': '全额已支付',
 			'2': '部分已支付',
-			'3': '付款失败',
+			'3': '支付失败',
 			'4': '付款中',
 			'5': '退款中',
 			'6': '退款失败',
 			'7': '退款成功',
-			'8': '订单关闭'
+			'8': '支付关闭'
 		};
 
 	function init() {
@@ -116,7 +116,7 @@ define(function(require, exports, module) {
 				format: function(v, i, row) {
 					var html = '<div class="">';
 					html += '<a href="javascript:void(0)" class="history">操作历史</a>&nbsp;';
-					if ('1' != row.payStatus && ('CYBS' == row.payChannel || 'PAYPAL' == row.payChannel) && ('5' != row.refundStatus && '7' != row.refundStatus)) {
+					if ('1' == row.payStatus && ('CYBS' == row.payChannel || 'PAYPAL' == row.payChannel) && ('5' != row.refundStatus && '7' != row.refundStatus)) {
 						html += '<a href="javascript:void(0)" class="refund">退款</a>&nbsp;';
 					}
 					html += '</div>';
@@ -302,7 +302,7 @@ define(function(require, exports, module) {
 		if (currencyType) {
 			newParam.currencyType = currencyType;
 		}
-		if (payStatus) {
+		if (payStatus != '') {
 			newParam.payStatus = payStatus;
 		}
 		if (startPayBeginTime) {

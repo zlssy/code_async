@@ -625,10 +625,10 @@ define(function(require, exports, module) {
 		// 监听列表滚动
 		var bdiv = this.controls.bdiv,
 			hdiv = this.controls.hdiv;
-		bdiv.on('scroll', Utils.delay(function(e) {
+		bdiv.on('scroll', function(e) {
 			var sl = bdiv.scrollLeft();
 			hdiv.scrollLeft(sl);
-		}, 10));
+		});
 
 		$(window).on('resize', function() {
 			resize.call(self);
