@@ -237,7 +237,7 @@ define(function(require, exports, module) {
 			html.push('<td>' + (d.operator) + '</td>');
 			html.push('<td>' + d.createDateStr + '</td>');
 			html.push('<td>' + getOperationTypeStr(d.type) + '</td>');
-			html.push('<td>' + (d.result || '') + '</td>');
+			html.push('<td>' + getResult(d.result) + '</td>');
 			html.push('<td>' + d.amount + '</td>');
 			html.push('</tr>');
 		}
@@ -253,6 +253,24 @@ define(function(require, exports, module) {
 			return '退款';
 		}
 		return '';
+	}
+
+	function getResult(v){
+		if('32000' == v){
+			return '退款成功';
+		}
+		else if('32101' ==v){
+			return '订单无效';
+		}
+		else if('32102' ==v){
+			return '重复退款';
+		}
+		else if('32103' ==v){
+			return '网络问题';
+		}
+		else{
+			return '退款失败';
+		}
 	}
 
 
