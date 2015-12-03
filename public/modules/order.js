@@ -78,10 +78,7 @@ define(function(require, exports, module) {
 				name: '订单金额',
 				index: 'orderAmount',
 				format: function(v) {
-					if (/\d+(\.\d+)?/.test(v)) {
-						return new Number(v).toFixed(2);
-					}
-					return v;
+					return changeCurrency(v);
 				}
 			}, {
 				name: '货币类型',
@@ -238,12 +235,19 @@ define(function(require, exports, module) {
 			html.push('<td>' + d.createDateStr + '</td>');
 			html.push('<td>' + getOperationTypeStr(d.type) + '</td>');
 			html.push('<td>' + getResult(d.result) + '</td>');
-			html.push('<td>' + d.amount + '</td>');
+			html.push('<td>' + changeCurrency(d.amount) + '</td>');
 			html.push('</tr>');
 		}
 		html.push('</tbody></table>');
 
 		Box.alert(html.join(''));
+	}
+
+	function changeCurrency(v){
+		if (/\d+(\.\d+)?/.test(v)) {
+			return new Number(v / 100).toFixed(2);
+		}
+		return v;
 	}
 
 	function getOperationTypeStr(v) {
@@ -255,20 +259,16 @@ define(function(require, exports, module) {
 		return '';
 	}
 
-	function getResult(v){
-		if('32000' == v){
+	function getResult(v) {
+		if ('32000' == v) {
 			return '退款成功';
-		}
-		else if('32101' ==v){
+		} else if ('32101' == v) {
 			return '订单无效';
-		}
-		else if('32102' ==v){
+		} else if ('32102' == v) {
 			return '重复退款';
-		}
-		else if('32103' ==v){
+		} else if ('32103' == v) {
 			return '网络问题';
-		}
-		else{
+		} else {
 			return '退款失败';
 		}
 	}
