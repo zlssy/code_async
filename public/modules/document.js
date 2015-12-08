@@ -26,7 +26,11 @@ define(function(require, exports, module) {
 			pageName: 'index',
 			cols: [{
 				name: '编号',
-				index: 'id'
+				index: 'id',
+				width: 80,
+				format: function(v, key, row, index, page) {
+					return ((page || 1) - 1) * 20 + index + 1;
+				}
 			}, {
 				name: '文件名',
 				index: 'name'
@@ -34,7 +38,7 @@ define(function(require, exports, module) {
 				name: '版本',
 				index: 'type',
 				format: function(v) {
-					return (0 == v ? '中文': '英文');
+					return (0 == v ? '中文' : '英文');
 				}
 			}, {
 				name: '上传日期',
@@ -50,7 +54,7 @@ define(function(require, exports, module) {
 			}],
 			url: getUrl(),
 			pagesize: 20,
-			pageName:'index',
+			pageName: 'index',
 			jsonReader: {
 				root: 'docList',
 				page: 'page.index',
@@ -89,7 +93,10 @@ define(function(require, exports, module) {
 
 	function delFile(data) {
 		var opt = {};
-		opt.message = '<h4><b>您确定要删除此文件吗？</b></h4><hr class="no-margin">' + delTpl;
+		console.log(data)
+		opt.message = '<h4><b>您确定要删除此文件吗？</b></h4><hr class="no-margin">' + Utils.formatJson(delTpl, {
+			filename: data[0].name
+		});
 		opt.buttons = {
 			"save": {
 				label: '确定',
