@@ -6,7 +6,7 @@ define(function(require, exports, module) {
 			update : global_config.serverHost.replace(/\/+$/,'') + '/upPwd'
 		}
 	var errfun = function(e){
-		var msg = typeof e == 'object' ? e.statusText || e.msg || "未知错误!" : e;
+		var msg = typeof e == 'object' ? e.statusText || e.msg || "操作失败!" : e;
 		D.err(msg);
 	}
 	$(function(){
@@ -30,7 +30,7 @@ define(function(require, exports, module) {
 				if(data.success){
 					D.suss('操作成功!');
 				}else{
-					return $.Deferred().reject(data.message || data.msg || "未知错误!")
+					return $.Deferred().reject(data.message || data.msg || "操作失败!")
 				}
 			}).then(null,errfun)
 			return false;

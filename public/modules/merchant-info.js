@@ -18,7 +18,8 @@ define(function(require, exports, module) {
 			merchantName: $('input[name="merchantName"]')
 		},
 
-		_grid;
+		_grid,
+		_curRow;
 
 	function init() {
 		loadData();
@@ -75,7 +76,7 @@ define(function(require, exports, module) {
 			//编辑的全show，展示的全hide
 			addAndUpdate();
 		});
-		_grid.listen('renderCallback', function(){
+		_grid.listen('renderCallback', function() {
 			$('.ui-pg-div *[title]').tooltip({
 				container: 'body'
 			});
@@ -237,6 +238,7 @@ define(function(require, exports, module) {
 			$('#zf').html(html.join(''));
 			$('div[vfor="zf"]').html(html.join(''));
 		}
+		_curRow = null;
 		data && getRowDetail(data[0].loginId, cb);; //编辑和查看需要
 	}
 
@@ -245,7 +247,7 @@ define(function(require, exports, module) {
 			url: global_config.serverRoot + 'queryMerchantInfoDetail?loginId=' + id + '&t=' + Math.random(),
 			success: function(json) {
 				if ('0' == json.response) {
-					fillData(json.tclMerchantInfo);
+					fillData(_curRow = json.tclMerchantInfo);
 					'function' == typeof cb && cb.call();
 				} else if (-100 == json.code) {
 					location.reload();
@@ -264,7 +266,7 @@ define(function(require, exports, module) {
 	 */
 	function fillData(d) {
 		var data = Utils.is('Array', d) ? d[0] : d;
-		console.log(data);
+
 		if (data.merchantNum) {
 			$("[vfor=merchantNum]").html(data.merchantNum);
 		}
@@ -592,12 +594,31 @@ define(function(require, exports, module) {
 		data.payChannelNumbers = zfcp.join(',');
 		data.withholdIds = dkcp.join(',');
 
+		/** 有行数据时，则当前为编辑模式， 此时要移除掉不需要和无变化的数据 */
+		if (_curRow) {
+			delete data.accountType;
+			delete data.businessType;
+			for (var k in _curRow) {
+				if (_curRow[k] == data[k]) {
+					delete data[k]
+				}
+			}
+			if (data.merchantName == _curRow.outMerchantName) {
+				delete data.merchantName
+			}
+			if (comparePay(_curRow.payChannel, zfcp)) {
+				delete data.payChannelNumbers;
+			}
+			if (comparePay(_curRow.withHoldingChannel, dkcp)) {
+				delete data.withholdIds;
+			}
+		}
+
+		/** 修改时，必填参数带上 */
 		if (d && d[0].loginId) {
 			data.loginId = d[0].loginId;
 			action = 'updateMerchant';
 		}
-
-		// console.log(data);
 
 		$.ajax({
 			url: global_config.serverRoot + action,
@@ -606,17 +627,41 @@ define(function(require, exports, module) {
 			success: function(json) {
 				if ('0' == json.response) {
 					alert('数据保存成功!');
-				}else if ('2' == json.response) {
+				} else if ('2' == json.response) {
 					alert('该商户已存在!');
-				}else {
+				} else {
 					alert('数据保存失败~');
 				}
-                _grid.loadData();
+				_grid.loadData();
 			},
 			error: function(e) {
 				alert('数据保存失败~~~');
 			}
 		});
+	}
+
+	/**
+	 * [comparePay 比较原始支付渠道与代扣产品和用户操作的结果]
+	 * @param  {[Array]} payArr [支付渠道or代扣产品]
+	 * @param  {[Array]} valArr [用户结果]
+	 * @return {[Bloean]}        [比较结果]
+	 */
+	function comparePay(payArr, valArr) {
+		var map = {};
+		for (var i = 0; i < valArr.length; i++) {
+			map[valArr[i]] = 1;
+		}
+		for (var i = 0; i < payArr.length; i++) {
+			if (payArr[i].checked) {
+				delete map[payArr[i].id];
+			}
+		}
+		for (var k in map) {
+			if (k && map[k]) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	function showDialog(opt) {
@@ -656,12 +701,12 @@ define(function(require, exports, module) {
 				var $dk = $('#dk');
 				!$dk.size() && ($dk = $('div[vfor="dk"]'));
 				if ($el.prop('checked')) {
-					if($el.val()=='10000000000'||$el.val()=='10000000001')//暂时只支持VISA/MasterCard、PayPAL有代扣产品
+					if ($el.val() == '10000000000' || $el.val() == '10000000001') //暂时只支持VISA/MasterCard、PayPAL有代扣产品
 					{
 						var node = $el.parent().clone();
 						node.find('input').attr('name', 'dkcp');
 						$dk.append(node);
-					}					
+					}
 				} else {
 					var rre = $dk.find('#' + $el.attr('id'));
 					if (rre) {
