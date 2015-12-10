@@ -371,9 +371,9 @@ define(function(require, exports, module) {
 
 	function formatDate(d) {
 		try {
-			var d = new Date(d);
-			d = new Date(Utils.local2utc(d));
-			return d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+			var dd = new Date(dd);
+			dd = new Date(Utils.date.local2utc(dd));
+			return dd.getFullYear() + '/' + (dd.getMonth() + 1) + '/' + dd.getDate() + ' ' + dd.getHours() + ':' + dd.getMinutes() + ':' + dd.getSeconds();
 		} catch (e) {
 			window.console && console.log(e);
 		}
