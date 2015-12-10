@@ -595,24 +595,24 @@ define(function(require, exports, module) {
 		data.withholdIds = dkcp.join(',');
 
 		/** 有行数据时，则当前为编辑模式， 此时要移除掉不需要和无变化的数据 */
-		if (_curRow) {
-			delete data.accountType;
-			delete data.businessType;
-			for (var k in _curRow) {
-				if (_curRow[k] == data[k]) {
-					delete data[k]
-				}
-			}
-			if (data.merchantName == _curRow.outMerchantName) {
-				delete data.merchantName
-			}
-			if (comparePay(_curRow.payChannel, zfcp)) {
-				delete data.payChannelNumbers;
-			}
-			if (comparePay(_curRow.withHoldingChannel, dkcp)) {
-				delete data.withholdIds;
-			}
-		}
+		// if (_curRow) {
+		// 	delete data.accountType;
+		// 	delete data.businessType;
+		// 	for (var k in _curRow) {
+		// 		if (_curRow[k] == data[k]) {
+		// 			delete data[k]
+		// 		}
+		// 	}
+		// 	if (data.merchantName == _curRow.outMerchantName) {
+		// 		delete data.merchantName
+		// 	}
+		// 	if (comparePay(_curRow.payChannel, zfcp)) {
+		// 		delete data.payChannelNumbers;
+		// 	}
+		// 	if (comparePay(_curRow.withHoldingChannel, dkcp)) {
+		// 		delete data.withholdIds;
+		// 	}
+		// }
 
 		/** 修改时，必填参数带上 */
 		if (d && d[0].loginId) {

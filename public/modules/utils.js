@@ -1,4 +1,6 @@
 define(function(require, exports, module) {
+	var _d_ = new Date(),
+		timezoneoffset = _d_.getTimezoneOffset();
 
 	/**
 	 * [object2param 转换对象为url参数]
@@ -345,6 +347,14 @@ define(function(require, exports, module) {
 		}
 	}
 
+	function local2utc(time) {
+		return time - timezoneoffset * 60000;
+	}
+
+	function utc2local(time) {
+		return time + timezoneoffset * 60000;
+	}
+
 	return {
 		object2param: object2param,
 		cookie: {
@@ -361,6 +371,10 @@ define(function(require, exports, module) {
 			decodeUrl: decodeUrl,
 			parseUrl: parseUrl,
 			replaceParam: replaceParam
+		},
+		date: {
+			local2utc: local2utc,
+			utc2local: utc2local
 		},
 		formatJson: formatJson,
 		loadJsonp: loadJsonp,

@@ -243,7 +243,7 @@ define(function(require, exports, module) {
 		Box.alert(html.join(''));
 	}
 
-	function changeCurrency(v){
+	function changeCurrency(v) {
 		if (/\d+(\.\d+)?/.test(v)) {
 			return new Number(v / 100).toFixed(2);
 		}
@@ -278,7 +278,7 @@ define(function(require, exports, module) {
 		$('.datepicker').datetimepicker({
 			autoclose: true,
 			todayHighlight: true,
-			minView: 2
+			minView: 1
 		});
 		$(document.body).on('click', function(e) {
 			var $el = $(e.target || e.srcElement),
@@ -332,16 +332,16 @@ define(function(require, exports, module) {
 			newParam.payStatus = payStatus;
 		}
 		if (startPayBeginTime) {
-			newParam.startPayBeginTime = startPayBeginTime;
+			newParam.startPayBeginTime = formatDate(startPayBeginTime);
 		}
 		if (startPayEndTime) {
-			newParam.startPayEndTime = startPayEndTime;
+			newParam.startPayEndTime = formatDate(startPayEndTime);
 		}
 		if (payOverBeginTime) {
-			newParam.payOverBeginTime = payOverBeginTime;
+			newParam.payOverBeginTime = formatDate(payOverBeginTime);
 		}
 		if (payOverEndTime) {
-			newParam.payOverEndTime = payOverEndTime;
+			newParam.payOverEndTime = formatDate(payOverEndTime);
 		}
 		if (merchantName) {
 			newParam.merchantName = merchantName;
@@ -367,6 +367,17 @@ define(function(require, exports, module) {
 		}
 		userParam = newParam;
 		return true;
+	}
+
+	function formatDate(d) {
+		try {
+			var d = new Date(d);
+			d = new Date(Utils.local2utc(d));
+			return d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+		} catch (e) {
+			window.console && console.log(e);
+		}
+		return d;
 	}
 
 	function getUrl() {

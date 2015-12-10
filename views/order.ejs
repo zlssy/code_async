@@ -74,7 +74,7 @@
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
-									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="chargeTypeInt">支付渠道:</label></div>
+									<label class="col-sm-3 no-padding lm-5" for="chargeTypeInt">支付渠道:</label>
 									<div class="col-sm-9">
 										<select class="form-control" id="payChannel"> 
 											<option value="">全部</option>   
@@ -89,7 +89,7 @@
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
-									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="chargeTypeInt">支付币种:</label></div>
+									<label class="col-sm-3 no-padding lm-5" for="chargeTypeInt">支付币种:</label>
 									<div class="col-sm-9">
 										<select class="form-control" id="currencyType"> 
 											<option value="">全部</option>   
@@ -101,8 +101,22 @@
 								     	 </select>
 									</div>
 								</div>
+								<div class="col-xs-12 col-sm-8 lm-5">
+									 <label class="col-sm-2 no-padding lm-5">支付开始时间:</label>
+									 <div class="col-sm-10">
+                                         <div class="col-sm-12">
+                                            <div class="input-group">
+                                                <input type="text" class="input-sm form-control datepicker" id="startDate" name="startPayBeginTime" placeholder="from" data-date-format="yyyy-mm-dd hh:00:00" />
+                                                <label for="startDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+                                                <span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+                                                <input type="text" class="input-sm form-control datepicker" name="startPayEndTime" id="endDate" placeholder="to" data-date-format="yyyy-mm-dd hh:00:00" />
+                                                <label for="endDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+                                          </div>
+                                      </div>
+									 </div>
+								</div>
 								<div class="col-xs-12 col-sm-4">
-									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="payStatus">订单状态:</label></div>
+									<label class="col-sm-3 no-padding lm-5" for="payStatus">订单状态:</label>
 									<div class="col-sm-9">
 										<select class="form-control" id="payStatus"> 
 											<option value="">全部</option>
@@ -116,27 +130,13 @@
 								     	 </select>
 									</div>
 								</div>
-								<div class="col-xs-12 col-sm-4  lm-5">
-									 <label class="col-sm-3 no-padding">支付开始时间:</label>
-									 <div class="col-sm-9">
-                                         <div class="col-sm-12">
-                                            <div class="input-group">
-                                                <input type="text" class="input-sm form-control datepicker" id="startDate" name="startPayBeginTime" placeholder="from" data-date-format="yyyy-mm-dd" />
-                                                <label for="startDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
-                                                <span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
-                                                <input type="text" class="input-sm form-control datepicker" name="startPayEndTime" id="endDate" placeholder="to" data-date-format="yyyy-mm-dd" />
-                                                <label for="endDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
-                                          </div>
-                                      </div>
-									 </div>
-								</div>
-								<div class="col-xs-12 col-sm-4 lm-5">
-									 <label class="col-sm-3 no-padding">支付结束时间:</label>
-									 <div class="col-sm-9">
+								<div class="col-xs-12 col-sm-8 lm-5">
+									 <label class="col-sm-2 no-padding lm-5">支付结束时间:</label>
+									 <div class="col-sm-10">
 									  <div class="col-sm-12">
-									  	<div class="input-group"><input type="text" class="input-sm form-control datepicker" name="payOverBeginTime" id="payOverBeginTime" placeholder="from" data-date-format="yyyy-mm-dd" /><label for="payOverBeginTime" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+									  	<div class="input-group"><input type="text" class="input-sm form-control datepicker" name="payOverBeginTime" id="payOverBeginTime" placeholder="from" data-date-format="yyyy-mm-dd hh:00:00" /><label for="payOverBeginTime" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
 									  		<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
-									  <input type="text" class="input-sm form-control datepicker" name="payOverEndTime" id="payOverEndTime" placeholder="to" data-date-format="yyyy-mm-dd" /><label for="payOverEndTime" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+									  <input type="text" class="input-sm form-control datepicker" name="payOverEndTime" id="payOverEndTime" placeholder="to" data-date-format="yyyy-mm-dd hh:00:00" /><label for="payOverEndTime" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
 									  </div></div>
 									 </div>
 								</div>
