@@ -371,7 +371,7 @@ define(function(require, exports, module) {
 
 	function formatDate(d) {
 		try {
-			var dd = new Date(d);
+			var dd = new Date(d.replace(/-/g, '/'));
 			dd = new Date(Utils.date.local2utc(dd.getTime()));
 			return dd.getFullYear() + '-' + (dd.getMonth() + 1) + '-' + dd.getDate() + ' ' + dd.getHours() + ':' + dd.getMinutes() + ':' + dd.getSeconds();
 		} catch (e) {
