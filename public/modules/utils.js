@@ -348,11 +348,11 @@ define(function(require, exports, module) {
 	}
 
 	function local2utc(time) {
-		return time - timezoneoffset * 60000;
+		return time + timezoneoffset * 60000;
 	}
 
 	function utc2local(time) {
-		return time + timezoneoffset * 60000;
+		return time - timezoneoffset * 60000;
 	}
 
 	return {

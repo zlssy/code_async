@@ -232,7 +232,7 @@ define(function(require, exports, module) {
 			d = data[i];
 			html.push('<tr>');
 			html.push('<td>' + (d.operator) + '</td>');
-			html.push('<td>' + d.createDateStr + '</td>');
+			html.push('<td>' + formatDate(d.createDateStr, 1) + '</td>');
 			html.push('<td>' + getOperationTypeStr(d.type) + '</td>');
 			html.push('<td>' + getResult(d.result) + '</td>');
 			html.push('<td>' + changeCurrency(d.amount) + '</td>');
@@ -370,9 +370,10 @@ define(function(require, exports, module) {
 	}
 
 	function formatDate(d) {
+		var resver = arguments[1] || 0;
 		try {
 			var dd = new Date(d.replace(/-/g, '/'));
-			dd = new Date(Utils.date.local2utc(dd.getTime()));
+			dd = new Date(Utils.date[resver ? 'utc2local':'local2utc'](dd.getTime()));
 			return dd.getFullYear() + '-' + fix(dd.getMonth() + 1) + '-' + fix(dd.getDate()) + ' ' + fix(dd.getHours()) + ':' + fix(dd.getMinutes()) + ':' + fix(dd.getSeconds());
 		} catch (e) {
 			window.console && console.log(e);
