@@ -373,7 +373,7 @@ define(function(require, exports, module) {
 		try {
 			var dd = new Date(d);
 			dd = new Date(Utils.date.local2utc(dd.getTime()));
-			return dd.getFullYear() + '/' + (dd.getMonth() + 1) + '/' + dd.getDate() + ' ' + dd.getHours() + ':' + dd.getMinutes() + ':' + dd.getSeconds();
+			return dd.getFullYear() + '-' + (dd.getMonth() + 1) + '-' + dd.getDate() + ' ' + dd.getHours() + ':' + dd.getMinutes() + ':' + dd.getSeconds();
 		} catch (e) {
 			window.console && console.log(e);
 		}
