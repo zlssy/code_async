@@ -11,7 +11,9 @@ define(function(require, exports, module) {
 		importTpl = $('#importTpl').html(),
 		_grid, doms = {},
 		dictionaryCollection = {},
-		userParam = {};
+		userParam = {},
+		submitLock = false,
+		submitInterval = 2000;
 
 	function init() {
 		_grid = Grid.create({
@@ -113,7 +115,13 @@ define(function(require, exports, module) {
 					if (!validate()) {
 						return false;
 					} else {
-						submitData(data);
+						if (!submitLock) {
+							submitData(data);
+							submitLock = true;
+							setTimeout(function() {
+								submitLock = false;
+							}, submitInterval);
+						}
 					}
 				}
 			},
@@ -140,10 +148,6 @@ define(function(require, exports, module) {
 			el: shbh,
 			elp: elp
 		});
-
-		data && setTimeout(function() {
-			shbh.focus();
-		}, 80);
 	}
 
 	/**
@@ -196,6 +200,7 @@ define(function(require, exports, module) {
 				}
 			});
 		}
+		!accountCheck.isPass() && $('#shbh').parents('.form-group:first').addClass('has-error');
 		return accountCheck.isPass() && pass;
 	}
 
@@ -242,6 +247,10 @@ define(function(require, exports, module) {
 		if (data.expirationDate) {
 			$('#xxsj').val(data.expirationDate);
 		}
+		$('#shbh').focus();
+		setTimeout(function() {
+			$('#shbh').blur();
+		}, 0);
 	}
 
 	/**
@@ -368,7 +377,7 @@ define(function(require, exports, module) {
 	 * @return {[type]} [description]
 	 */
 	function getUrl() {
-		return global_config.serverRoot + 'settleCard/list?userId=&' + Utils.object2param(userParam);
+		return global_config.serverRoot + 'settleCard/list?userId=&sort=merchantIds&' + Utils.object2param(userParam);
 	}
 
 	function getDictionaryFromServer(type, callback, errorback) {
@@ -539,9 +548,8 @@ define(function(require, exports, module) {
 				if (data.result) {
 					(typeof data.result === "string") && (data.result = JSON.parse(data.result));
 					if (data.result.code == 0) {
-						if (data.result.data.Failed == 0) {
+						if (data.result.data.Failed == 0 && data.result.data.Updated == 0) {
 							art_dialog.error('导入成功', data.result.msg);
-							_grid.loadData();
 							console.log('reload data grid.');
 						} else {
 							var html = [],
@@ -561,8 +569,9 @@ define(function(require, exports, module) {
 							html.push('</tbody>');
 							html.push('</table>');
 							html.push('</div>');
-							art_dialog.error('导入失败', html.join(''));
+							art_dialog.error(data.result.data.Failed == 0 ? '导入成功' : '导入失败', html.join(''));
 						}
+						_grid.loadData();
 					} else {
 						art_dialog.error('导入失败', data.result.msg);
 					}
@@ -585,7 +594,7 @@ define(function(require, exports, module) {
 			expirationDateStart = doms.expirationDateStart.val(),
 			expirationDateEnd = doms.expirationDateEnd.val();
 		if (commercialId) {
-			newParam.commercialIds = encodeURIComponent(commercialId);
+			newParam.merchantIds = encodeURIComponent(commercialId);
 		}
 		if (issuer) {
 			newParam.issuer = encodeURIComponent(issuer);
@@ -629,10 +638,7 @@ define(function(require, exports, module) {
 				break;
 			}
 		}
-		if (!newchange) {
-			Box.alert('您的查询条件并没有做任何修改.');
-			return false;
-		}
+
 		userParam = newParam;
 		return true;
 	}

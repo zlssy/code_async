@@ -2,11 +2,23 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
-router.all('/payment-channel', function(req, res, next){
-	res.render('payment-channel', {
+router.all('/qingfen-detail', function(req, res, next){
+	res.render('qingfen-detail', {
 		title: 'TCL支付运营平台',
 		req: req
 	})
+});
+router.all('/dataDictionary/list', function(req, res, next){
+    res.render('dataDictionary_list', {
+        title: 'TCL支付运营平台',
+        req: req
+    })
+});
+router.all('/payment-channel', function(req, res, next){
+    res.render('payment-channel', {
+        title: 'TCL支付运营平台',
+        req: req
+    })
 });
 router.all('/order', function(req, res, next){
 	res.render('order', {
@@ -111,7 +123,12 @@ router.all('/tradeRecord/list', function(req, res, next){
 		req: req
 	})
 });
-
+router.all('/exchange-query', function(req, res, next){
+    res.render('exchange-query', {
+        title: 'TCL业务清算平台',
+        req: req
+    })
+});
 
 /** get root 放到最后 */
 router.get('/', function(req, res, next) {

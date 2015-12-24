@@ -61,8 +61,12 @@ define(function(require, exports, module) {
 			}, {
 				name: '操作',
 				index: '',
-				format: function(v) {
-					return '<div class="ui-pg-div align-center"><a href="javascript:;" class="confirm" title="付款确认">付款确认</a></div>';
+				format: function(v, ov, col) {
+					if ('1' == col.status) {
+						return '<div class="ui-pg-div align-center"><a href="javascript:;" class="confirm" title="付款确认">付款确认</a></div>';
+					} else {
+						return ' '
+					}
 				}
 			}],
 			url: getUrl(),
@@ -100,6 +104,13 @@ define(function(require, exports, module) {
 	}
 
 	function exportExcel() {
+		var settleDateStart = $('#settleDateStart').val(), settleDateEnd = $('#settleDateEnd').val();
+		if(!settleDateStart || !settleDateEnd){
+			Box.alert('请选择结算日期后下载。');
+			return;
+		}
+		userParam.settleDateStart = settleDateStart;
+		userParam.settleDateEnd = settleDateEnd;
 		var a = document.createElement('a');
 		var url = 'http://testtclpay.tclclouds.com/settlement/settleStatement/export?userId=&' + Utils.object2param(userParam);
 		a.href = url; //global_config.serverRoot + '/settleStatement/export?userId=&' + Utils.object2param(userParam);
@@ -198,7 +209,8 @@ define(function(require, exports, module) {
 	function registerEvents() {
 		$('.datepicker').datetimepicker({
 			autoclose: true,
-			todayHighlight: true
+			todayHighlight: true,
+			minView: 2
 		});
 		$(document.body).on('click', function(e) {
 			var $el = $(e.target || e.srcElement),
@@ -280,10 +292,7 @@ define(function(require, exports, module) {
 				break;
 			}
 		}
-		if (!newchange) {
-			Box.alert('您的查询条件并没有做任何修改.');
-			return false;
-		}
+		
 		userParam = newParam;
 		return true;
 	}

@@ -2,7 +2,7 @@
 <script id="ace_script_position" src="<%-setting.filePath%>/js/ace-elements.min.js"></script>
 <script src="<%-setting.filePath%>/js/ace.min.js"></script>
 <script>
-$('.nav-list').on('click', 'a', function(e) {
+$('.nav-list > li > a').on('click', function(e) {
 	var $el = $(this),
 		id = $el.attr('id');
 	if (id) {
@@ -14,12 +14,4 @@ $('.nav-list').on('click', 'a', function(e) {
 //seajs.use('why',function(a){
 //	a.autonav('#sidebar ul.submenu>li','active').parents('ul.submenu').parent().addClass('active open');
 //})
-
-// 配置全局ajax
-$(document).ajaxSuccess(function(){
-	var res = arguments[3];
-	if(res && '-100' == res.code){
-		location.reload();
-	}
-});
 </script>

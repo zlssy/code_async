@@ -25,6 +25,82 @@
 <%
 	var url = req.url,
 		menus = [{
+            name:'清分管理',
+            code:'shxxgl',
+            child: [{
+                name: '清分明细查询',
+                code:'shxxgl',
+                url: '/qingfen-detail'
+            },{
+                name: '清分单查询',
+                code:'shxxgl',
+                url: '/qingfen-list-query'
+            }]
+        },{
+            name:'结算管理',
+            code:'shxxgl',
+            child: [{
+                name: '结算卡',
+                code:'shxxgl',
+                url: '/settle-card'
+            },{
+                name: '结算规则',
+                code:'shxxgl',
+                url: '/settle-rule'
+            },{
+                name: '结算限额',
+                code:'shxxgl',
+                url: '/settle-limit'
+            },{
+                name: '结算单查询',
+                code: 'ddgl-dd',
+                url: '/settle-query'
+            }]
+        },{
+            name:'费率管理',
+            code: 'ddgl',
+            child: [{
+                name: '费率',
+                code: 'ddgl-dd',
+                url: '/rate'
+            }]
+        },{
+            name:'汇率管理',
+            code:'shxxgl',
+            child: [{
+                name: '汇率管理',
+                code:'shxxgl',
+                url: '/exchange-query'
+            }]
+        },{
+            name:'对账差错处理',
+            code: 'ddgl',
+            child: [{
+                name: '上传对账单',
+                code: 'ddgl-dd',
+                url: '/statement-upload'
+            },{
+                name: '查错账处理',
+                code: 'ddgl-dd',
+                url: '/statement-list'
+            }]
+        },{
+            name:'财务统计管理',
+            code: 'ddgl',
+            child: [{
+                name: '财务统计查询',
+                code: 'ddgl-dd',
+                url: '/financial-statistics'
+            }]
+        },{
+            name:'数据字典管理',
+            code: 'ddgl',
+            child: [{
+                name: '数据字典',
+                code: 'ddgl-dd',
+                url: '/dataDictionary/list'
+            }]
+        },{
 			name:'商户信息管理',
 			code:'shxxgl',
 			child: [{

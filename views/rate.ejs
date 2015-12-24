@@ -55,7 +55,7 @@
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
-									<label class="col-sm-3 control-label no-padding lm-5" for="ownerIds">所有者编号2:</label>
+									<label class="col-sm-3 control-label no-padding lm-5" for="ownerIds">所有者编号:</label>
 									<div class="col-sm-9">
 										<input type="text" id="ownerIds" class="form-control col-sm-5 input-sm">
 									</div>
@@ -195,7 +195,7 @@
 					</div>
 					<div class="col-xs-12 col-sm-6">
 						<label class="col-sm-3 control-label no-padding lm-5 text-center" for="faccountNumber">有效期:</label>
-						<div class="col-sm-9">
+						<div class="col-sm-9 no-padding">
 							  <div class="col-sm-5 no-padding form-group"><div class="input-group" style="z-index:1060"><input type="text" class="input-sm form-control datepicker" name="feffectiveDate" placeholder="from" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>
 							  <div class="col-sm-1 no-padding text-center">-</div>
 							  <div class="col-sm-5 no-padding form-group"><div class="input-group" style="z-index:1060"><input type="text" class="input-sm form-control datepicker" name="fexpirationDate" placeholder="to" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>							
@@ -275,6 +275,11 @@
 	<div class="widget-header"><h5 class="widget-title">阶梯费率设置</h5></div>
 	<div class="widget-body">
 		<div class="widget-main">
+		<div class="row" style="border-bottom:1px solid #ddd; background-color:#eee; line-height:24px;">
+			<div class="col-xs-12 col-sm-3 no-padding center lm-5 align-center" style="border-right:solid 1px white;">交易量</div>
+			<div class="col-xs-12 col-sm-8 no-padding center lm-5 align-center" style="border-right:solid 1px white;">费率</div>
+			<div class="col-xs-12 col-sm-1 no-padding center lm-5 align-center">操作</div>
+		</div>
 		<%%=template%>
 		</div>
 	</div>

@@ -37,7 +37,19 @@
 							<div class="widget-main">
 								<form class="form" id="sform">
 								<div class="row">
-									<div class="col-xs-12 col-sm-6">
+									<div class="col-xs-12 col-sm-4">
+										<label class="col-sm-3 no-padding lm-5">清分日期:</label>
+										<div class="col-xs-12 col-sm-9 no-padding">
+										<div class="input-group">
+											<input type="text" class="input-sm form-control datepicker" id="startDate" name="startDate" placeholder="from" />
+											<label for="startDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+											<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+											<input type="text" class="input-sm form-control datepicker" id="endDate" name="endDate" placeholder="to" />
+											<label for="endDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+										</div>
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-4">
 										<label class="col-sm-3 no-padding lm-5">交易日期:</label>
 										<div class="col-xs-12 col-sm-9 no-padding">
 										<div class="input-group">
@@ -49,18 +61,29 @@
 										</div>
 										</div>
 									</div>
-									<div class="col-xs-12 col-sm-6">
-										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">商户订单编号:</label></div>
-										<div class="col-sm-9 no-padding"><input type="text" name="merchantOrderId" class="form-control col-sm-5 input-sm"></div>
+									<div class="col-xs-12 col-sm-4">
+										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">清分状态:</label></div>
+										<div class="col-sm-9 no-padding">
+											<select class="form-control" name="statusInt">
+												<option value="">全部</option>
+												<option value="1">待结算</option>
+												<option value="2">结算中</option>
+												<option value="3">已结算</option>
+											</select>
+										</div>
 									</div>
 								</div>
 								<div class="row">
-									<div class="col-xs-12 col-sm-6">
-										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">交易流水号:</label></div>
-										<div class="col-sm-9 no-padding"><input type="text" name="payOrderId" class="form-control col-sm-5 input-sm"></div>
+									<div class="col-xs-12 col-sm-4">
+										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">商户名称:</label></div>
+										<div class="col-sm-9 no-padding"><input type="text" name="merchantName" class="form-control col-sm-5 input-sm"></div>
 									</div>
-									<div class="col-xs-12 col-sm-6">
-										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">支付渠道:</label></div>
+									<div class="col-xs-12 col-sm-4">
+										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">用户编号:</label></div>
+										<div class="col-sm-9 no-padding"><input type="text" name="merchantIds" class="form-control col-sm-5 input-sm"></div>
+									</div>
+									<div class="col-xs-12 col-sm-4">
+										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">交易渠道:</label></div>
 										<div class="col-sm-9 no-padding">
 											<select class="form-control" data-typename="payChannel"  name="payTool">
 												<option value="">全部</option>
@@ -68,21 +91,10 @@
 										</div>
 									</div>
 								</div>
-								<div class="row">
-									<div class="col-xs-12 col-sm-6">
-										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">交易状态:</label></div>
-										<div class="col-sm-9 no-padding">
-										<select class="form-control" name="orderStatus">
-											<option value="全部">全部</option>
-											<option value="交易成功">交易成功</option>
-											<option value="交易失败">交易失败</option>
-										</select>
-										</div>
-									</div>
-									<div class="col-xs-12 col-sm-6 align-right">
+								<div class="row">									
+									<div class="align-right">
 										<button class="btn btn-info btn-sm" type="submit"><i class="ace-icon fa fa-check bigger-110"></i>查询</button>
 										<button class="btn btn-sm" type="reset"><i class="ace-icon fa fa-undo bigger-110"></i>重置</button>
-										<button id="export-btn" class="btn btn-info btn-sm" type="button"><i class="ace-icon fa fa-file-excel-o bigger-110 white"></i>导出</button>
 									</div>
 								</div>
 								</form>
@@ -90,12 +102,7 @@
 						</div>
 					</div>
 				</div>
-			</div>
-			<!-- <div class="row">
-				<div class="col-xs-12">
-					<button id="but_add" class="btn btn-info btn-xs"><i class="glyphicon glyphicon-plus"></i> 新增字典</button>
-				</div>
-			</div> -->
+			</div>			
 			<div class="row">
 				<div id="grid_list" class="col-xs-12">
 				</div>
@@ -115,7 +122,7 @@
 
 <!-- process enter -->
 <script>
-seajs.use('tradeRecord.list', function(m){
+seajs.use('qingfen-detail', function(m){
 	//m.init();
 });
 </script>

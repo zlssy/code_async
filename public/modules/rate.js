@@ -2,9 +2,7 @@ define(function(require, exports, module) {
 	var Utils = require('utils'),
 		Grid = require('gridBootstrap'),
 		Xss = require('xss'),
-		accountCheck = require('checkAccount'),
-		
-		//定义模板
+
 		addEditTpl = $('#viewTpl-baseInfo').html(),
 		viewTpl = $('#viewTpl').html(),
 		baseTpl = $('#addEditTpl-baseInfo').html(),
@@ -20,7 +18,7 @@ define(function(require, exports, module) {
 		userParam = {},
 		dictionaryCollection = {},
 		doms = {
-			effectiveDateStart: $('input[name="effectiveDateStart"]'),//与接口需要的参数命名相同
+			effectiveDateStart: $('input[name="effectiveDateStart"]'),
 			effectiveDateEnd: $('input[name="effectiveDateEnd"]'),
 			expirationDateStart: $('input[name="expirationDateStart"]'),
 			expirationDateEnd: $('input[name="expirationDateEnd"]'),
@@ -33,7 +31,8 @@ define(function(require, exports, module) {
 			ownerIds: $('#ownerIds'),
 			ids: $('#ids')
 		},
-
+		submitLock = false,
+		submitInterval = 2000, // 点击按钮点击后锁定2秒钟
 		_grid;
 
 	function init() {
@@ -46,7 +45,7 @@ define(function(require, exports, module) {
 			checkbox: false,
 			cols: [{
 				name: '计费编号',
-				index: 'id'//与接口返回的参数相同命名
+				index: 'id'
 			}, {
 				name: '所有者编号',
 				index: 'ownerId'
@@ -81,15 +80,14 @@ define(function(require, exports, module) {
 			}
 		});
 		listContainer.html(_grid.getHtml());
-		
-		//addCallback 与下面事件绑定
+
 		_grid.listen('addCallback', function() {
 			if (dictionaryCollection.chargeTypeArr) {
 				addAndUpdate();
 			}
 		});
 		_grid.listen('editCallback', function(row) {
-			if (dictionaryCollection.chargeTypeArr) {				
+			if (dictionaryCollection.chargeTypeArr) {
 				addAndUpdate(row);
 				$('#fownerId').prop('disabled', true);
 			}
@@ -101,15 +99,13 @@ define(function(require, exports, module) {
 			$('.ui-pg-div *[title]').tooltip({
 				container: 'body'
 			});
-			$('.ui-pg-div .fa-clock-o').on('click', function() {				
+			$('.ui-pg-div .fa-clock-o').on('click', function() {
 				setTimeout(function() {
-					//_grid.getSelectedRow()是封装的，是注册了事件，要高亮，那些查看，编辑都是这样
 					viewHistory(_grid.getSelectedRow())
 				}, 0);
 			})
 		});
 		_grid.load();
-		//下拉框填充和数据显示转换
 		getDictionaryFromServer('chargeType', function(json) {
 			if ('0' == json.code) {
 				dictionaryCollection.chargeTypeArr = json.data && json.data.dataArray || [];
@@ -148,20 +144,27 @@ define(function(require, exports, module) {
 	//新增编辑
 	function addAndUpdate(data, cb) {
 		var opt = {},
-			id = '';
+			id = '',
+			theDialog;
 		addEditTpl = baseTpl + gdTpl + jtTpl;
 		opt.message = '<h4><b>' + (data ? ('function' == typeof cb ? '查看费率' : '修改费率') : '添加费率') + '</b></h4><hr class="no-margin">' + addEditTpl;
 		opt.buttons = {
 			"save": {
 				label: '<i class="ace-icon fa fa-check"></i> 保存',
 				className: 'btn-sm btn-success',
-				callback: function() {
+				callback: function(a, b) {
+					console.log(a, b, arguments);
 					if (!validate()) {
 						return false;
 					} else {
-						if (!submitData(data)) {
-							return false;
+						if (!submitLock) {
+							submitLock = true;
+							submitData(data, theDialog);
+							setTimeout(function() {
+								submitLock = false;
+							}, submitInterval);
 						}
+						return false;
 					}
 				}
 			},
@@ -173,7 +176,7 @@ define(function(require, exports, module) {
 		if ('function' == typeof cb) {
 			delete opt.buttons.save;
 		}
-		showDialog(opt);
+		theDialog = showDialog(opt);
 		if (dictionaryCollection.chargeStatusArr) {
 			$('input[name="fchargeStatusInt"]:first').attr('value', dictionaryCollection.chargeStatusArr[0].innerValue).trigger('click');
 			$('input[name="fchargeStatusInt"]:last').attr('value', dictionaryCollection.chargeStatusArr[1].innerValue);
@@ -201,10 +204,6 @@ define(function(require, exports, module) {
 		$('.bootbox input, .bootbox select').on('change', function(e) {
 			validate($(this));
 		});
-		accountCheck.check({
-			el: $('#fownerId'),
-			elp: $('#fownerId').parents('.form-group:first')
-		});
 	}
 
 	/**
@@ -230,14 +229,14 @@ define(function(require, exports, module) {
 					pass = false;
 					elp.addClass('has-error');
 				}
-			} else if(el.data('empty')){
+			} else if (el.data('empty')) {
 				if ('' != el.val().trim()) {
 					elp.removeClass('has-error');
 				} else {
 					pass = false;
 					elp.addClass('has-error');
 				}
-				
+
 			} else if (el.attr('id') == 'fownerId') {
 				if (el.val().trim()) {
 					elp.removeClass('has-error');
@@ -248,57 +247,69 @@ define(function(require, exports, module) {
 			}
 
 		} else {
-			var obj=$('.bootbox').find("#gdPanel").find("input");//里面有很多input名字重名的在不同费率下
-			if($("input[name=fchargeTypeInt]:checked").val()=='2')
-			{
+			var obj = $('.bootbox').find("#gdPanel").find("input"); //里面有很多input名字重名的在不同费率下
+			if ($("input[name=fchargeTypeInt]:checked").val() == '2') {
 				obj = $('.bootbox').find("#jtPanel").find("input");
-			}			
-			var pass1= validBase($('.bootbox').find("#baseInfoPanel").find("input"));//基本信息的valid判断
-			var pass2= validBase(obj);//各费率模块valid判断
+			}
+			var pass1 = validBase($('.bootbox').find("#baseInfoPanel").find("input")); //基本信息的valid判断
+			var pass2 = validBase(obj); //各费率模块valid判断
 			pass = pass1 && pass2;
-		}		
-		//return accountCheck.isPass() && pass;
+		}
+		/** 特殊校验 */
+		var d1 = $('input[name="feffectiveDate"]'),
+			dv1 = d1.val(),
+			d2 = $('input[name="fexpirationDate"]'),
+			dv2 = d2.val();
+		d1.parents('.input-group:first').removeClass('has-error');
+		d2.parents('.input-group:first').removeClass('has-error');
+		if(dv1 && dv2){
+			dv1 = new Date(dv1).getTime();
+			dv2 = new Date(dv2).getTime();			
+			if(dv1 > dv2){
+				pass = false;
+				d1.parents('.input-group:first').addClass('has-error');
+			}
+		}
 		return pass;
 	}
-	
+
 	//判断有效的根基func
-	function validBase(boxObj){
+	function validBase(boxObj) {
 		var pass = true;
 		boxObj.each(function(i, v) {
-				var $el = $(this),
-					$p = $el.parents('.form-group:first'),
-					isInt = $el.data('int'),
-					isEmpty = $el.data('empty'),
-					isDate = $el.hasClass('datepicker');
-				if (isDate) {
-					if (Utils.isDate($el.val())) {
-						$p.removeClass('has-error');
-					} else {
-						pass = false;
-						$p.addClass('has-error');
-					}
+			var $el = $(this),
+				$p = $el.parents('.form-group:first'),
+				isInt = $el.data('int'),
+				isEmpty = $el.data('empty'),
+				isDate = $el.hasClass('datepicker');
+			if (isDate) {
+				if (Utils.isDate($el.val())) {
+					$p.removeClass('has-error');
+				} else {
+					pass = false;
+					$p.addClass('has-error');
 				}
-				if (isInt) {
-					if ($.isNumeric($el.val())) {
-						$p.removeClass('has-error');
-					} else {
-						pass = false;
-						$p.addClass('has-error');
-					}
-				}				
-				if (isEmpty) {
-					if ('' != $el.val().trim()) {
-						$p.removeClass('has-error');
-					} else {
-						pass = false;
-						$p.addClass('has-error');
-					}
+			}
+			if (isInt) {
+				if ($.isNumeric($el.val())) {
+					$p.removeClass('has-error');
+				} else {
+					pass = false;
+					$p.addClass('has-error');
 				}
-			});
-		return pass;	
+			}
+			if (isEmpty) {
+				if ('' != $el.val().trim()) {
+					$p.removeClass('has-error');
+				} else {
+					pass = false;
+					$p.addClass('has-error');
+				}
+			}
+		});
+		return pass;
 	}
-	
-	//获取每条数据信息
+
 	function getRowDetail(id, cb) {
 		$.ajax({
 			url: global_config.serverRoot + 'clearingCharge/detail?userId=' + '&id=' + id,
@@ -371,7 +382,7 @@ define(function(require, exports, module) {
 		}
 	}
 
-	function submitData(row) {
+	function submitData(row, dialog) {
 		var data = {},
 			start = 0,
 			fownerId = $("#fownerId").val(),
@@ -406,7 +417,7 @@ define(function(require, exports, module) {
 				return $(this).val()
 			}).get(),
 			arr = [];
-		
+
 		data.id = row && row[0] && row[0].id || '';
 		if (fownerId) {
 			data.ownerId = fownerId;
@@ -431,20 +442,19 @@ define(function(require, exports, module) {
 		}
 		if (fchargeTypeInt == dictionaryCollection.chargeTypeArr[1].innerValue) {
 			start = 1;
-		}		
+		}
 		for (var i = 0; i < ffixedCharge.length - 1; i++) {
 			arr[i] = {};
-			arr[i].ruleId = fruleId[i+start];
-			arr[i].fixedCharge = ffixedCharge[i+start];
-			arr[i].excludeChannelCharge = fexcludeChanelCharge[i+start];
-			arr[i].variableRate = fvariableRate[i+start];
-			arr[i].chargeFloor = fchargeFloor[i+start];
-			arr[i].chargeCeiling = fchargeCeiling[i+start];
+			arr[i].ruleId = fruleId[i + start];
+			arr[i].fixedCharge = ffixedCharge[i + start];
+			arr[i].excludeChannelCharge = fexcludeChanelCharge[i + start];
+			arr[i].variableRate = fvariableRate[i + start];
+			arr[i].chargeFloor = fchargeFloor[i + start];
+			arr[i].chargeCeiling = fchargeCeiling[i + start];
 			arr[i].transactionFloor = ftransactionFloor[i];
 			arr[i].transactionCeiling = ftransactionCeiling[i];
 		}
 		data.dataArray = JSON.stringify(arr);
-		var pass = true;
 		$.ajax({
 			url: global_config.serverRoot + 'clearingCharge/addOrUpdate',
 			method: 'post',
@@ -452,18 +462,21 @@ define(function(require, exports, module) {
 			async: false,
 			success: function(json) {
 				if ('0' == json.code) {
+					dialog.remove();
 					_grid.loadData();
 				} else if (-102 == json.code) {
 					location.reload();
 				} else {
-					if (json.code == '107' || json.code == '108') {
-						pass = false;
+					if (json.code == '106' || json.code == '107') {
 						$("#fownerId").parents('.form-group:first').addClass('has-error');
-						alert('所有者编号不存在，数据保存失败！');
+						Box.alert('所有者编号不存在，数据保存失败！');
+					} else if (json.code == '108') {
+						$("input[name='feffectiveDate']").parents('.form-group:first').addClass('has-error');
+						$("input[name='fexpirationDate']").parents('.form-group:first').addClass('has-error');
+						Box.alert('有效期不正确，请确保结束时间大于开始时间并且结束时间大于当前时间！');
 					} else if (json.code == '109') {
-						pass = false;
 						$("#fownerId").parents('.form-group:first').addClass('has-error');
-						alert('所有者编号重复，数据保存失败！');
+						Box.alert('所有者编号重复，数据保存失败！');
 					} else {
 						Box.alert('数据保存失败！');
 					}
@@ -472,13 +485,12 @@ define(function(require, exports, module) {
 			error: function(json) {
 				Box.alert('数据保存失败~');
 			}
-		})
-		return pass;
+		});
 	}
 
 	//box dialog init
 	function showDialog(opt) {
-		Box.dialog(opt);
+		return Box.dialog(opt);
 	}
 
 	/**
@@ -494,15 +506,13 @@ define(function(require, exports, module) {
 	}
 
 	function viewHistory(row) {
-		console.log(row);
 		var id = row[0].id;
 		$.ajax({
 			url: global_config.serverRoot + '/clearingCharge/history?userId=' + '&id=' + id,
 			success: function(json) {
 				if ('0' == json.code) {
 					showHistory(json.data.pageData);
-				}
-				else if(-100 == json.code){
+				} else if (-100 == json.code) {
 					location.reload();
 				}
 			},
@@ -559,8 +569,7 @@ define(function(require, exports, module) {
 			dom.append('<option value="' + data[i].innerValue + '"' + s + '>' + Xss.inHTMLData(data[i].label) + '</option>');
 		}
 	}
-	
-	//下拉框填充函数
+
 	function getDictionaryFromServer(type, callback, errorback) {
 		var emptyFn = function() {},
 			cb = callback || emptyFn,
@@ -590,14 +599,12 @@ define(function(require, exports, module) {
 			if (cls && cls.indexOf('fa-calendar') > -1) {
 				$el.parent().siblings('input').focus();
 			}
-			//查询按钮点击事件
 			if (cls && cls.indexOf('fa-check') > -1 || (id && 'query-btn' == id)) {
 				if (getParams()) {
 					_grid.setUrl(getUrl());
 					_grid.loadData();
 				}
 			}
-			//重置按钮点击事件
 			if (cls && cls.indexOf('fa-undo') > -1 || (id && 'reset-btn' == id)) {
 				userParam = {};
 				doms.effectiveDateStart.val('');
@@ -706,10 +713,6 @@ define(function(require, exports, module) {
 				newchange = true;
 				break;
 			}
-		}
-		if (!newchange) {
-			Box.alert('您的查询条件并没有做任何修改.');
-			return false;
 		}
 		userParam = newParam;
 		return true;

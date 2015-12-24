@@ -141,21 +141,28 @@ define(function(require, exports, module) {
         data = data || {};
         var content = template('tpleditItem')(data),
             title = $.isEmptyObject(data) ? "新增汇率" : "编辑汇率",
-            pop, $el;
+            pop, $el, flag = false, submitInterval = 2000;
         pop = art_dialog.edit({
             title: title,
             content:content,
             skin:'ui-dialog-edit-2',
             ok:function(){
                 var $form =  $el.find("form");
-                if(!formValid($form)){
-                    return false;
+                //2秒内只发一次请求
+                if (!flag) {
+                    flag = true;
+                    if (!formValid($form)) {
+                        return false;
+                    }
+                    var val = $form.form2json();
+                    doCreateItem(val, function(){
+                        _grid.loadData();
+                        pop.remove();
+                    });
                 }
-                var val = $form.form2json();
-                doCreateItem(val, function(){
-                    _grid.loadData();
-                    pop.remove();
-                });
+                setTimeout(function(){
+                    flag = false;
+                }, submitInterval);
                 return false;
             },
             cancel:function(){
