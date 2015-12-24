@@ -12,6 +12,8 @@ define(function(require, exports, module) {
 			checkbox: true,
 			pagesize: 20,
 			page: 1,
+			ajaxCompleteKey: 'code',
+			pageName: 'pageNo',
 			actions: {
 				add: false,
 				del: false,
@@ -33,12 +35,12 @@ define(function(require, exports, module) {
 		var html = [];
 		html.push('<div id="' + this.id + '" class="ui-jqgrid ui-widget ui-widget-content ui-corner-all" dir="ltr" style="width: 100%;">');
 		html.push('	<div class="ui-widget-overlay jqgrid-overlay" id="' + this.id + '_layer"></div>');
-		html.push('	<div class="loading ui-state-default ui-state-active" id="' + this.id + '_loading" style="display: none;">读取中...</div>');
-		html.push('	<div class="ui-jqgrid-view" id="' + this.id + '_view" style="width: 100%;' + (this.have_scroll ? "overflow:auto;" : "") + '">');
+		html.push('	<div class="loading ui-state-default ui-state-active" id="' + this.id + '_loading"><i class="ace-icon fa fa-spinner fa-spin blue bigger-125"></i>&nbsp;<span>处理中...</span></div>');
+		html.push('	<div class="ui-jqgrid-view" id="' + this.id + '_view">');
 		html.push('		<div class="ui-jqgrid-titlebar ui-jqgrid-caption ui-widget-header ui-corner-top ui-helper-clearfix" style="display: none;"><a role="link" class="ui-jqgrid-titlebar-close ui-corner-all HeaderButton" style="right: 0px;"><span class="ui-icon ui-icon-circle-triangle-n"></span></a><span class="ui-jqgrid-title"></span></div>');
-		html.push('		<div class="ui-state-default ui-jqgrid-hdiv" style="width: 100%;' + (this.have_scroll ? "overflow:initial;" : "") + '">');
-		html.push('			<div class="ui-jqgrid-hbox" style="padding:0">');
-		html.push('				<table class="ui-jqgrid-htable" style="' + (this.have_scroll ? "width:" + this.fixed_table_width + "px" : "width:100%;") + '" role="grid" aria-labelledby="gbox_grid" cellspacing="0" cellpadding="0" border="0">');
+		html.push('		<div id="' + this.id + '_hdiv" class="ui-state-default ui-jqgrid-hdiv" ' + (this.have_scroll ? "overflow:initial;" : "") + '">');
+		html.push('			<div class="ui-jqgrid-hbox">');
+		html.push('				<table id="' + this.id + '_header" class="ui-jqgrid-htable" role="grid" aria-labelledby="gbox_grid" cellspacing="0" cellpadding="0" border="0">');
 		html.push('					<thead>');
 		html.push('						<tr class="ui-jqgrid-labels" role="rowheader">');
 		html.push(getHeader.call(this));
@@ -47,12 +49,13 @@ define(function(require, exports, module) {
 		html.push('				</table>');
 		html.push('			</div>');
 		html.push('		</div>');
-		html.push('		<div class="ui-jqgrid-bdiv" style="height: ' + this.height + 'px; width:100%;' + (this.have_scroll ? "overflow:initial;" : "") + '">');
+		html.push('		<div id="' + this.id + '_bdiv" class="ui-jqgrid-bdiv" style="height: ' + this.height + 'px; ' + (this.have_scroll ? "overflow:initial;" : "") + '">');
 		html.push('			<div style="position:relative;">');
 		html.push('				<div class="ui-jqgrid-hbox" style="padding: 0">');
-		html.push('				<table id="' + this.id + '_listbox" tabindex="0" cellspacing="0" cellpadding="0" border="0" role="grid" aria-multiselectable="true" aria-labelledby="gbox_grid" class="ui-jqgrid-btable" style="' + (this.have_scroll ? "width:" + this.fixed_table_width + "px" : "width:100%;") + '">');
+		html.push('				<table id="' + this.id + '_listbox" tabindex="0" cellspacing="0" cellpadding="0" border="0" role="grid" aria-multiselectable="true" aria-labelledby="gbox_grid" class="ui-jqgrid-btable">');
 		html.push('				<tbody id="' + this.id + '_list">');
 		html.push('				</tbody>');
+		html.push(getFirstRow.call(this));
 		html.push('				</table>');
 		html.push('				</div>');
 		html.push('			</div>');
@@ -122,7 +125,6 @@ define(function(require, exports, module) {
 	function getHeader() {
 		var html = [],
 			id = this.id,
-			idx = 0,
 			col, colid, colwidth, colvalue, wstr;
 		if (this.checkbox) {
 			html.push('<th id="' + id + '_cb" role="columnheader" class="ui-state-default ui-th-column ui-th-ltr" style="width: 25px;"><div id="' + id + '_grid_cb"><input role="checkbox" id="' + id + '_hcb" class="cbox" type="checkbox"><span class="s-ico" style="display:none"><span sort="asc" class="ui-grid-ico-sort ui-icon-asc ui-state-disabled ui-icon ui-icon-triangle-1-n ui-sort-ltr"></span><span sort="desc" class="ui-grid-ico-sort ui-icon-desc ui-state-disabled ui-icon ui-icon-triangle-1-s ui-sort-ltr"></span></span></div></th>');
@@ -130,13 +132,12 @@ define(function(require, exports, module) {
 
 		for (var i = 0; i < this.colLen; i++) {
 			col = this.cols[i];
-			idx = i + (this.checkbox ? 1 : 0);
 			if (col) {
 				colid = col.id || 'col' + (++guid);
 				colwidth = col.width || this.col_average_width;
 				colvalue = col.name || '&nbsp;';
-				wstr = i != this.colLen - 1 ? 'style="width: ' + colwidth + '%;"' : '';
-				html.push('<th id="' + id + '_' + colid + '" role="columnheader" class="ui-state-default ui-th-column ui-th-ltr" ' + wstr + '><span class="ui-jqgrid-resize ui-jqgrid-resize-ltr" style="cursor:col-resize;width:2px;" data-idx="' + idx + '">&nbsp;</span><div id="' + id + '_h_' + colid + '" class="ui-jqgrid-sortable">' + colvalue + '<span class="s-ico" style="display:none"><span sort="asc" class="ui-grid-ico-sort ui-icon-asc ui-state-disabled ui-icon ui-icon-triangle-1-n ui-sort-ltr"></span><span sort="desc" class="ui-grid-ico-sort ui-icon-desc ui-state-disabled ui-icon ui-icon-triangle-1-s ui-sort-ltr"></span></span></div></th>');
+				wstr = ''; //i != this.colLen - 1 ? 'style="width: ' + colwidth + '%;"' : '';
+				html.push('<th id="' + id + '_' + colid + '" role="columnheader" class="ui-state-default ui-th-column ui-th-ltr" ' + wstr + '><span class="ui-jqgrid-resize ui-jqgrid-resize-ltr" style="cursor:default">&nbsp;</span><div id="' + id + '_h_' + colid + '" class="ui-jqgrid-sortable">' + colvalue + '<span class="s-ico" style="display:none"><span sort="asc" class="ui-grid-ico-sort ui-icon-asc ui-state-disabled ui-icon ui-icon-triangle-1-n ui-sort-ltr"></span><span sort="desc" class="ui-grid-ico-sort ui-icon-desc ui-state-disabled ui-icon ui-icon-triangle-1-s ui-sort-ltr"></span></span></div></th>');
 			}
 		};
 
@@ -153,8 +154,8 @@ define(function(require, exports, module) {
 		for (var i = 0; i < this.colLen; i++) {
 			col = this.cols[i];
 			if (col) {
-				colwidth = col.fixedWidth ? col.fixedWidth + 'px' : (col.width || this.col_average_width) + '%';
-				wstr = i != this.colLen - 1 ? 'width: ' + colwidth + ';' : '';
+				colwidth = col.width || this.col_average_width;
+				wstr = ''; //i != this.colLen - 1 ? 'width: ' + colwidth + '%;' : '';
 				html.push('<td role="gridcell" style="height: 0px; ' + wstr + '"></td>');
 			}
 		}
@@ -170,7 +171,6 @@ define(function(require, exports, module) {
 			throw new Error('Could\'t find the list container. Maybe your html struct did\'t render on the dom.')
 		}
 		this.trigger('setContentCallback', this);
-		this.controls.firstRow = $('.jqgfirstrow');
 	}
 
 	function render(data) {
@@ -194,8 +194,9 @@ define(function(require, exports, module) {
 					colfn = col.format;
 					colval = d[col.index];
 					xsscheck = !!colval;
-					colval = 'function' === typeof colfn ? colfn(xsscheck ? colval : d[this.key], colval, d) : colval;
-					html.push('<td role="gridcell" title="' + (xsscheck ? Xss.inDoubleQuotedAttr(colval) : '') + '" aria-describedby="' + this.id + '_' + col.index + '">' + (xsscheck ? Xss.inHTMLData(colval) : colval) + '</td>');
+					colval = 'function' === typeof colfn ? colfn(colval, d[this.key], d, i, this.page) : colval;
+					colval = colval || '';
+					html.push('<td style="word-wrap:break-word;word-break:break-all;white-space: pre-wrap;" role="gridcell" title="' + (xsscheck ? Xss.inDoubleQuotedAttr(colval) : '') + '" aria-describedby="' + this.id + '_' + col.index + '">' + (col.closeXss ? colval : xsscheck ? Xss.inHTMLData(colval) : colval) + '</td>');
 				}
 				html.push('</tr>');
 			};
@@ -204,6 +205,7 @@ define(function(require, exports, module) {
 			html.push('<tr><td colspan="' + colNum + '" style="height:40px; line-height:40px;"><p class="text-info center">当前条件下没有检索到数据</p></td></tr>')
 		}
 		this.setContent(html.join(''));
+		syncFirstRowWidth();
 		this.trigger('renderCallback', this);
 	}
 
@@ -226,26 +228,81 @@ define(function(require, exports, module) {
 	function load() {
 		getControls.call(this);
 		loadData.call(this);
+		resize.call(this);
 		registerEvents.call(this);
 		this.trigger('loadCallback', this);
 	}
 
+	function resize() {
+		var width = this.controls.box.width(),
+			tableWidth = width - 18, // 为滚动条预留位置
+			avg = 0,
+			last = 0,
+			offset = 5, // jq的 table css中有左右两像素的填充，还有1像素边框，需要减掉，否则宽度会溢出
+			indexOffset = 0,
+			cellWidth = 0;
+
+		if (width > 0) {
+			this.controls.hdiv.width(width);
+			this.controls.bdiv.width(width);
+			this.controls.view.width(width);
+
+			// 平均分配宽度
+			if (this.checkbox) {
+				tableWidth -= 25;
+			}
+			avg = Math.floor(tableWidth / this.cols.length);
+			last = tableWidth - (avg * (this.cols.length - 1));
+			// console.log(tableWidth, avg, last, this.cols.length);
+			if (this.checkbox) {
+				$('.ui-th-ltr:not(:last):not(:first)').width(avg - offset);
+				$('.ui-th-ltr:last').width(last - offset);
+				indexOffset = 1;
+			} else {
+				$('.ui-th-ltr:not(:last)').width(avg - offset);
+				$('.ui-th-ltr:last').width(last - offset);
+			}
+
+			// 进行用户设定
+			for (var i = 0; i < this.cols.length; i++) {
+				cellWidth = this.cols[i].width;
+				if (cellWidth) {
+					$('.ui-th-ltr').eq(i + indexOffset).width(cellWidth);
+					cellWidth > avg && (tableWidth += cellWidth - avg);
+				}
+			}
+
+			this.controls.header.width(tableWidth);
+			this.controls.listbox.width(tableWidth);
+			syncFirstRowWidth();
+		}
+	}
+
+	function syncFirstRowWidth() {
+		$('.jqgfirstrow td').each(function(i, v) {
+			$(v).width($('.ui-th-ltr').eq(i).width());
+		});
+	}
+
 	function loadData() {
 		var self = this;
+		this.setContent('');
+		showLoading.call(this, '数据正在拼命加载中...');
 		$.ajax({
 			url: self.getUrl(),
 			success: function(json) {
-				if ('0' == json.code) {
+				hideLoading.call(self);
+				if ('0' == json[self.ajaxCompleteKey]) {
 					render.call(self, getMapData(json, self.jsonReader.root));
-					self.jsonReader.page && (self.page = getMapData(json, self.jsonReader.page));
-					self.jsonReader.records && (self.total = getMapData(json, self.jsonReader.records));
+					self.jsonReader.page && (self.page = getMapData(json, self.jsonReader.page) || 1);
+					self.jsonReader.records && (self.total = getMapData(json, self.jsonReader.records) || 0);
 					if (self.total) {
 						self.totalPage = Math.ceil(self.total / self.pagesize);
 					} else {
 						self.totalPage = 0;
 					}
 					self.updatePager();
-				} else if (-100 == json.code) {
+				} else if (-100 == json[self.ajaxCompleteKey]) {
 					location.reload();
 				} else {
 					self.page = 1;
@@ -264,8 +321,13 @@ define(function(require, exports, module) {
 	function getControls() {
 		this.controls = {
 			box: $('#' + this.id),
+			header: $('#' + this.id + '_header'),
+			listbox: $('#' + this.id + '_listbox'),
+			hdiv: $('#' + this.id + '_hdiv'),
+			bdiv: $('#' + this.id + '_bdiv'),
 			layer: $('#' + this.id + '_layer'),
 			loading: $('#' + this.id + '_loading'),
+			view: $('#' + this.id + '_view'),
 			list: $('#' + this.id + '_list'),
 			mark: $('#' + this.id + '_resizemark'),
 			pager: $('#' + this.id + '_pager'),
@@ -277,9 +339,7 @@ define(function(require, exports, module) {
 			nPageBtn: $('#' + this.id + '_n_pager'),
 			totalPageView: $('#' + this.id + '_sp_pager'),
 			pageInfo: $('#' + this.id + '_pager_info'),
-			headerCheckbox: $('#' + this.id + '_hcb'),
-			headerDiv: $('.ui-jqgrid-hdiv'),
-			firstRow: $('.jqgfirstrow')
+			headerCheckbox: $('#' + this.id + '_hcb')
 		};
 	}
 
@@ -323,11 +383,16 @@ define(function(require, exports, module) {
 				}
 			});
 		}
+
 		return ret;
 	}
 
 	function getUrl() {
-		return this.url;
+		var url = this.url;
+		if (url.indexOf(this.pageName) < 0) {
+			url += (url.indexOf('&') < 0 ? url.indexOf('?') < 0 ? '?' : '' : '&') + this.pageName + '=' + this.page;
+		}
+		return url;
 	}
 
 	function setUrl(url) {
@@ -417,6 +482,24 @@ define(function(require, exports, module) {
 					return;
 				}
 			}
+			if (cls.indexOf('fa-edit') > -1) {
+				selectedRow = self.getSelectedRow();
+				if (selectedRow.length) {
+					self.trigger('checkCallback', selectedRow, self);
+				} else {
+					alert('请先选择要审核的行.');
+					return;
+				}
+			}
+			if (cls.indexOf('add-edit-font') > -1) {
+				selectedRow = self.getSelectedRow();
+				if (selectedRow.length) {
+					self.trigger('editViewCallback', selectedRow, self);
+				} else {
+					alert('请先选择要查看编辑的行.');
+					return;
+				}
+			}
 			if (cls.indexOf('fa-search-plus') > -1) {
 				selectedRow = self.getSelectedRow();
 				if (selectedRow.length) {
@@ -454,6 +537,24 @@ define(function(require, exports, module) {
 					return;
 				}
 			}
+			if (cls.indexOf('fa-edit') > -1) {
+				selectedRow = self.getSelectedRow();
+				if (selectedRow.length) {
+					self.trigger('checkCallback', selectedRow, self);
+				} else {
+					alert('请先选择要审核的行.');
+					return;
+				}
+			}
+			if (cls.indexOf('add-edit-font') > -1) {
+				selectedRow = self.getSelectedRow();
+				if (selectedRow.length) {
+					self.trigger('editViewCallback', selectedRow, self);
+				} else {
+					alert('请先选择要查看编辑的行.');
+					return;
+				}
+			}
 			if (cls.indexOf('fa-search-plus') > -1) {
 				selectedRow = self.getSelectedRow();
 				if (selectedRow.length) {
@@ -482,7 +583,7 @@ define(function(require, exports, module) {
 
 		this.controls.firstPageBtn.off().on('click', function(e) {
 			if (!$(this).hasClass('ui-state-disabled')) {
-				self.setUrl(Utils.url.replaceParam('pageNo', 1, self.getUrl(), true));
+				self.setUrl(Utils.url.replaceParam(self.pageName, 1, self.getUrl(), true));
 				loadData.call(self);
 			}
 		});
@@ -490,7 +591,7 @@ define(function(require, exports, module) {
 			if (!$(this).hasClass('ui-state-disabled')) {
 				var page = self.page - 1;
 				if (page > 0 && page < self.totalPage) {
-					self.setUrl(Utils.url.replaceParam('pageNo', page, self.getUrl(), true));
+					self.setUrl(Utils.url.replaceParam(self.pageName, page, self.getUrl(), true));
 					loadData.call(self);
 				}
 			}
@@ -499,14 +600,14 @@ define(function(require, exports, module) {
 			if (!$(this).hasClass('ui-state-disabled')) {
 				var page = (self.page - 0) + 1;
 				if (page > 0 && page <= self.totalPage) {
-					self.setUrl(Utils.url.replaceParam('pageNo', page, self.getUrl(), true));
+					self.setUrl(Utils.url.replaceParam(self.pageName, page, self.getUrl(), true));
 					loadData.call(self);
 				}
 			}
 		});
 		this.controls.lastPageBtn.off().on('click', function(e) {
 			if (!$(this).hasClass('ui-state-disabled')) {
-				self.setUrl(Utils.url.replaceParam('pageNo', self.totalPage, self.getUrl(), true));
+				self.setUrl(Utils.url.replaceParam(self.pageName, self.totalPage, self.getUrl(), true));
 				loadData.call(self);
 			}
 		});
@@ -514,7 +615,7 @@ define(function(require, exports, module) {
 			var code = e.keyCode;
 			if (13 == code) {
 				var page = $(this).val() - 0 || 1;
-				self.setUrl(Utils.url.replaceParam('pageNo', page, self.getUrl(), true));
+				self.setUrl(Utils.url.replaceParam(self.pageName, page, self.getUrl(), true));
 				loadData.call(self);
 			}
 		});
@@ -523,66 +624,43 @@ define(function(require, exports, module) {
 			container: 'body'
 		});
 
-		/** 注册拖拽事件 */
-		$('.ui-jqgrid-resize').on('mousedown', function(e) {
-			dragStart.apply(self, [$(this), e]);
+		// 监听列表滚动
+		var bdiv = this.controls.bdiv,
+			hdiv = this.controls.hdiv;
+		bdiv.on('scroll', function(e) {
+			var sl = bdiv.scrollLeft();
+			hdiv.scrollLeft(sl);
 		});
-		this.controls.headerDiv.on('mousemove', function(e) {
-			dragMove.apply(self, [e]);
+
+		$(window).on('resize', function() {
+			resize.call(self);
 		});
-		$(document).on('mouseup', function(e) {
-			dragEnd.apply(self, [e]);
+
+		// 注册ajax请求错误
+		this.listen('ajaxError', function(){
+			fail.call(self);
 		});
 	}
 
-	function dragStart(el, e) {
-		var left = el.offset().left,
-			idx = el.data('idx');
-		this.curBox = el.parent();
-		this.resizing = {
-			idx: idx,
-			el: el,
-			startX: e.clientX,
-			oldLeft: left,
-			pwidth: this.curBox.width()
-		}
-		document.onselectstart = function() {
-			return false;
-		}
-		this.controls.headerDiv.css("cursor", 'col-resize');
+	function fail(){
+		this.setContent('<tr><td colspan="' + (this.cols.length + (this.checkbox ? 1 : 0)) + '" align="center" valign="middle" height="' + this.height + '">加载数据失败，稍后刷新试试~~~</td></tr>');
 	}
 
-	function dragMove(e) {
-		if (this.resizing) {
-			var x = e.clientX,
-				ox = this.resizing.startX,
-				nw = x - ox + this.resizing.pwidth;
-			this.curBox.css({
-				width: nw
-			});
-			this.resizing.newWidth = nw;
-		}
+	function showLayer(){
+		this.controls.layer.show();
 	}
 
-	function dragEnd() {
-		var idx,
-			newWidth;
-		if (this.resizing) {
-			idx = this.resizing.idx;
-			newWidth = this.resizing.newWidth;
-			if (newWidth && undefined != idx) {
-				this.controls.firstRow.find('td').eq(idx).css({
-					width: newWidth
-				});
-				this.cols[idx].fixedWidth = newWidth;
-			}
-			this.resizing = null;
-			this.curBox = null;
-			document.onselectstart = function() {
-				return true;
-			}
-			this.controls.headerDiv.css("cursor", 'default');
-		}
+	function hideLayer(){
+		this.controls.layer.hide();
+	}
+
+	function showLoading(str){
+		str && this.controls.loading.find('span').html(str);
+		this.controls.loading.show();
+	}
+
+	function hideLoading(){
+		this.controls.loading.hide().find('span').html('处理中...');
 	}
 
 	return {
@@ -598,6 +676,10 @@ define(function(require, exports, module) {
 		setContent: setContent, // 设置tboby的内容
 		load: load, // 加载入口
 		loadData: loadData, // 载入数据
-		updatePager: updatePager //刷新页码
+		updatePager: updatePager, //刷新页码
+		showLayer: showLayer,
+		hideLayer: hideLayer,
+		showLoading: showLoading,
+		hideLoading: hideLoading
 	};
 });
