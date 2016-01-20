@@ -129,6 +129,12 @@ router.all('/exchange-query', function(req, res, next){
         req: req
     })
 });
+router.all('/config', function(req, res, next){
+    res.render('config', {
+        title: 'TCL业务清算平台',
+        req: req
+    })
+});
 
 /** get root 放到最后 */
 router.get('/', function(req, res, next) {
