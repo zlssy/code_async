@@ -81,7 +81,7 @@ define(function(require, exports, module) {
 			+ function() {
 				var s = $(stypes[i]);
 				var typename = s.data('typename');
-				ajaxArr.push($.get(global_config.serverRoot + 'dataDictionary/dropdownlist', {
+				ajaxArr.push($.get(global_config.serverRootQF + 'dataDictionary/dropdownlist', {
 					type: s.data('typename')
 				}, function(data) {
 					if (data.code != 0) {
@@ -207,7 +207,7 @@ define(function(require, exports, module) {
 		userParam.settleDateEnd = settleDateEnd;
 		var a = document.createElement('a');
 		var url = 'http://testtclpay.tclclouds.com/settlement/settleStatement/export?userId=&' + Utils.object2param(userParam);
-		a.href = url; //global_config.serverRoot + '/settleStatement/export?userId=&' + Utils.object2param(userParam);
+		a.href = url; //global_config.serverRootQF + '/settleStatement/export?userId=&' + Utils.object2param(userParam);
 		a.target = '_blank';
 		a.height = 0;
 		a.width = 0;
@@ -221,7 +221,7 @@ define(function(require, exports, module) {
 	function concatQuery() {
 		getParams();
 		$.ajax({
-			url: global_config.serverRoot + 'settleStatement/total?userId=&' + Utils.object2param(userParam),
+			url: global_config.serverRootQF + 'settleStatement/total?userId=&' + Utils.object2param(userParam),
 			success: function(json) {
 				if ('0' == json.code) {
 					exportContainer.html(Utils.formatJson($('#totalTpl').html(), json.data));
@@ -242,7 +242,7 @@ define(function(require, exports, module) {
 			settleStatementId: needPayRow.id
 		};
 		$.ajax({
-			url: global_config.serverRoot + '/settleStatement/paid',
+			url: global_config.serverRootQF + '/settleStatement/paid',
 			method: 'post',
 			data: req,
 			success: function(json) {
@@ -271,7 +271,7 @@ define(function(require, exports, module) {
 			cb = callback || emptyFn,
 			ecb = errorback || emptyFn;
 		$.ajax({
-			url: global_config.serverRoot + 'dataDictionary/dropdownlist?userId=' + '&type=' + type,
+			url: global_config.serverRootQF + 'dataDictionary/dropdownlist?userId=' + '&type=' + type,
 			success: cb,
 			error: ecb
 		});
@@ -343,7 +343,7 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + 'settleStatement/list?userId=&' + Utils.object2param(userParam);
+		return global_config.serverRootQF + 'settleStatement/list?userId=&' + Utils.object2param(userParam);
 	}
 
 	function getParams() {

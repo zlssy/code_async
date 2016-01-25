@@ -13,7 +13,7 @@ define(function(require, exports, module) {
 				val = $this.val();
 			ajaxCache && ajaxCache.abort();
 			ajaxCache = $.ajax({
-				url: global_config.serverRoot + '/dataDictionary/merchantId/isValid?userId=&merchantId=' + val,
+				url: global_config.serverRootQF + '/dataDictionary/merchantId/isValid?userId=&merchantId=' + val,
 				success: function(json) {
 					pass = false;
 					if ('0' == json.code) {

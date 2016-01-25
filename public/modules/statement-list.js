@@ -5,10 +5,11 @@ define(function(require, exports, module) {
 		content = $('#content'),
         Table = require('whygrid'),
         tool = require("why"),
-        rooturl = global_config.serverRoot.replace(/\/+$/,''),
+        rooturl = global_config.serverRootQF.replace(/\/+$/,''),
         apis = {
             list : rooturl + '/queryWrongRecord',
-            down : rooturl + '/downloadWrongRecord'
+            down : rooturl + '/downloadWrongRecord',
+            addorup : rooturl + '/exchangeRate/addOrUpdate'
         },
 		_grid;
 
@@ -140,7 +141,7 @@ define(function(require, exports, module) {
     }
 
     function doCreateItem(data, callback){
-        $.post(global_config.serverRoot + "/exchangeRate/addOrUpdate", data, function(res){
+        $.post(apis.addorup , data, function(res){
             if(res.code == 0){
                 callback(res);
             }

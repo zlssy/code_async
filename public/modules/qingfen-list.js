@@ -91,7 +91,7 @@ define(function(require, exports, module) {
 			+ function() {
 				var s = $(stypes[i]);
 				var typename = s.data('typename');
-				ajaxArr.push($.get(global_config.serverRoot + 'dataDictionary/dropdownlist', {
+				ajaxArr.push($.get(global_config.serverRootQF + 'dataDictionary/dropdownlist', {
 					type: s.data('typename')
 				}, function(data) {
 					if (data.code != 0) {
@@ -257,7 +257,7 @@ define(function(require, exports, module) {
 		var id = arguments[0]; //row && row[0] && row[0].id;
 		if (id) {
 			$.ajax({
-				url: global_config.serverRoot + 'clearing/doSettle',
+				url: global_config.serverRootQF + 'clearing/doSettle',
 				type: 'post',
 				data: {
 					id: id
@@ -287,7 +287,7 @@ define(function(require, exports, module) {
 		var a = document.createElement('a');
 		userParam.clearingDateStart = clearingDateStart;
 		userParam.clearingDateEnd = clearingDateEnd;
-		a.href = global_config.serverRoot + 'clearing/export?userId=&' + Utils.object2param(userParam);
+		a.href = global_config.serverRootQF + 'clearing/export?userId=&' + Utils.object2param(userParam);
 		a.target = '_blank';
 		a.height = 0;
 		a.width = 0;
@@ -303,7 +303,7 @@ define(function(require, exports, module) {
 			cb = callback || emptyFn,
 			ecb = errorback || emptyFn;
 		$.ajax({
-			url: global_config.serverRoot + 'dataDictionary/dropdownlist?userId=' + '&type=' + type,
+			url: global_config.serverRootQF + 'dataDictionary/dropdownlist?userId=' + '&type=' + type,
 			success: cb,
 			error: ecb
 		});
@@ -388,7 +388,7 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + 'clearing/list?userId=&' + Utils.object2param(userParam);
+		return global_config.serverRootQF + 'clearing/list?userId=&' + Utils.object2param(userParam);
 	}
 
 	return {

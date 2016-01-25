@@ -30,3 +30,18 @@
 `pm2 restart pm2.json`  
 `pm2 delete pm2.json`  
 ##8.配置nginx(略)
+
+
+##passport后台菜单初始化  
+商户信息管理(shxxgl)
+ * 商户信息(shxxgl-shxx)
+商户审核管理(shshgl)
+ * 商户信息(shshgl-shxx)
+支付渠道管理(zfqdgl)
+ * 支付渠道(zfqdgl-zfqd)
+订单查询(ddgl)
+ * 订单(ddgl-dd)
+文档管理(wdgl)
+ * 文档管理(wdgl-wdgl)
+支付节点统计(zfjd)
+ * 支付节点统计(zfjd-zfjd)

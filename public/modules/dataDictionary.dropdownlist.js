@@ -5,13 +5,14 @@ define(function(require, exports, module) {
 		firstRowTemplate = $('#first_row_template').html(),
 		rowTemplate = $('#row_template').html(),
 		userParam = {type:'clearingStatus'};
-		var apis = {
-			list : global_config.serverRoot + '/dataDictionary/dropdownlist',
-			add : global_config.serverRoot + '/dataDictionary/addOrUpdate',
-			update : global_config.serverRoot + '/dataDictionary/addOrUpdate',
-			show : global_config.serverRoot + '/dataDictionary/detail',
-			dropdownlist : global_config.serverRoot + '/dataDictionary/dropdownlist'
-		}
+	var rooturl = global_config.serverRootQF.replace(/\/+$/, '');
+	var apis = {
+		list : rooturl + '/dataDictionary/dropdownlist',
+		add : rooturl + '/dataDictionary/addOrUpdate',
+		update : rooturl + '/dataDictionary/addOrUpdate',
+		show : rooturl + '/dataDictionary/detail',
+		dropdownlist : rooturl + '/dataDictionary/dropdownlist'
+	}
 
 	$(function(){
 		loadData();

@@ -22,7 +22,7 @@ define(function(require, exports, module) {
         $uploadFile.fileupload({
             url: "",
             beforeSend: function (e, data) {
-                data.url = global_config.serverRoot + "/reconciliation?payChannel="
+                data.url = global_config.serverRootQF + "/reconciliation?payChannel="
                     + payTool + "&date=" + new Date() + "";
             },
             start: function () {
