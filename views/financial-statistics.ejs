@@ -39,7 +39,7 @@
                                 <div class="widget-main">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-4">
-                                            <label class="col-sm-3 no-padding lm-5">统计日期:</label>
+                                            <label class="col-sm-3 no-padding lm-5">交易日期:</label>
                                             <div class="col-xs-12 col-sm-9 no-padding">
                                                 <div class="input-group">
                                                     <input type="text" class="input-sm form-control datepicker" id="startDate" name="startDate" placeholder="from" data-date-format="yyyy-mm-dd" />
@@ -51,11 +51,9 @@
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-4">
-                                            <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">支付渠道:</label></div>
+                                            <label class="col-sm-3 no-padding lm-5" >商品编号:</label>
                                             <div class="col-sm-9 no-padding">
-                                                <select class="form-control" name="payTool" dict-name="payChannel">
-                                                    <option value="">全部</option>
-                                                </select>
+                                                <input type="text" name="productIds" class="form-control col-sm-5 input-sm">
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-4">
@@ -64,12 +62,16 @@
                                                 <input type="text" name="productName" class="form-control col-sm-5 input-sm">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-xs-12 col-sm-4">
                                             <label class="col-sm-3 no-padding lm-5" >产品类别:</label>
                                             <div class="col-sm-9 no-padding">
                                                 <input type="text" name="productCategory" class="form-control col-sm-5 input-sm">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-4">
+                                            <label class="col-sm-3 no-padding lm-5">商户订单号:</label>
+                                            <div class="col-sm-9 no-padding">
+                                                <input type="text" name="orderNumbers"  class="form-control col-sm-5 input-sm">
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-4">
@@ -78,8 +80,6 @@
                                                 <input type="text" name="userID" class="form-control col-sm-5 input-sm">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-xs-12 col-sm-4">
                                             <label class="col-sm-3 no-padding lm-5">商户编号:</label>
                                             <div class="col-sm-9 no-padding">
@@ -87,9 +87,11 @@
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-4">
-                                            <label class="col-sm-3 no-padding lm-5" >订单编号:</label>
+                                            <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="payChannel">支付渠道:</label></div>
                                             <div class="col-sm-9 no-padding">
-                                                <input type="text"  class="form-control col-sm-5 input-sm">
+                                                <select class="form-control" name="payChannel" dict-name="payChannel">
+                                                    <option value="">全部</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>

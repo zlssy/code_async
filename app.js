@@ -46,7 +46,7 @@ app.use('/', require('./routes/index'));
 //系统功能
 app.use('/system',require('./routes/system'));
 //接口模拟
-app.use('/operationtest',require('./routes/settlement'))
+app.use('/operationtest',require('./routes/operation'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

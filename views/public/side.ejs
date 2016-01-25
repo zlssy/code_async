@@ -25,6 +25,38 @@
 <%
 	var url = req.url,
 		menus = [{
+            name:'订单管理',
+            code:'ddgl',
+            child: [{
+                name: '订单查询',
+                code:'ddgl-dd',
+                url: '/order'
+            },{
+                name: '支付节点统计',
+                code: 'zfjd-zfjd',
+				url: '/payment-statistics'
+            },{
+            	name: '交易数据统计',
+            	code: 'zfjd-zfjd',
+            	url: '/'
+            }]
+        },{
+			name:'商户信息管理',
+			code:'shxxgl',
+			child: [{
+				name: '商户信息',
+				code:'shxxgl-shxx',
+				url: '/merchant-info'
+			}]
+		},{
+			name:'商户审核管理',
+			code:'shshgl',
+			child: [{
+				name: '商户信息',
+				code: 'shshgl-shxx',
+				url: '/merchant-check'
+			}]
+		},{
             name:'清分管理',
             code:'shxxgl',
             child: [{
@@ -32,7 +64,7 @@
                 code:'shxxgl',
                 url: '/qingfen-detail'
             },{
-                name: '清分单查询',
+                name: '清分汇总查询',
                 code:'shxxgl',
                 url: '/qingfen-list-query'
             }]
@@ -73,17 +105,21 @@
                 url: '/exchange-query'
             }]
         },{
-            name:'对账差错处理',
+            name:'对账管理',
             code: 'ddgl',
             child: [{
-                name: '上传对账单',
+                name: '交易渠道报告',
                 code: 'ddgl-dd',
                 url: '/statement-upload'
             },{
-                name: '查错账处理',
-                code: 'ddgl-dd',
-                url: '/statement-list'
-            }]
+				name: '对账日汇总',
+				code: 'ddgl-dd',
+				url: '/daily-collect'
+			},{
+				name: '手续费差',
+				code: 'ddgl-dd',
+				url: '/charge'
+			}]
         },{
             name:'财务统计管理',
             code: 'ddgl',
@@ -93,44 +129,12 @@
                 url: '/financial-statistics'
             }]
         },{
-            name:'数据字典管理',
-            code: 'ddgl',
-            child: [{
-                name: '数据字典',
-                code: 'ddgl-dd',
-                url: '/dataDictionary/list'
-            }]
-        },{
-			name:'商户信息管理',
-			code:'shxxgl',
-			child: [{
-				name: '商户信息',
-				code:'shxxgl-shxx',
-				url: '/merchant-info'
-			}]
-		},{
-			name:'商户审核管理',
-			code:'shshgl',
-			child: [{
-				name: '商户信息',
-				code: 'shshgl-shxx',
-				url: '/merchant-check'
-			}]
-		},{
 			name:'支付渠道管理',
 			code: 'zfqdgl',
 			child: [{
 				name: '支付渠道',
 				code: 'zfqdgl-zfqd',
 				url: '/payment-channel'
-			}]
-		},{
-			name:'订单查询',
-			code: 'ddgl',
-			child: [{
-				name: '订单',
-				code: 'ddgl-dd',
-				url: '/order'
 			}]
 		},{
 			name:'文档管理',
@@ -141,6 +145,14 @@
 				url: '/documet'
 			}]
 		},{
+            name:'数据字典管理',
+            code: 'sjzd',
+            child: [{
+                name: '数据字典',
+                code: 'sjzd-sjzd',
+                url: '/dataDictionary/list'
+            }]
+        },{
             name:'配置信息',
             code: 'wdgl',
             child: [{
@@ -149,14 +161,6 @@
                 url: '/config'
             }]
         },{
-			name:'支付节点统计',
-			code: 'zfjd',
-			child: [{
-				name: '支付节点统计',
-				code: 'zfjd-zfjd',
-				url: '/payment-statistics'
-			}]
-		},{
 			name: '常用功能',
 			child: [{
 				name: '修改密码',

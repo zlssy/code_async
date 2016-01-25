@@ -41,11 +41,11 @@
 										<label class="col-sm-3 no-padding lm-5">清分日期:</label>
 										<div class="col-xs-12 col-sm-9 no-padding">
 										<div class="input-group">
-											<input type="text" class="input-sm form-control datepicker" id="startDate" name="startDate" placeholder="from" />
-											<label for="startDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+											<input type="text" class="input-sm form-control datepicker" id="clearingDateStart" name="clearingDateStart" placeholder="from" />
+											<label for="clearingDateStart" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
 											<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
-											<input type="text" class="input-sm form-control datepicker" id="endDate" name="endDate" placeholder="to" />
-											<label for="endDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+											<input type="text" class="input-sm form-control datepicker" id="clearingDateEnd" name="clearingDateEnd" placeholder="to" />
+											<label for="clearingDateEnd" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
 										</div>
 										</div>
 									</div>
@@ -53,39 +53,36 @@
 										<label class="col-sm-3 no-padding lm-5">交易日期:</label>
 										<div class="col-xs-12 col-sm-9 no-padding">
 										<div class="input-group">
-											<input type="text" class="input-sm form-control datepicker" id="startDate" name="startDate" placeholder="from" />
-											<label for="startDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+											<input type="text" class="input-sm form-control datepicker" id="tranDateStart" name="tranDateStart" placeholder="from" />
+											<label for="tranDateStart" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
 											<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
-											<input type="text" class="input-sm form-control datepicker" id="endDate" name="endDate" placeholder="to" />
-											<label for="endDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+											<input type="text" class="input-sm form-control datepicker" id="tranDateEnd" name="tranDateEnd" placeholder="to" />
+											<label for="tranDateEnd" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
 										</div>
 										</div>
 									</div>
 									<div class="col-xs-12 col-sm-4">
-										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">清分状态:</label></div>
+										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="statusInt">清分状态:</label></div>
 										<div class="col-sm-9 no-padding">
-											<select class="form-control" name="statusInt">
+											<select class="form-control" data-typename="clearingCollectionStatus" name="statusInt">
 												<option value="">全部</option>
-												<option value="1">待结算</option>
-												<option value="2">结算中</option>
-												<option value="3">已结算</option>
 											</select>
 										</div>
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-xs-12 col-sm-4">
-										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">商户名称:</label></div>
+										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="merchantName">商户名称:</label></div>
 										<div class="col-sm-9 no-padding"><input type="text" name="merchantName" class="form-control col-sm-5 input-sm"></div>
 									</div>
 									<div class="col-xs-12 col-sm-4">
-										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">用户编号:</label></div>
-										<div class="col-sm-9 no-padding"><input type="text" name="merchantIds" class="form-control col-sm-5 input-sm"></div>
+										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="payers">用户编号:</label></div>
+										<div class="col-sm-9 no-padding"><input type="text" name="payers" class="form-control col-sm-5 input-sm"></div>
 									</div>
 									<div class="col-xs-12 col-sm-4">
-										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">交易渠道:</label></div>
+										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="payChannel">交易渠道:</label></div>
 										<div class="col-sm-9 no-padding">
-											<select class="form-control" data-typename="payChannel"  name="payTool">
+											<select class="form-control" data-typename="payChannel"  name="payChannel">
 												<option value="">全部</option>
 											</select>
 										</div>

@@ -10,8 +10,27 @@ var router = express.Router();
 
 //代理
 var daili = true; //是否启用代理
-var daili_url = setting.qfApiUrl || "http://testtclpay.tclclouds.com/settlement";
+var proxy_url = setting.apiUrl || "http://testtclpay.tclclouds.com/operationtest";
+var qf_proxy_url = setting.qfApiUrl || 'http://testtclpay.tclclouds.com/settlement';
+var qf_uris = ['/clearingDetail/list', '/clearing/list', '/settleCard/list', '/settleRule/list', '/settleLimit/list', '/settleStatement/list',
+'/clearingCharge/list', '/exchangeRate/list', '/dataDictionary/dropdownlist','/reconciliation/list', '/reconciliation/chargeDifference',
+'/financialStatistic/list', '/reconciliation/getDetail', '/exchangeRate/detail',
+'/exchangeRate/delete', '/exchangeRate/delete', '/exchangeRate/detail', '/exchangeRate/addOrUpdate', '/reconciliation',
+'/clearingCharge/detail','/clearingCharge/history','/settleCard/history', '/settleCard/addOrUpdate', '/dataDictionary/merchantId/isValid',
+'/settleCard/template', '/settleRule/detail', '/settleRule/history', '/settleRule/addOrUpdate', '/settleLimit/detail','/settleLimit/history',
+'/settleLimit/addOrUpdate','/settleStatement/total', '/settleStatement/export', '/clearing/doSettle'];
 var userid = 12345;
+
+function getProxyUri(req) {
+    var daili_url;
+    console.log((req.apiurl || req.url), qf_uris.indexOf((req.apiurl || req.url)))
+    if (qf_uris.indexOf((req.apiurl || req.url).split('?')[0]) > -1) {
+        daili_url = qf_proxy_url;
+    } else {
+        daili_url = proxy_url;
+    }
+    return daili_url;
+}
 
 if (daili) {
     var downFiles = [
@@ -19,87 +38,67 @@ if (daili) {
     ]
 
     var conditions = [
-        '/queryTradeRecord'
-        ,'/downloadTradeRecord'
-        ,'/queryStatisticalRecord'
-        ,'/downloadStatisticalRecord'
-        ,'/queryWrongRecord'
-        ,'/downloadWrongRecord'
+        '/queryTradeRecord', '/downloadTradeRecord', '/queryStatisticalRecord', '/downloadStatisticalRecord', '/queryWrongRecord', '/downloadWrongRecord'
     ]
 
-    router.all(conditions,function(req,res,next){
-        if(req.query.condition){return next()}
-        var comd = {'condition':JSON.stringify(req.query)}
+    router.all(conditions, function(req, res, next) {
+        if (req.query.condition) {
+            return next()
+        }
+        var comd = {
+            'condition': JSON.stringify(req.query)
+        }
         req.apiurl = req._parsedUrl.pathname + '?' + qs.stringify(comd)
-        //req.query.condition = JSON.stringify(req.query)
+            //req.query.condition = JSON.stringify(req.query)
         next();
     })
 
     //文件流代理
-    router.all(downFiles,function(req,res,next){
+    router.all(downFiles, function(req, res, next) {
         req.headers.userId = req.session.userId;
 
-        if(req.url == '/test'){
+        if (req.url == '/test') {
             var r = request("http://127.0.0.1:3000/settlement/set");
             req.pipe(r).pipe(res);
             return;
         }
-        // var obj = {
-        //     "method": req.method,
-        //     "uri": daili_url + req.url,
-        //     "headers": {
-        //         "userId": userid
-        //     }
-        // }
-        // if (req.method === "POST") {
-        //     obj.form = _.extend({}, req.body)
-        // }
-        var r = request(daili_url + (req.apiurl || req.url));
-        // r.on('error',function(e){
-        //     res.json({
-        //         'msg' : e.message
-        //         ,'code' : 1
-        //     })
-        //     return;
-        // })
-        // 
-
+        var proxyUri = getProxyUri(req);
+        var r = request(proxyUri + (req.apiurl || req.url));
 
         req.pipe(r).pipe(res);
     })
 
-    router.all("/set",function(req,res,next){
+    router.all("/set", function(req, res, next) {
         console.log(req.headers);
         return req.pipe(res);
     })
 
     //普通 get set 代理
     router.all("/*", function(req, res, next) {
-        //var callback = req.query.callback;
- //       if(~req.url.indexOf('queryTradeRecord') && ((Math.random()*1000)>>0) % 2){return next(new Error("test error"))}
+        var proxyUri = getProxyUri(req);
         var obj = {
             "method": req.method,
-            "uri": daili_url + (req.apiurl || req.url),
+            "uri": proxyUri + (req.apiurl || req.url),
             "headers": {
                 "userId": req.session.userId || "0"
             }
         };
         if (req.method === "POST") {
             obj.form = _.extend({}, req.body)
-            //关于dataArray的特殊处理
-            if(req.body.dataArray){
+                //关于dataArray的特殊处理
+            if (req.body.dataArray) {
                 obj.json = JSON.parse(req.body.dataArray);
-                obj.qs = _.extend({},req.query,req.body);
+                obj.qs = _.extend({}, req.query, req.body);
                 delete obj.qs.dataArray;
                 delete obj.form;
             }
         }
         tool.qrequestStr(obj).done(function(data) {
-            try{
+            try {
                 var json = JSON.parse(data);
-                if(typeof json.code == "undefined") json.code = 0;
+                if (typeof json.code == "undefined") json.code = 0;
                 res.json(json);
-            }catch(e){
+            } catch (e) {
                 //res.set('Content-Type','application/json; charset=utf-8');
                 console.log('---------------parse json error ----------------', e)
                 res.send(data);
@@ -118,13 +117,13 @@ if (daili) {
 
 //以下为模拟数据
 var DATAY = {
-    "code": 0,
-    "msg": 'Success'
-}
-// 通用约定
-// 	pageNo Integer 表示第几页，默认为1
-// 	pageSize Integer 每页返回多少条数据，默认20
-//处理page
+        "code": 0,
+        "msg": 'Success'
+    }
+    // 通用约定
+    // 	pageNo Integer 表示第几页，默认为1
+    // 	pageSize Integer 每页返回多少条数据，默认20
+    //处理page
 router.all('/*', function(req, res, next) {
     var _Page = res._Page = {
         "totalCount": 100,
@@ -183,7 +182,55 @@ router.all('/dataDictionary/addOrUpdate', function(req, res, next) {
 // 参数：
 // id	Integer	是	数据字典类型ID
 router.all('/dataDictionary/detail', function(req, res, next) {
-    res.send({"code":"0","data":{"creationDate":"2015-09-25 18:50:39","creationUser":"init","dataArray":[{"code":"ToCorporation","creationDate":"2015-09-25 18:50:39","creationUser":"init","dataDictionaryStatus":"可用","dataInfoId":4,"displayOrder":1,"innerValue":1,"isHidden":0,"label":"对公","label_en":"To Corporation","label_zh":"对公","modifyDate":"2015-09-25 18:50:39","modifyUser":"init","status":2,"type":"settleCardType"},{"code":"ToPersonal","creationDate":"2015-09-25 18:50:39","creationUser":"init","dataDictionaryStatus":"可用","dataInfoId":5,"displayOrder":2,"innerValue":2,"isHidden":0,"label":"对私","label_en":"To Personal","label_zh":"对私","modifyDate":"2015-09-25 18:50:39","modifyUser":"init","status":1,"type":"settleCardType"}],"id":2,"isHidden":0,"label":"结算卡类型","modifyDate":"2015-09-25 18:50:39","modifyUser":"init","type":"settleCardType","typeLabel_en":"Settle Card Type","typeLabel_zh":"结算卡类型"},"msg":"Success"});
+    res.send({
+        "code": "0",
+        "data": {
+            "creationDate": "2015-09-25 18:50:39",
+            "creationUser": "init",
+            "dataArray": [{
+                "code": "ToCorporation",
+                "creationDate": "2015-09-25 18:50:39",
+                "creationUser": "init",
+                "dataDictionaryStatus": "可用",
+                "dataInfoId": 4,
+                "displayOrder": 1,
+                "innerValue": 1,
+                "isHidden": 0,
+                "label": "对公",
+                "label_en": "To Corporation",
+                "label_zh": "对公",
+                "modifyDate": "2015-09-25 18:50:39",
+                "modifyUser": "init",
+                "status": 2,
+                "type": "settleCardType"
+            }, {
+                "code": "ToPersonal",
+                "creationDate": "2015-09-25 18:50:39",
+                "creationUser": "init",
+                "dataDictionaryStatus": "可用",
+                "dataInfoId": 5,
+                "displayOrder": 2,
+                "innerValue": 2,
+                "isHidden": 0,
+                "label": "对私",
+                "label_en": "To Personal",
+                "label_zh": "对私",
+                "modifyDate": "2015-09-25 18:50:39",
+                "modifyUser": "init",
+                "status": 1,
+                "type": "settleCardType"
+            }],
+            "id": 2,
+            "isHidden": 0,
+            "label": "结算卡类型",
+            "modifyDate": "2015-09-25 18:50:39",
+            "modifyUser": "init",
+            "type": "settleCardType",
+            "typeLabel_en": "Settle Card Type",
+            "typeLabel_zh": "结算卡类型"
+        },
+        "msg": "Success"
+    });
 });
 
 
@@ -221,17 +268,17 @@ var fileapi = {
     '/clearing/list': "settlement-clearing-list.json",
     '/settleCard/list': 'settle-card-list.json',
     '/settleCard/list:1': 'settle-card-list.json',
-    '/settleCard/list:2':'settle-card-list2.json',
-    '/settleCard/history':'settle-card-history.json',
-    '/settleRule/list':'settle-rule-list.json',
-    '/settleRule/history':'settle-card-history.json',
-    '/queryStatisticalRecord':'queryStatisticalRecord.json',
-    '/exchangeRate/list':'exchange-list.json',
+    '/settleCard/list:2': 'settle-card-list2.json',
+    '/settleCard/history': 'settle-card-history.json',
+    '/settleRule/list': 'settle-rule-list.json',
+    '/settleRule/history': 'settle-card-history.json',
+    '/queryStatisticalRecord': 'queryStatisticalRecord.json',
+    '/exchangeRate/list': 'exchange-list.json',
     '/settleLimit/list': 'settle-limit-list.json',
     '/queryWrongRecord': 'queryWrongRecord.json',
     '/queryBusinessTypes': 't1.json',
     '/queryAccountTypes': 't2.json',
-    '/queryMerchantInfo':'settlement-clearing-list.json'
+    '/queryMerchantInfo': 'settlement-clearing-list.json'
 };
 
 if (!daili) {
@@ -278,4 +325,3 @@ if (!daili) {
 }
 
 module.exports = router;
-

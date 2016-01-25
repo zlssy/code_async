@@ -22,16 +22,18 @@ define(function(require, exports, module) {
 							pass = true;
 						} else {
 							elp.addClass(errorClass);
+							pass = false;
 						}
 					} else {
 						elp.addClass(errorClass);
-						console.log(json);
+						pass = false;
 					}
+					typeof opt.ajaxComplete == 'function' && opt.ajaxComplete(true, pass);
 				},
 				error: function(json) {
-					pass = false;
-					console.log('检验失败~');
+					pass = false;					
 					elp.addClass(errorClass);
+					typeof opt.ajaxComplete == 'function' && opt.ajaxComplete(false, pass);
 				}
 			});
 		});

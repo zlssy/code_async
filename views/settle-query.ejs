@@ -14,6 +14,7 @@
 		<link href='<%-setting.filePath%>/css/bootstrap-datetimepicker.min.css' rel="stylesheet" />
 		<link href='<%-setting.filePath%>/css/ui.jqgrid.css' rel="stylesheet" />
 		<%- include('public/header') %>
+		<%- include('public/whygrid_type') %>
 		<style>
 			.lm-5{
 				margin-top: 5px;
@@ -42,17 +43,18 @@
 					</div>
 					<div class="widget-body">
 						<div class="widget-main">
+						<form id="sform">
 							<div class="row">
 								<div class="col-xs-12 col-sm-6">
 									<label class="col-sm-3 control-label no-padding lm-5" for="merchantIds">商户编号:</label>
 									<div class="col-sm-9">
-										<input type="text" id="merchantIds" class="form-control col-sm-5 input-sm">
+										<input type="text" id="merchantIds" name="merchantIds" class="form-control col-sm-5 input-sm">
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-6">
 									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="merchantName">商户名称:</label></div>
 									<div class="col-sm-9">
-										<input type="text" id="merchantName" class="form-control col-sm-5 input-sm">
+										<input type="text" id="merchantName" name="merchantName" class="form-control col-sm-5 input-sm">
 									</div>
 								</div>
 							</div>
@@ -60,14 +62,14 @@
 								<div class="col-xs-12 col-sm-6">
 									<label class="col-sm-3 control-label no-padding lm-5" for="settleStatementIds">结算单号:</label>
 									<div class="col-sm-9">
-										<input type="text" id="settleStatementIds" class="form-control col-sm-5 input-sm">
+										<input type="text" id="settleStatementIds" name="settleStatementIds" class="form-control col-sm-5 input-sm">
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-6">
 									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="status">结算状态:</label></div>
 									<div class="col-sm-9">
-									  	<select class="form-control" id="status">
-									  		<option value="0">全部</option>
+									  	<select class="form-control" id="status" name="settleStatus" data-typename="settleStatus">
+									  		<option value="">全部</option>
 										</select>
 									</div>
 								</div>
@@ -77,16 +79,16 @@
 								 <label class="col-sm-3 no-padding lm-5">结算日期:</label>
 								 <div class="col-sm-9 no-padding">
 								 	<div class="col-sm-12">
-								 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="settleDateStart" data-date-format="yyyy-mm-dd" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+								 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="settleDateStart" name="settleDateStart" data-date-format="yyyy-mm-dd" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
 								 		<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
-								 		<input type="text" class="input-sm form-control datepicker" id="settleDateEnd" data-date-format="yyyy-mm-dd" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+								 		<input type="text" class="input-sm form-control datepicker" id="settleDateEnd" name="settleDateEnd" data-date-format="yyyy-mm-dd" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
 								 	</div>
 								 </div>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<button id="query-btn" class="btn btn-info btn-sm" type="button">
+									<button id="query-btn" class="btn btn-info btn-sm" type="submit">
 										<i class="ace-icon fa fa-check bigger-110"></i>
 										查询
 									</button>
@@ -106,6 +108,7 @@
 									</button>
 								</div>
 							</div>
+						</form>
 						</div>
 					</div>
 				</div>
@@ -123,34 +126,19 @@
 <div id="mask" class="widget-box-overlay hide"></div>
 <script id="totalTpl" type="text/html">
 <table id="total_table" class="table table-striped table-bordered table-hover">
-	<thead>
-		<tr>
-			<th class="center">
-				<label class="pos-rel">&nbsp;</label>
-			</th>
-			<th>款项类型</th>
-			<th>币种（USD）</th>
-		</tr>
-	</thead>
 	<tbody>
 		<tr>
-			<td class="center" rowspan="3" valign="bottom">合计</td>
-			<td>
-				结算金额
-			</td>
+			<td rowspan="2" style="vertical-align:middle; text-align:center;">合计</td>
+			<td>结算金额</td>
+			<td>付款金额</td>
+			<td>付款手续费</td>
+			<td>币种</td>
+		</tr>
+		<tr>
 			<td><%%=settleAmount%></td>
-		</tr>
-		<tr>
-			<td>
-				付款金额
-			</td>
 			<td><%%=payAmount%></td>
-		</tr>
-		<tr>
-			<td>
-				付款手续费
-			</td>
 			<td><%%=serviceCharge%></td>
+			<td><%%=settleCurrencyCode || "USD"%></td>
 		</tr>
 	</tbody>
 </table>

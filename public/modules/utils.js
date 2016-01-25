@@ -1,6 +1,4 @@
 define(function(require, exports, module) {
-	var _d_ = new Date(),
-		timezoneoffset = _d_.getTimezoneOffset();
 
 	/**
 	 * [object2param 转换对象为url参数]
@@ -292,33 +290,6 @@ define(function(require, exports, module) {
 		return r;
 	}
 
-	/*
-	 * 检查是否是正确网址
-	 */
-	function isUrl(str_url) {
-		var strRegex = "^((https|http|ftp|rtsp|mms)?://)" + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" // ftp的user@  
-			+ "(([0-9]{1,3}\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184  
-			+ "|" // 允许IP和DOMAIN（域名）  
-			+ "([0-9a-z_!~*'()-]+\.)*" // 域名- www.  
-			+ "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\." // 二级域名  
-			+ "[a-z]{2,6})" // first level domain- .com or .museum  
-			+ "(:[0-9]{1,4})?" // 端口- :80  
-			+ "((/?)|" // a slash isn't required if there is no file name  
-			+ "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
-		var re = new RegExp(strRegex);
-		return re.test(str_url);
-	}
-
-	/**
-	 * [is 校验是否是某种类型]
-	 * @param  {[type]}  type [类型字符串]
-	 * @param  {[type]}  v    [值]
-	 * @return {Boolean}      [结果]
-	 */
-	function is(type, v) {
-		return ('[object ' + type + ']') === Object.prototype.toString.call(v);
-	}
-
 	/**
 	 * [once 执行一次的函数]
 	 * @param  {Function} fn [要执行的函数]
@@ -331,28 +302,15 @@ define(function(require, exports, module) {
 		}
 	}
 
-	function delay(f, t) {
-		var now = Date.now,
-			last = 0,
-			ctx, args, exec = function() {
-				last = now();
-				f.apply(ctx, args)
-			};
-		return function() {
-			cur = now();
-			ctx = this, args = arguments;
-			if (cur - last > t) {
-				exec();
-			}
-		}
-	}
-
-	function local2utc(time) {
-		return time + timezoneoffset * 60000;
-	}
-
-	function utc2local(time) {
-		return time - timezoneoffset * 60000;
+	/**
+	 * [getTodayStr 获取日期的今天年月日表示法]
+	 * @param {Date|String} [date] [要获取的日期对象或日期对象字符串]
+	 * @return {[String]} [年月日字符串]
+	 */
+	function getTodayStr(date) {
+		var d = date || new Date();
+		d = 'string' === typeof d ? new Date(d) : d;
+		return d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDay();
 	}
 
 	return {
@@ -372,16 +330,13 @@ define(function(require, exports, module) {
 			parseUrl: parseUrl,
 			replaceParam: replaceParam
 		},
-		date: {
-			local2utc: local2utc,
-			utc2local: utc2local
-		},
 		formatJson: formatJson,
 		loadJsonp: loadJsonp,
 		isDate: isDate,
-		isUrl: isUrl,
-		once: once,
-		is: is,
-		delay: delay
+		date: {
+			isDate: isDate,
+			getTodayStr: getTodayStr
+		},
+		once: once
 	};
 });

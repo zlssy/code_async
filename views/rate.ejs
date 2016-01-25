@@ -14,12 +14,16 @@
 		<link href='<%-setting.filePath%>/css/bootstrap-datetimepicker.min.css' rel="stylesheet" />
 		<link href='<%-setting.filePath%>/css/ui.jqgrid.css' rel="stylesheet" />
 		<%- include('public/header') %>
+		<%- include('public/whygrid_type') %>
 		<style>
 			.lm-5{
 				margin-top: 5px;
 			}
 			.row{
 				margin: 4px 0;
+			}
+			.error-info{
+				color: red;
 			}
 			@media(min-width: 768px) {
 				.modal-dialog{
@@ -47,24 +51,25 @@
 					</div>
 					<div class="widget-body">
 						<div class="widget-main">
+						<form id="sform">
 							<div class="row">
 								<div class="col-xs-12 col-sm-4">
 									<label class="col-sm-3 control-label no-padding lm-5" for="ids">计费编号:</label>
-									<div class="col-sm-9">
-										<input type="text" id="ids" class="form-control col-sm-5 input-sm">
+									<div class="col-sm-9 no-padding">
+										<input type="text" id="ids" name="ids" class="form-control col-sm-5 input-sm">
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
 									<label class="col-sm-3 control-label no-padding lm-5" for="ownerIds">所有者编号:</label>
-									<div class="col-sm-9">
-										<input type="text" id="ownerIds" class="form-control col-sm-5 input-sm">
+									<div class="col-sm-9 no-padding">
+										<input type="text" id="ownerIds" name="ownerIds" class="form-control col-sm-5 input-sm">
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
 									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="chargeTypeInt">手续费类型:</label></div>
-									<div class="col-sm-9">
-									  	<select class="form-control" id="chargeTypeInt">
-									  		<option value="0">全部</option>
+									<div class="col-sm-9 no-padding">
+									  	<select class="form-control" id="chargeTypeInt" name="chargeTypeInt" data-typename="chargeType">
+									  		<option value="">全部</option>
 										</select>
 									</div>
 								</div>
@@ -72,67 +77,60 @@
 							<div class="row">
 								<div class="col-xs-12 col-sm-4">
 									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="chargeSystemPropertyInt">系统属性:</label></div>
-									<div class="col-sm-9">
-									  	<select class="form-control" id="chargeSystemPropertyInt">
-									  		<option value="0">全部</option>
+									<div class="col-sm-9 no-padding">
+									  	<select class="form-control" id="chargeSystemPropertyInt" name="chargeSystemPropertyInt" data-typename="chargeSystemProperty">
+									  		<option value="">全部</option>
 										</select>
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
 									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="chargeStatusInt">状态:</label></div>
-									<div class="col-sm-9">
-									  	<select class="form-control" id="chargeStatusInt">
-									  		<option value="0">全部</option>
+									<div class="col-sm-9 no-padding">
+									  	<select class="form-control" id="chargeStatusInt" name="chargeStatusInt" data-typename="chargeStatus">
+									  		<option value="">全部</option>
 										</select>
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
 									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="chargeServiceTypeInt">服务类型:</label></div>
-									<div class="col-sm-9">
-									  	<select class="form-control" id="chargeServiceTypeInt">
-									  		<option value="0">全部</option>
+									<div class="col-sm-9 no-padding">
+									  	<select class="form-control" id="chargeServiceTypeInt" name="chargeServiceTypeInt" data-typename="chargeServiceType">
+									  		<option value="">全部</option>
 										</select>
 									</div>
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-xs-12 col-sm-6">
+								<div class="col-xs-12 col-sm-4">
 								 <label class="col-sm-3 no-padding lm-5">生效日期:</label>
-								 <div class="col-sm-9">
-								  <div class="col-sm-12">
+								 <div class="col-sm-9 no-padding">
 								  	<div class="input-group"><input type="text" class="input-sm form-control datepicker" name="effectiveDateStart" placeholder="from" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
 								    	<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
 								    <input type="text" class="input-sm form-control datepicker" name="effectiveDateEnd" placeholder="to" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
 								  	</div>
-								  </div>
 								 </div>
 								</div>
-								<div class="col-xs-12 col-sm-6">
+								<div class="col-xs-12 col-sm-4">
 								 <label class="col-sm-3 no-padding lm-5">失效日期:</label>
 								 <div class="col-sm-9 no-padding">
-								 	<div class="col-sm-12">
 									  <div class="input-group"><input type="text" class="input-sm form-control datepicker" name="expirationDateStart" placeholder="from" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
 									  <span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
 									  <input type="text" class="input-sm form-control datepicker" name="expirationDateEnd" placeholder="to" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
-									</div>
 								 </div>
 								</div>
-							</div>
-							<div class="row">
-								<div class="col-xs-12 col-sm-6">
+								<div class="col-xs-12 col-sm-4">
 								 <label class="col-sm-3 no-padding lm-5">创建日期:</label>
-								 <div class="col-sm-9">
-								  <div class="col-sm-12">
+								 <div class="col-sm-9 no-padding">
 								  	<div class="input-group"><input type="text" class="input-sm form-control datepicker" name="creationDateStart" placeholder="from" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
 								  		<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
 								  <input type="text" class="input-sm form-control datepicker" name="creationDateEnd" placeholder="to" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>								  	
-								  </div></div>
+								    </div>
 								 </div>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-9">
-									<button id="query-btn" class="btn btn-info btn-sm" type="button">
+									<button id="query-btn" class="btn btn-info btn-sm" type="submit">
 										<i class="ace-icon fa fa-check bigger-110"></i>
 										查询
 									</button>
@@ -148,6 +146,7 @@
 									</button>
 								</div>
 							</div>
+						</form>
 						</div>
 					</div>
 				</div>

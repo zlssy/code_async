@@ -4,6 +4,7 @@ define(function(require, exports, module) {
 		Box = require('boxBootstrap'),
 		Grid = require('gridBootstrap'),
 		accountCheck = require('checkAccount'),
+		Table = require('whygrid'),
 
 		listContainer = $('#grid_list'),
 		addEditTpl = $('#addEditTpl').html(),
@@ -33,13 +34,85 @@ define(function(require, exports, module) {
 			label: '电商'
 		}],
 		businessTypeDefault = '',
-		submitLock = false,
-		submitInterval = 2000,
+		actionLock = {},
+		lockInterval = 2000,
+		dataMap = {},
+		dataTypes = {},
 		_grid;
 
 	function init() {
+		_grid = Table('#grid_list', getUrl(), {
+			checkRow: false,
+			seachForm: '#sform',
+			pagenav: true,
+			cols: [{
+				name: '商户编码',
+				index: 'merchantId'
+			}, {
+				name: '商户名称',
+				index: 'merchantName'
+			}, {
+				name: '对公结算限额',
+				index: 'businessLimit'
+			}, {
+				name: '对法人结算限额',
+				index: 'legalPersonLimit'
+			}, {
+				name: '操作时间',
+				index: 'modifyDate'
+			}, {
+				name: '操作人',
+				index: 'modifyUser'
+			}, {
+				name: '操作',
+				index: '',
+				format: function(v) {
+					//return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-pencil blue" title="编辑"></span><span class="ui-icon ace-icon fa fa-search-plus blue" title="查看"></span><span class="ui-icon ace-icon fa fa-clock-o blue" title="历史记录"></span></div>';
+					dataMap[v.id] = v;
+					return '<a href="javascript:void(0)" data-id="' + v.id + '" class="edit">编辑</a>&nbsp;<a href="javascript:void(0)" data-id="' + v.id + '" class="view">查看</a>&nbsp;<a href="javascript:void(0)" data-id="' + v.id + '" class="history">历史记录</a>';
+				}
+			}]
+		});
+		var stypes = $("#sform").find('select[data-typename]');
+		var ajaxArr = []
+		for (var i = 0; i < stypes.length; i++) {
+			+ function() {
+				var s = $(stypes[i]);
+				var typename = s.data('typename');
+				ajaxArr.push($.get(global_config.serverRoot + 'dataDictionary/dropdownlist', {
+					type: s.data('typename')
+				}, function(data) {
+					if (data.code != 0) {
+						return $.Deferred().reject(data.message || data.msg || "未知错误!")
+					}
+					if (data.data && data.data.dataArray) {
+						var html = '',
+							arr = data.data.dataArray,
+							val;
+						dataTypes[typename] = arr;
+						dictionaryCollection[typename] = arr;
+						for (var i = 0; i < arr.length; i++) {
+							var item = arr[i];
+							val = item.innerValue;
+							html += '<option value=' + val + '>' + item.label + '</option>'
+						}
+					}
+					s.append(html);
+				}))
+			}()
+		}
+		$.when.apply($, ajaxArr).then(function() {
+			_grid.load(); //加载列表数据;
+		}).then(null, function(e) {
+			Box.alert('加载数据失败，请稍后刷新重试~');
+		});
+		registerEvents();
+	}
+
+	function initData() {
 		_grid = Grid.create({
 			key: 'id',
+			checkbox: false,
 			cols: [{
 				name: '商户编码',
 				index: 'merchantId'
@@ -91,6 +164,13 @@ define(function(require, exports, module) {
 			addAndUpdate(row);
 		});
 		_grid.listen('viewCallback', function(row) {
+			if (actionLock.view) {
+				return;
+			}
+			actionLock.view = true;
+			setTimeout(function() {
+				actionLock.view = false;
+			}, lockInterval);
 			view(row);
 		})
 		listContainer.html(_grid.getHtml());
@@ -147,6 +227,13 @@ define(function(require, exports, module) {
 	 * @param {[type]} data [description]
 	 */
 	function addAndUpdate(data) {
+		if (actionLock.addAndUpdate) {
+			return;
+		}
+		actionLock.addAndUpdate = true;
+		setTimeout(function() {
+			actionLock.addAndUpdate = false;
+		}, lockInterval);
 		var opt = {
 				modal: true,
 				dragable: true,
@@ -164,12 +251,12 @@ define(function(require, exports, module) {
 					if (!validate()) {
 						return false;
 					} else {
-						if (!submitLock) {
+						if (!actionLock.submitData) {
 							submitData(data);
-							submitLock = true;
+							actionLock.submitData = true;
 							setTimeout(function() {
-								submitLock = false;
-							}, submitInterval);
+								actionLock.submitData = false;
+							}, lockInterval);
 						}
 					}
 				}
@@ -180,7 +267,7 @@ define(function(require, exports, module) {
 			}
 		};
 		Box.dialog(opt);
-		setSelect('businessTypeArr', $('#fbusinessTypeInt'));
+		setSelect('businessType', $('#fbusinessTypeInt'));
 		data && getRowDetail(data[0].id);
 		$('.bootbox .datepicker').datepicker({
 			autoclose: true
@@ -237,7 +324,7 @@ define(function(require, exports, module) {
 			data: data,
 			success: function(json) {
 				if ('0' == json.code) {
-					_grid.loadData();
+					_grid.load();
 				} else {
 					Box.alert('数据保存失败！');
 				}
@@ -299,6 +386,8 @@ define(function(require, exports, module) {
 		setTimeout(function() {
 			$("#fmerchantId").blur();
 		}, 0);
+
+		$('#fmerchantId').prop('readonly', true);
 	}
 
 	/**
@@ -357,8 +446,7 @@ define(function(require, exports, module) {
 					}
 				}
 			});
-		}
-		!accountCheck.isPass() && $('#fmerchantId').parents('.form-group:first').addClass('has-error');
+		}!accountCheck.isPass() && $('#fmerchantId').parents('.form-group:first').addClass('has-error');
 		return accountCheck.isPass() && pass;
 	}
 
@@ -407,7 +495,7 @@ define(function(require, exports, module) {
 				if ('0' == json.code) {
 					opt.message = Utils.formatJson(viewTpl, {
 						data: json.data,
-						businessType: arr2map(dictionaryCollection['businessTypeArr'], 'innerValue', 'label')
+						businessType: arr2map(dictionaryCollection['businessType'], 'innerValue', 'label')
 					});
 					Box.dialog(opt);
 				} else if (-100 == json.code) {
@@ -423,6 +511,13 @@ define(function(require, exports, module) {
 	}
 
 	function viewHistory(row) {
+		if (actionLock.viewHistory) {
+			return;
+		}
+		actionLock.viewHistory = true;
+		setTimeout(function() {
+			actionLock.viewHistory = false;
+		}, lockInterval);
 		var id = row[0].id;
 		$.ajax({
 			url: global_config.serverRoot + '/settleLimit/history?userId=' + '&id=' + id,
@@ -487,7 +582,8 @@ define(function(require, exports, module) {
 			autoclose: true
 		});
 		$('#add-btn').on('click', function() {
-			_grid.trigger('addCallback');
+			// _grid.trigger('addCallback');
+			addAndUpdate();
 		});
 		$(document.body).on('click', function(e) {
 			var $el = $(e.target || e.srcElement),
@@ -498,10 +594,10 @@ define(function(require, exports, module) {
 				$el.parent().siblings('input').focus();
 			}
 			if (cls && cls.indexOf('fa-check') > -1 || (id && 'query-btn' == id)) {
-				if (getParams()) {
-					_grid.setUrl(getUrl());
-					_grid.loadData();
-				}
+				// if (getParams()) {
+				// 	_grid.setUrl(getUrl());
+				// 	_grid.loadData();
+				// }
 			}
 			if ('businessLimit' == id) {
 				if ($el.prop('checked')) {
@@ -533,6 +629,15 @@ define(function(require, exports, module) {
 				doms.legalPersonLimitCeiling.val('');
 				doms.legalPersonLimit.val('');
 				doms.businessTypeInt.val(0);
+			}
+			if(cls && cls.indexOf('edit') > -1){
+				addAndUpdate([dataMap[$el.data('id')]]);
+			}
+			if(cls && cls.indexOf('view') > -1){
+				view([dataMap[$el.data('id')]]);
+			}
+			if(cls && cls.indexOf('history') > -1){
+				viewHistory([dataMap[$el.data('id')]]);
 			}
 		});
 	}

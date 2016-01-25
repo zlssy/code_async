@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 		Grid = require('gridBootstrap'),
 		Box = require('boxBootstrap'),
 		Xss = require('xss'),
+		Table = require('whygrid'),
 
 		listContainer = $('#grid_list'),
 		exportContainer = $('#export_panel'),
@@ -16,9 +17,101 @@ define(function(require, exports, module) {
 			settleDateStart: $("#settleDateStart"),
 			settleDateEnd: $("#settleDateEnd")
 		},
-		_grid;
+		_grid,
+		dataTypes = {},
+		dataMap = {};
 
 	function init() {
+		_grid = Table('#grid_list', getUrl(),{
+			checkRow: false,
+			seachForm: '#sform',
+			pagenav: true,
+			cols: [{
+				name: '结算单号',
+				index: 'id'
+			}, {
+				name: '商户编码',
+				index: 'merchantId'
+			}, {
+				name: '商户名称',
+				index: 'merchantName'
+			}, {
+				name: '结算日期',
+				index: 'settleDate'
+			}, {
+				name: '结算金额',
+				index: 'settleAmount'
+			}, {
+				name: '起始清分日期',
+				index: 'clearingDateStart'
+			}, {
+				name: '终止清分日期',
+				index: 'clearingDateEnd'
+			}, {
+				name: '付款金额',
+				index: 'payAmount'
+			}, {
+				name: '付款手续费',
+				index: 'serviceCharge'
+			}, {
+				name: '结算币种',
+				index: 'settleCurrencyCode'
+			}, {
+				name: '结算卡号',
+				index: 'settleCardNumber'
+			}, {
+				name: '结算状态',
+				index: 'settleStatus'
+			}, {
+				name: '操作',
+				index: '',
+				format: function(v, ov, col) {
+					dataMap[v.id] = v;
+					if ('1' == v.status) {
+						return '<div class="ui-pg-div align-center"><a href="javascript:;" class="confirm" title="付款确认" data-id="'+v.id+'">付款确认</a></div>';
+					} else {
+						return ' '
+					}
+				}
+			}]
+		});
+		var stypes = $("#sform").find('select[data-typename]');
+		var ajaxArr = []
+		for (var i = 0; i < stypes.length; i++) {
+			+ function() {
+				var s = $(stypes[i]);
+				var typename = s.data('typename');
+				ajaxArr.push($.get(global_config.serverRoot + 'dataDictionary/dropdownlist', {
+					type: s.data('typename')
+				}, function(data) {
+					if (data.code != 0) {
+						return $.Deferred().reject(data.message || data.msg || "未知错误!")
+					}
+					if (data.data && data.data.dataArray) {
+						var html = '',
+							arr = data.data.dataArray,
+							val;
+						dataTypes[typename] = arr;
+						dictionaryCollection[typename] = arr;
+						for (var i = 0; i < arr.length; i++) {
+							var item = arr[i];
+							val = item.innerValue;
+							html += '<option value=' + val + '>' + item.label + '</option>'
+						}
+					}
+					s.append(html);
+				}))
+			}()
+		}
+		$.when.apply($, ajaxArr).then(function() {
+			_grid.load(); //加载列表数据;
+		}).then(null, function(e) {
+			Box.alert('加载数据失败，请稍后刷新重试~');
+		});
+		registerEvents();
+	}
+
+	function initData() {
 		_grid = Grid.create({
 			key: 'id',
 			checkbox: false,
@@ -104,8 +197,9 @@ define(function(require, exports, module) {
 	}
 
 	function exportExcel() {
-		var settleDateStart = $('#settleDateStart').val(), settleDateEnd = $('#settleDateEnd').val();
-		if(!settleDateStart || !settleDateEnd){
+		var settleDateStart = $('#settleDateStart').val(),
+			settleDateEnd = $('#settleDateEnd').val();
+		if (!settleDateStart || !settleDateEnd) {
 			Box.alert('请选择结算日期后下载。');
 			return;
 		}
@@ -125,7 +219,7 @@ define(function(require, exports, module) {
 	}
 
 	function concatQuery() {
-		console.log('concat result');
+		getParams();
 		$.ajax({
 			url: global_config.serverRoot + 'settleStatement/total?userId=&' + Utils.object2param(userParam),
 			success: function(json) {
@@ -154,7 +248,8 @@ define(function(require, exports, module) {
 			success: function(json) {
 				if ('0' == json.code) {
 					Box.alert('确认付款成功');
-					_grid.loadData();
+					// _grid.loadData();
+					_grid.load();
 				} else if ('110' == json.code) {
 					Box.alert('改单已成功结算');
 				} else if (-100 == json.code) {
@@ -162,7 +257,6 @@ define(function(require, exports, module) {
 				} else {
 					// report
 					Box.alert('确认付款失败');
-					console.log(json)
 				}
 			},
 			error: function(e) {
@@ -221,11 +315,11 @@ define(function(require, exports, module) {
 				$el.parent().siblings('input').focus();
 			}
 			if (cls && cls.indexOf('fa-check') > -1 || (id && 'query-btn' == id)) {
-				if (getParams()) {
-					_grid.setUrl(getUrl());
-					_grid.loadData();
-					exportContainer.html('');
-				}
+				// if (getParams()) {
+				// 	_grid.setUrl(getUrl());
+				// 	_grid.loadData();
+				// 	exportContainer.html('');
+				// }
 			}
 			if (cls && cls.indexOf('fa-coffee') > -1 || (id && 'concat-btn' == id)) {
 				concatQuery();
@@ -241,6 +335,9 @@ define(function(require, exports, module) {
 				doms.status.val(0);
 				doms.settleDateStart.val('');
 				doms.settleDateEnd.val('');
+			}
+			if(cls && cls.indexOf('confirm')>-1){
+				confirmPay([dataMap[$el.data('id')]]);
 			}
 		});
 	}
@@ -292,7 +389,7 @@ define(function(require, exports, module) {
 				break;
 			}
 		}
-		
+
 		userParam = newParam;
 		return true;
 	}
