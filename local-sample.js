@@ -1,6 +1,7 @@
 module.exports = {
 	port: '3000', //监听的端口号
-	apiUrl: 'http://testtclpay.tclclouds.com/settlement', //接口地址 正式环境请配局域网地址以提高效率
+	apiUrl: 'http://testtclpay.tclclouds.com/operationtest', //接口地址 正式环境请配局域网地址以提高效率
+	qfApiUrl: 'http://testtclpay.tclclouds.com/settlement', //清分接口api地址
 	proxyPath: '/settlementWeb', //url根路径
 	filePath: '/settlementWeb',//引用静态前端文件(js,css)路径
 
