@@ -15,12 +15,27 @@ var config = {
 }
 
 var pathConfig = [
+    ['/order','ddgl-ddcx'],
+    ['/payment-statistics', 'ddgl-zfjdtj'],
+    ['/jysjtj', 'ddgl-jysjtj'],
     ['/merchant-info','shxxgl-shxx'],
-    ['/merchant-check','shshgl-shxx'],
-    ['/payment-channel','zfqdgl-zfqd'],
-    ['/order','ddgl-dd'],
-    ['/documet','wdgl-wdgl'],
-    ['/payment-statistics','zfjd-zfjd']
+    ['/merchant-check', 'shshgl-shxx'],
+    ['/qingfen-detail','qfgl-qfmxcx'],
+    ['/qingfen-list-query','qfgl-qfhzcx'],
+    ['/settle-card', 'jsgl-jsk'],
+    ['/settle-rule', 'jsgl-jsgz'],
+    ['/settle-limit', 'jsgl-jsxe'],
+    ['/settle-query', 'jsgl-jsdcx'],
+    ['/rate', 'flgl-fl'],
+    ['/exchange-query', 'hlgl-hl'],
+    ['/statement-upload', 'dzgl-jyqdbg'],
+    ['/daily-collect', 'dzgl-dzrhz'],
+    ['/charge', 'dzgl-sxfc'],
+    ['/financial-statistics', 'cwtjgl-cwtjcx'],
+    ['/payment-channel', 'zfqdgl-zfqd'],
+    ['/documet', 'wdgl-wdgl'],
+    ['/dataDictionary/list', 'sjzdgl-sjzd'],
+    ['/config', 'wdgl-wdgl']
     /*
     ["/abc/list,","sjzdgl-sjzd"],
     ["/abc/a,abc/b","sjzdgl-sjzd"],
