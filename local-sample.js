@@ -4,7 +4,7 @@ module.exports = {
 	proxyPath: '/settlementWeb', //url根路径
 	filePath: '/settlementWeb',//引用静态前端文件(js,css)路径
 
-		//passport 配置
+	//passport 配置
 	passport    : 'http://passporttest.tclclouds.com/passport',//passport URL
 	projectCode : 'settlement', //分配的名称
 	projectKey  : 'qysks4rb',   //分配的KEY
