@@ -11,10 +11,11 @@ define(function(require, exports, module) {
         userParam = {},
         Table = require('whygrid'),
         tool = require("why"),
-        rooturl = global_config.serverRoot.replace(/\/+$/, ''),
+        rooturl = global_config.serverRootQF.replace(/\/+$/, ''),
         apis = {
             list: rooturl + '/financialStatistic/list',
             down: rooturl + '/financialStatistic/export'
+            addorup: rooturl + '/exchangeRate/addOrUpdate'
         },
         _grid;
 
@@ -256,7 +257,7 @@ define(function(require, exports, module) {
     }
 
     function doCreateItem(data, callback) {
-        $.post(global_config.serverRoot + "/exchangeRate/addOrUpdate", data, function(res) {
+        $.post(apis.addorup, data, function(res) {
             if (res.code == 0) {
                 callback(res);
             }

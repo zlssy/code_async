@@ -18,7 +18,9 @@ var qf_uris = ['/clearingDetail/list', '/clearing/list', '/settleCard/list', '/s
 '/exchangeRate/delete', '/exchangeRate/delete', '/exchangeRate/detail', '/exchangeRate/addOrUpdate', '/reconciliation',
 '/clearingCharge/detail','/clearingCharge/history','/settleCard/history', '/settleCard/addOrUpdate', '/dataDictionary/merchantId/isValid',
 '/settleCard/template', '/settleRule/detail', '/settleRule/history', '/settleRule/addOrUpdate', '/settleLimit/detail','/settleLimit/history',
-'/settleLimit/addOrUpdate','/settleStatement/total', '/settleStatement/export', '/clearing/doSettle'];
+'/settleLimit/addOrUpdate','/settleStatement/total', '/settleStatement/export', '/clearing/doSettle'
+,'/queryTradeRecord', '/downloadTradeRecord', '/queryStatisticalRecord', '/downloadStatisticalRecord', '/queryWrongRecord', '/downloadWrongRecord'
+];
 var userid = 12345;
 
 function getProxyUri(req) {

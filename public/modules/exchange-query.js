@@ -12,11 +12,13 @@ define(function(require, exports, module) {
         $form = $("#dataForm"),
         $grid_list = $("#grid_list"),
         userParam = {},
+        rooturl = global_config.serverRootQF.replace(/\/+$/,''),
         urls = {
-            dataUrl: global_config.serverRoot + "/exchangeRate/list",
-            delUrl: global_config.serverRoot + "/exchangeRate/delete",
-            detailUrl: global_config.serverRoot + "/exchangeRate/detail",
-            addUrl: global_config.serverRoot + "/exchangeRate/addOrUpdate"
+            dataUrl: rooturl + "/exchangeRate/list",
+            delUrl: rooturl + "/exchangeRate/delete",
+            detailUrl: rooturl + "/exchangeRate/detail",
+            addUrl: rooturl + "/exchangeRate/addOrUpdate",
+            dropdownlist: rooturl + "/dataDictionary/dropdownlist"
         },
         _grid,
         dataTypes = {},
@@ -65,7 +67,7 @@ define(function(require, exports, module) {
             + function() {
                 var s = $(stypes[i]);
                 var typename = s.data('typename');
-                ajaxArr.push($.get(global_config.serverRoot + 'dataDictionary/dropdownlist', {
+                ajaxArr.push($.get(urls.dropdownlist, {
                     type: s.data('typename')
                 }, function(data) {
                     if (data.code != 0) {

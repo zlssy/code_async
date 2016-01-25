@@ -79,7 +79,7 @@ define(function(require, exports, module) {
 			+ function() {
 				var s = $(stypes[i]);
 				var typename = s.data('typename');
-				ajaxArr.push($.get(global_config.serverRoot + 'dataDictionary/dropdownlist', {
+				ajaxArr.push($.get(global_config.serverRootQF + 'dataDictionary/dropdownlist', {
 					type: s.data('typename')
 				}, function(data) {
 					if (data.code != 0) {
@@ -319,7 +319,7 @@ define(function(require, exports, module) {
 		}
 
 		$.ajax({
-			url: global_config.serverRoot + 'settleLimit/addOrUpdate',
+			url: global_config.serverRootQF + 'settleLimit/addOrUpdate',
 			method: 'post',
 			data: data,
 			success: function(json) {
@@ -337,7 +337,7 @@ define(function(require, exports, module) {
 
 	function getRowDetail(id) {
 		$.ajax({
-			url: global_config.serverRoot + 'settleLimit/detail?userId=' + '&id=' + id,
+			url: global_config.serverRootQF + 'settleLimit/detail?userId=' + '&id=' + id,
 			success: function(json) {
 				if ('0' == json.code) {
 					fillData(json.data);
@@ -490,7 +490,7 @@ define(function(require, exports, module) {
 			}
 		};
 		$.ajax({
-			url: global_config.serverRoot + 'settleLimit/detail?userId=' + '&id=' + d.id,
+			url: global_config.serverRootQF + 'settleLimit/detail?userId=' + '&id=' + d.id,
 			success: function(json) {
 				if ('0' == json.code) {
 					opt.message = Utils.formatJson(viewTpl, {
@@ -520,7 +520,7 @@ define(function(require, exports, module) {
 		}, lockInterval);
 		var id = row[0].id;
 		$.ajax({
-			url: global_config.serverRoot + '/settleLimit/history?userId=' + '&id=' + id,
+			url: global_config.serverRootQF + '/settleLimit/history?userId=' + '&id=' + id,
 			success: function(json) {
 				if ('0' == json.code) {
 					showHistory(json.data.pageData);
@@ -563,7 +563,7 @@ define(function(require, exports, module) {
 	 * @return {[type]} [description]
 	 */
 	function getUrl() {
-		return global_config.serverRoot + 'settleLimit/list?userId=' + '&' + Utils.object2param(userParam);
+		return global_config.serverRootQF + 'settleLimit/list?userId=' + '&' + Utils.object2param(userParam);
 	}
 
 	function getDictionaryFromServer(type, callback, errorback) {
@@ -571,7 +571,7 @@ define(function(require, exports, module) {
 			cb = callback || emptyFn,
 			ecb = errorback || emptyFn;
 		$.ajax({
-			url: global_config.serverRoot + 'dataDictionary/dropdownlist?userId=' + '&type=' + type,
+			url: global_config.serverRootQF + 'dataDictionary/dropdownlist?userId=' + '&type=' + type,
 			success: cb,
 			error: ecb
 		});

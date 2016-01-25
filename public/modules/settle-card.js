@@ -69,7 +69,7 @@ define(function(require, exports, module) {
 			+ function() {
 				var s = $(stypes[i]);
 				var typename = s.data('typename');
-				ajaxArr.push($.get(global_config.serverRoot + 'dataDictionary/dropdownlist', {
+				ajaxArr.push($.get(global_config.serverRootQF + 'dataDictionary/dropdownlist', {
 					type: s.data('typename')
 				}, function(data) {
 					if (data.code != 0) {
@@ -534,7 +534,7 @@ define(function(require, exports, module) {
 		}
 		data.issuer = fissuer;
 		$.ajax({
-			url: global_config.serverRoot + 'settleCard/addOrUpdate',
+			url: global_config.serverRootQF + 'settleCard/addOrUpdate',
 			method: 'post',
 			data: data,
 			success: function(json) {
@@ -563,7 +563,7 @@ define(function(require, exports, module) {
 		if (!actionLock.viewHistory) {
 			actionLock.viewHistory = true; // 正在访问，不可以连续访问
 			$.ajax({
-				url: global_config.serverRoot + '/settleCard/history?userId=' + '&id=' + id,
+				url: global_config.serverRootQF + '/settleCard/history?userId=' + '&id=' + id,
 				success: function(json) {
 					if ('0' == json.code) {
 						showHistory(json.data.pageData);
@@ -619,7 +619,7 @@ define(function(require, exports, module) {
 	 * @return {[type]} [description]
 	 */
 	function getUrl() {
-		return global_config.serverRoot + 'settleCard/list?userId=&sort=merchantIds&' + Utils.object2param(userParam);
+		return global_config.serverRootQF + 'settleCard/list?userId=&sort=merchantIds&' + Utils.object2param(userParam);
 	}
 
 	function getDictionaryFromServer(type, callback, errorback) {
@@ -627,7 +627,7 @@ define(function(require, exports, module) {
 			cb = callback || emptyFn,
 			ecb = errorback || emptyFn;
 		$.ajax({
-			url: global_config.serverRoot + 'dataDictionary/dropdownlist?userId=' + '&type=' + type,
+			url: global_config.serverRootQF + 'dataDictionary/dropdownlist?userId=' + '&type=' + type,
 			success: cb,
 			error: ecb
 		});
@@ -658,7 +658,7 @@ define(function(require, exports, module) {
 
 	function download() {
 		var a = document.createElement('a');
-		var url = global_config.serverRoot + '/settleCard/template?userId=';
+		var url = global_config.serverRootQF + '/settleCard/template?userId=';
 		a.href = url;
 		a.target = '_blank';
 		a.height = 0;
@@ -740,7 +740,7 @@ define(function(require, exports, module) {
 		$('#import-btn').fileupload({
 			url: "",
 			beforeSend: function(e, data) {
-				data.url = global_config.serverRoot + "/settleCard/importReturnJson?userId=" + "&t=" + Math.random();
+				data.url = global_config.serverRootQF + "/settleCard/importReturnJson?userId=" + "&t=" + Math.random();
 			},
 			start: function() {
 				art_dialog.loading.start("uploading");

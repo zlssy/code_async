@@ -40,7 +40,7 @@ define(function(require, exports, module) {
             return;
         }
         $.ajax({
-            url: global_config.serverRoot + 'dataDictionary/dropdownlist?userId=' + '&type=' + type,
+            url: global_config.serverRootQF + 'dataDictionary/dropdownlist?userId=' + '&type=' + type,
             success: function (res) {
                 if (res.code == 0) {
                     _cacheDataDictionary[type] = res.data;

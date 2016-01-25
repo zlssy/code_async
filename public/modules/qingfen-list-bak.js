@@ -73,10 +73,10 @@ define(function(require, exports, module) {
 		});
 
 		$(grid_selector).jqGrid({
-			url: mybase.serverRoot + 'clearing/list?userId=' + utils.object2param(userParam), // 获取数据地址
+			url: mybase.serverRootQF + 'clearing/list?userId=' + utils.object2param(userParam), // 获取数据地址
 			datatype: 'json', // 获取数据的响应格式
 			mtype: 'post', // 上传数据的方式
-			editurl: mybase.serverRoot + 'clearing/edit', // 添加or编辑数据的地址
+			editurl: mybase.serverRootQF + 'clearing/edit', // 添加or编辑数据的地址
 			// data: grid_data,
 			// datatype: 'local',
 			height: 400,

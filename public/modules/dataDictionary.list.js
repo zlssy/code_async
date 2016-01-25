@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 	var Box = window.Box = require('boxBootstrap');
 	var tool = require("why");
 	var D = window.D = require("dialog.ace");
-	var rooturl = global_config.serverRoot.replace(/\/+$/,'');
+	var rooturl = global_config.serverRootQF.replace(/\/+$/,'');
 	var apis = {
 			list : rooturl + '/dataDictionary/list',
 			add : rooturl + '/dataDictionary/addOrUpdate',

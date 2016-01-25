@@ -32,10 +32,10 @@ define(function(require, exports, module) {
 		});
 
 		$(grid_selector).jqGrid({
-			url: mybase.serverRoot+'trade/list', // 获取数据地址
+			url: mybase.serverRootQF+'trade/list', // 获取数据地址
 			datatype: 'json', // 获取数据的响应格式
 			mtype: 'post', // 上传数据的方式
-			editurl:mybase.serverRoot+'trade/edit', // 添加or编辑数据的地址
+			editurl:mybase.serverRootQF+'trade/edit', // 添加or编辑数据的地址
 			// data: grid_data,
 			// datatype: 'local',
 			height: 400,
