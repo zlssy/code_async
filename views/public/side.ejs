@@ -58,77 +58,77 @@
 			}]
 		},{
             name:'清分管理',
-            code:'shxxgl',
+            code:'qfgl',
             child: [{
                 name: '清分明细查询',
-                code:'shxxgl',
+                code:'qfgl-qfmx',
                 url: '/qingfen-detail'
             },{
                 name: '清分汇总查询',
-                code:'shxxgl',
+                code:'qfgl-qfdcx',
                 url: '/qingfen-list-query'
             }]
         },{
-            name:'结算管理',
-            code:'shxxgl',
-            child: [{
-                name: '结算卡',
-                code:'shxxgl',
-                url: '/settle-card'
-            },{
-                name: '结算规则',
-                code:'shxxgl',
-                url: '/settle-rule'
-            },{
-                name: '结算限额',
-                code:'shxxgl',
-                url: '/settle-limit'
-            },{
-                name: '结算单查询',
-                code: 'ddgl-dd',
-                url: '/settle-query'
-            }]
-        },{
-            name:'费率管理',
-            code: 'ddgl',
-            child: [{
-                name: '费率',
-                code: 'ddgl-dd',
-                url: '/rate'
-            }]
-        },{
-            name:'汇率管理',
-            code:'shxxgl',
-            child: [{
-                name: '汇率管理',
-                code:'shxxgl',
-                url: '/exchange-query'
-            }]
-        },{
+			name: '结算管理',
+			code: 'jsgl',
+			child: [{
+				name: '结算卡',
+				code: 'jsgl-jsk',
+				url: '/settle-card'
+			},{
+				name: '结算规则',
+				code: 'jsgl-jsgz',
+				url: '/settle-rule'
+			},{
+				name: '结算限额',
+				code: 'jsgl-jsxe',
+				url: '/settle-limit'
+			},{
+				name: '结算单查询',
+				code: 'jsgl-jsdcx',
+				url: '/settle-query'
+			}]
+		},{
+			name: '费率管理',
+			code: 'flgl',
+			child:[{
+				name: '费率',
+				code: 'flgl-fl',
+				url: '/rate'
+			}]
+		},{
+			name: '汇率管理',
+			code: 'hlgl',
+			child:[{
+				name: '汇率管理',
+				code: 'hlgl-hl',
+				url: '/exchange-query'
+			}]
+		},{
             name:'对账管理',
-            code: 'ddgl',
+            code: 'dzcccl',
             child: [{
                 name: '交易渠道报告',
-                code: 'ddgl-dd',
+                code: 'dzcccl-scdzd',
                 url: '/statement-upload'
             },{
 				name: '对账日汇总',
-				code: 'ddgl-dd',
+				code: 'dzcccl-dzrhz',
 				url: '/daily-collect'
 			},{
 				name: '手续费差',
-				code: 'ddgl-dd',
+				code: 'dzcccl-sxfc',
 				url: '/charge'
 			}]
         },{
-            name:'财务统计管理',
-            code: 'ddgl',
-            child: [{
-                name: '财务统计查询',
-                code: 'ddgl-dd',
-                url: '/financial-statistics'
-            }]
-        },{
+			name: '财务统计管理',
+			code: 'cwtjgl',
+			child:[{
+				name: '财务统计查询',
+				code: 'cwtjgl-cwtjcx',
+				url: '/financial-statistics'
+			}]
+		},{
 			name:'支付渠道管理',
 			code: 'zfqdgl',
 			child: [{
@@ -145,14 +145,14 @@
 				url: '/documet'
 			}]
 		},{
-            name:'数据字典管理',
-            code: 'sjzd',
-            child: [{
-                name: '数据字典',
-                code: 'sjzd-sjzd',
-                url: '/dataDictionary/list'
-            }]
-        },{
+			name: '数据字典管理',
+			code: 'sjzdgl',
+			child: [{
+				name: '数据字典',
+				code: 'sjzdgl-sjzd',
+				url: '/dataDictionary/list'
+			}]
+		},{
             name:'配置信息',
             code: 'wdgl',
             child: [{

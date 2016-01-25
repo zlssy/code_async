@@ -14,7 +14,7 @@ define(function(require, exports, module) {
         rooturl = global_config.serverRootQF.replace(/\/+$/, ''),
         apis = {
             list: rooturl + '/financialStatistic/list',
-            down: rooturl + '/financialStatistic/export'
+            down: rooturl + '/financialStatistic/export',
             addorup: rooturl + '/exchangeRate/addOrUpdate'
         },
         _grid;

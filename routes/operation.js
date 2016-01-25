@@ -11,27 +11,28 @@ var router = express.Router();
 //代理
 var daili = true; //是否启用代理
 var proxy_url = setting.apiUrl || "http://testtclpay.tclclouds.com/operationtest";
-var qf_proxy_url = setting.qfApiUrl || 'http://testtclpay.tclclouds.com/settlement';
-var qf_uris = ['/clearingDetail/list', '/clearing/list', '/settleCard/list', '/settleRule/list', '/settleLimit/list', '/settleStatement/list',
-'/clearingCharge/list', '/exchangeRate/list', '/dataDictionary/dropdownlist','/reconciliation/list', '/reconciliation/chargeDifference',
-'/financialStatistic/list', '/reconciliation/getDetail', '/exchangeRate/detail',
-'/exchangeRate/delete', '/exchangeRate/delete', '/exchangeRate/detail', '/exchangeRate/addOrUpdate', '/reconciliation',
-'/clearingCharge/detail','/clearingCharge/history','/settleCard/history', '/settleCard/addOrUpdate', '/dataDictionary/merchantId/isValid',
-'/settleCard/template', '/settleRule/detail', '/settleRule/history', '/settleRule/addOrUpdate', '/settleLimit/detail','/settleLimit/history',
-'/settleLimit/addOrUpdate','/settleStatement/total', '/settleStatement/export', '/clearing/doSettle'
-,'/queryTradeRecord', '/downloadTradeRecord', '/queryStatisticalRecord', '/downloadStatisticalRecord', '/queryWrongRecord', '/downloadWrongRecord'
-];
-var userid = 12345;
+// var qf_proxy_url = setting.qfApiUrl || 'http://testtclpay.tclclouds.com/settlement';
+// var qf_uris = ['/clearingDetail/list', '/clearing/list', '/settleCard/list', '/settleRule/list', '/settleLimit/list', '/settleStatement/list',
+// '/clearingCharge/list', '/exchangeRate/list', '/dataDictionary/dropdownlist','/reconciliation/list', '/reconciliation/chargeDifference',
+// '/financialStatistic/list', '/reconciliation/getDetail', '/exchangeRate/detail',
+// '/exchangeRate/delete', '/exchangeRate/delete', '/exchangeRate/detail', '/exchangeRate/addOrUpdate', '/reconciliation',
+// '/clearingCharge/detail','/clearingCharge/history','/settleCard/history', '/settleCard/addOrUpdate', '/dataDictionary/merchantId/isValid',
+// '/settleCard/template', '/settleRule/detail', '/settleRule/history', '/settleRule/addOrUpdate', '/settleLimit/detail','/settleLimit/history',
+// '/settleLimit/addOrUpdate','/settleStatement/total', '/settleStatement/export', '/clearing/doSettle'
+// ,'/queryTradeRecord', '/downloadTradeRecord', '/queryStatisticalRecord', '/downloadStatisticalRecord', '/queryWrongRecord', '/downloadWrongRecord'
+// ];
+//var userid = 12345;
 
 function getProxyUri(req) {
-    var daili_url;
-    console.log((req.apiurl || req.url), qf_uris.indexOf((req.apiurl || req.url)))
-    if (qf_uris.indexOf((req.apiurl || req.url).split('?')[0]) > -1) {
-        daili_url = qf_proxy_url;
-    } else {
-        daili_url = proxy_url;
-    }
-    return daili_url;
+    // var daili_url;
+    // console.log((req.apiurl || req.url), qf_uris.indexOf((req.apiurl || req.url)))
+    // if (qf_uris.indexOf((req.apiurl || req.url).split('?')[0]) > -1) {
+    //     daili_url = qf_proxy_url;
+    // } else {
+    //     daili_url = proxy_url;
+    // }
+    // return daili_url;
+    return proxy_url;
 }
 
 if (daili) {
@@ -39,21 +40,21 @@ if (daili) {
         '/fileUpload'
     ]
 
-    var conditions = [
-        '/queryTradeRecord', '/downloadTradeRecord', '/queryStatisticalRecord', '/downloadStatisticalRecord', '/queryWrongRecord', '/downloadWrongRecord'
-    ]
+    // var conditions = [
+    //     '/queryTradeRecord', '/downloadTradeRecord', '/queryStatisticalRecord', '/downloadStatisticalRecord', '/queryWrongRecord', '/downloadWrongRecord'
+    // ]
 
-    router.all(conditions, function(req, res, next) {
-        if (req.query.condition) {
-            return next()
-        }
-        var comd = {
-            'condition': JSON.stringify(req.query)
-        }
-        req.apiurl = req._parsedUrl.pathname + '?' + qs.stringify(comd)
-            //req.query.condition = JSON.stringify(req.query)
-        next();
-    })
+    // router.all(conditions, function(req, res, next) {
+    //     if (req.query.condition) {
+    //         return next()
+    //     }
+    //     var comd = {
+    //         'condition': JSON.stringify(req.query)
+    //     }
+    //     req.apiurl = req._parsedUrl.pathname + '?' + qs.stringify(comd)
+    //         //req.query.condition = JSON.stringify(req.query)
+    //     next();
+    // })
 
     //文件流代理
     router.all(downFiles, function(req, res, next) {
