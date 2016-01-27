@@ -129,6 +129,12 @@ router.all('/exchange-query', function(req, res, next){
         req: req
     })
 });
+router.all('/InterfaceApply', function(req, res, next){
+    res.render('InterfaceApply', {
+        title: 'TCL支付运营平台',
+        req: req
+    })
+});
 router.all('/config', function(req, res, next){
     res.render('config', {
         title: 'TCL支付运营平台',
