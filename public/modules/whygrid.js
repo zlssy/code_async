@@ -77,6 +77,14 @@ var Lang_config = {
 		getSearch: function(){
 			return qs.parse(location.hash.replace(/^\#/g,'')); //默认筛选条件
 		},
+		setSearch: function(key,val){
+			if(typeof key == "object"){
+				document.location.href = tool.urlComm.setHash(key);
+			}else{
+				document.location.href = tool.urlComm.setHash(key,val);			
+			}
+			// tool.urlComm.setHash(key,val);
+		},
 		funFixtd: function(x,y,col,itemobj){},
 		//funDatacheck: function(data){},
 		pagenav: true,
@@ -196,14 +204,17 @@ var Lang_config = {
     	var prmNames = o.option.prmNames;
     	this.main.on('click','.pagenav a[data-page]',function(){
     		var obj = $(this);
-    		document.location.href = tool.urlComm.setHash(prmNames.page,obj.data('page'));
+    		// document.location.href = tool.urlComm.setHash(prmNames.page,obj.data('page'));
+			o.option.setSearch(prmNames.page,obj.data('page'));
     		o.load();
     	}).on('change','.pagenav select[name=pagesize]',function(){
     		var pageSize = $(this).val();
             var changeHash = {};
-            changeHash[prmNames.page] = null;
-            changeHash[prmNames.rows] = pageSize;
-            document.location.href = tool.urlComm.setHash(changeHash)
+            // changeHash[prmNames.page] = null;
+            // changeHash[prmNames.rows] = pageSize;
+            // document.location.href = tool.urlComm.setHash(changeHash)
+			o.option.setSearch(prmNames.page,null);
+			o.option.setSearch(prmNames.rows,pageSize);
     		o.load();
     	})
     	this.main.on('submit',".pagenav .pagenav-goform",function(){
@@ -213,7 +224,8 @@ var Lang_config = {
             if(isNaN(page)) return false;
             page = page < 1 ? 1 : page > max ? max : page;
     		if(page){
-    			document.location.href = tool.urlComm.setHash(prmNames.page,page);
+    			// document.location.href = tool.urlComm.setHash(prmNames.page,page);
+				o.option.setSearch(prmNames.page,page);
     			o.load();
     		}
     		return false;
@@ -235,11 +247,14 @@ var Lang_config = {
     		}
     		o.main.find('thead span.order-icos span').addClass('order-disabled');
 
-    		var changeHash = {}
-    		changeHash[prmNames.page] = null;
-    		changeHash[prmNames.order] = order;
-    		changeHash[prmNames.sort] = sort;
-            document.location.href = tool.urlComm.setHash(changeHash)
+    		// var changeHash = {}
+    		// changeHash[prmNames.page] = null;
+    		// changeHash[prmNames.order] = order;
+    		// changeHash[prmNames.sort] = sort;
+            // document.location.href = tool.urlComm.setHash(changeHash)
+			o.option.setSearch(prmNames.page,page);
+			o.option.setSearch(prmNames.order,order);
+			o.option.setSearch(prmNames.sort,sort);
     		o.load();
     	})
     }
@@ -354,12 +369,16 @@ var Lang_config = {
 			})
 		},
 		loadC:function(){
-			var url = tool.urlComm.apply(tool.urlComm.setHash,Array.prototype.slice.call(arguments,0))
-			if(url == document.location.href){
-				o.load();
-			}else{
-				document.location.href = url;
-			}
+			var o = this;
+			o.setSearch(Array.prototype.slice.call(arguments,0));
+			o.load();
+
+			// var url = tool.urlComm.setHash.apply(tool.urlComm,Array.prototype.slice.call(arguments,0))
+			// if(url == document.location.href){
+			// 	o.load();
+			// }else{
+			// 	document.location.href = url;
+			// }
 		},
 		//准备异步获取列表数据
 		loadingTable: function(){
