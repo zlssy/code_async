@@ -26,7 +26,7 @@ define(function(require, exports, module) {
 
 	function loadData() {
 		_grid = Grid.create({
-			key: 'id',//记得这里要换成现在接口的参数
+			key: 'merchantId',//记得这里要换成现在接口的参数
 			checkbox: false,
 			cols: [{
 				name: '账户名',
@@ -271,10 +271,6 @@ define(function(require, exports, module) {
 				newchange = true;
 				break;
 			}
-		}
-		if (!newchange) {
-			Box.alert('您的查询条件并没有做任何修改.');
-			return false;
 		}
 		userParam = newParam;
 		return true;

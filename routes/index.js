@@ -153,6 +153,12 @@ router.all('/charge', function(req, res, next){
 		req: req
 	})
 });
+router.all('/trade-stat', function(req, res, next){
+	res.render('trade-stat', {
+		title: 'TCL支付运营平台',
+		req: req
+	})
+});
 
 /** get root 放到最后 */
 router.get('/', function(req, res, next) {

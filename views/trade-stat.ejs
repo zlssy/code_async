@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title><%=title%></title>
+
+		<meta name="description" content="Tcl settlements" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<link href='<%-setting.filePath%>/css/jquery-ui.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/jquery-ui.custom.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/datepicker.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/bootstrap-datetimepicker.min.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/ui.jqgrid.css' rel="stylesheet" />
+		<%- include('public/header') %>
+		<%- include('public/whygrid_type') %>
+	</head>
+<body class="no-skin">
+<%- include('public/nav')%>
+
+<div class="main-container" id="main-container">
+	<%- include('public/side') %>
+	<div class="main-content">
+		<div id="content" class="main-content-inner">
+		<div class="page-content">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="widget-box">
+						<div class="widget-header">
+							<h4 class="widget-title">搜索：</h4>
+							<div class="widget-toolbar">
+							<a href="javascript:;" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
+							</div>
+						</div>
+						<div class="widget-body">
+							<div class="widget-main">
+								<form class="form" id="sform">
+								<div class="row">
+									<div class="col-xs-12 col-sm-4">
+										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="merchantName">商户名称:</label></div>
+										<div class="col-sm-9 no-padding"><input type="text" id="merchantName" name="merchantName" class="form-control col-sm-5 input-sm"></div>
+									</div>
+									<div class="col-xs-12 col-sm-4">
+										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="merchantId">商户ID:</label></div>
+										<div class="col-sm-9 no-padding"><input type="text" id="merchantId" name="merchantId" class="form-control col-sm-5 input-sm"></div>
+									</div>
+									<div class="col-xs-12 col-sm-4">
+										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="currencyType">支付币种:</label></div>
+										<div class="col-sm-9 no-padding">
+											<select class="form-control" data-typename="currencyCode" id="currencyCode" name="currencyType">
+												<option value="">全部</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-12 col-sm-4">
+										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="payStatus">订单状态:</label></div>
+										<div class="col-sm-9 no-padding"><select class="form-control" id="payStatus" name="payStatus"> 
+											<option value="">全部</option>
+											<option value="0">待支付</option>   
+								        	<option value="1">全额已支付</option>
+								        	<option value="3">支付失败</option>
+								        	<option value="8">支付关闭</option>
+								        	<option value="5">退款中</option>
+								        	<option value="6">退款失败</option>
+								        	<option value="7">退款成功</option>
+								     	 </select></div>
+									</div>
+									<div class="col-xs-12 col-sm-4">
+										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="payChannel">支付渠道:</label></div>
+										<div class="col-sm-9 no-padding"><select class="form-control" data-typename="payChannel" id="payChannel" name="payChannel">
+												<option value="">全部</option>
+											</select></div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-12 col-sm-4">
+										<label class="col-sm-3 no-padding lm-5">开始支付时间:</label>
+										<div class="col-xs-12 col-sm-9 no-padding">
+										<div class="input-group">
+											<input type="text" class="input-sm form-control datepicker" id="startPayBeginTime" name="startPayBeginTime" placeholder="from" />
+											<label for="startPayBeginTime" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+											<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+											<input type="text" class="input-sm form-control datepicker" id="startPayEndTime" name="startPayEndTime" placeholder="to" />
+											<label for="startPayEndTime" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+										</div>
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-4">
+										<label class="col-sm-3 no-padding lm-5">支付完成时间:</label>
+										<div class="col-xs-12 col-sm-9 no-padding">
+										<div class="input-group">
+											<input type="text" class="input-sm form-control datepicker" id="payOverBeginTime" name="payOverBeginTime" placeholder="from" />
+											<label for="payOverBeginTime" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+											<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+											<input type="text" class="input-sm form-control datepicker" id="payOverEndTime" name="payOverEndTime" placeholder="to" />
+											<label for="payOverEndTime" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+										</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">									
+									<div class="col-sm-9">
+										<button class="btn btn-info btn-sm" type="submit"><i class="ace-icon fa fa-check bigger-110"></i>查询</button>
+										<button class="btn btn-sm" type="reset"><i class="ace-icon fa fa-undo bigger-110"></i>重置</button>
+									</div>
+									<div class="col-sm-3 align-right"><button id="export" class="btn btn-info btn-sm" type="button"><i class="ace-icon fa fa-file-excel-o bigger-110"></i>导出</button></div>
+								</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>			
+			<div class="row">
+				<div id="grid_list" class="col-xs-12">
+				</div>
+			</div><!-- end grid row-->
+		</div>
+		</div>
+	</div>
+</div>
+<div id="mask" class="widget-box-overlay hide"></div>
+<%- include('public/footscript1') %>
+<%- include('public/footscript2') %>
+
+<script src='<%-setting.filePath%>/js/jquery-ui.min.js'></script>
+<script src='<%-setting.filePath%>/js/moment.min.js'></script>
+<script src='<%-setting.filePath%>/js/bootstrap-datepicker.min.js'></script>
+<script src='<%-setting.filePath%>/js/bootstrap-datetimepicker.min.js'></script>
+
+<!-- process enter -->
+<script>
+seajs.use('tradeStat', function(m){
+	m.init();
+});
+</script>
+<%- include('public/footer') %>
