@@ -3,13 +3,10 @@ define(function(require, exports, module) {
 	var Box = window.Box = require('boxBootstrap');
 	var tool = require("why");
 	var D = window.D = require("dialog.ace");
-	var rooturl = global_config.serverRootQF.replace(/\/+$/,'');
+	var rooturl = global_config.serverRoot.replace(/\/+$/,'');
 	var apis = {
-			baselist : rooturl + '/operation/dict/queryInterfaceApplyIds',
-			add : rooturl + '/dataDictionary/addOrUpdate',
-			update : rooturl + '/dataDictionary/addOrUpdate',
-			show : rooturl + '/dataDictionary/detail',
-			dropdownlist : rooturl + '/dataDictionary/dropdownlist'
+			baselist : rooturl + '/dict/queryInterfaceApplyIds',
+			add : rooturl + '/config/configChannelArgs'
 		}
 	var T;
 	var errfun = function(e){
@@ -22,6 +19,11 @@ define(function(require, exports, module) {
 	var Edit = window.Edit = {}
 	Edit.init = function(){
 		this.dom = $('#addtable').find('tbody');
+		this.addItem();
+		this.events();
+	}
+	Edit.reset = function(){
+		this.dom.html('');
 		this.addItem();
 	}
 	Edit.addItem = function(){
@@ -56,50 +58,39 @@ define(function(require, exports, module) {
 		}).then(null,errfun)
 	}
 	Edit.fix = function(){
-		var rows = this.dom.find('.panel-body>.row');
+		var rows = this.dom.find('tr');
 		rows.find('[data-comm]').removeClass('disabled')
-		rows.first().find('[data-comm="goup"]').addClass('disabled')
-		rows.last().find('[data-comm="godown"]').addClass('disabled')
 		if(rows.length <= 1) rows.first().find('[data-comm="del"]').addClass('disabled')
 	};
 	Edit.getData = function(){
-		// var dom = this.dom;
-		// var obj = {
-		// 	"id" : dom.find('input[name="id"]').val(),
-		// 	"type" : dom.find('input[name="type"]').val(),
-		// 	"typeLabel_en" : dom.find('input[name="typeLabel_en"]').val(),
-		// 	"typeLabel_zh" : dom.find('input[name="typeLabel_zh"]').val()
-		// }
-		// // if(dom.find('input[name="id"]').val() !== ""){
-		// // 	obj.id = dom.find('input[name="id"]').val()
-		// // }
+		var dom = this.dom;
+		
+		var obj = {
+			interfaceNum : $("#interfaceNum").val(),
+			currencyType : $("#currencyType").val()
+		}
+		
 		// var dataArray = [],
-		// 	rows = dom.find('.panel-body>.row');
-		// for(var i=0; i<rows.length; i++){
-		// 	var row = $(rows[i]);
-		// 	dataArray.push({
-		// 		"dataInfoId" : row.find('input[name="dataInfoId"]').val(),
-		// 		"code" : row.find('input[name="code"]').val(),
-		// 		"label_zh" : row.find('input[name="label_zh"]').val(),
-		// 		"label_en" : row.find('input[name="label_en"]').val(),
-		// 		"innerValue" : row.find('input[name="innerValue"]').val(),
-		// 		"status" : row.find('[data-comm="onoff"]').hasClass('btn-danger') ? 2 : 1,
-		// 		"displayOrder" : +i
-		// 	})
-		// }
-		// obj.dataArray = JSON.stringify(dataArray);
+		var dataArray = {},
+			rows = dom.find('tr');
+		for(var i=0; i<rows.length; i++){
+			var row = $(rows[i]);
+			// dataArray.push({
+			// 	"key" : row.find('input[name="key"]').val(),
+			// 	"value" : row.find('input[name="value"]').val()
+			// })
+			dataArray[row.find('input[name="key"]').val()] = row.find('input[name="value"]').val();
+		}
+		obj.tradeInfo = JSON.stringify(dataArray);
 		// return obj;
 	}
 	//保存
 	Edit.save = function(){
-		// var saveData = this.getData();
-		// $.post(apis.update,saveData,null,'json').then(function(data){
-		// 	if(data.code != 0){return $.Deferred().reject(data.message || data.msg || "未知错误!")}
-		// 	D.suss("操作成功!");
-		// 	T.load();
-		// 	//Edit.Box && Edit.Box.remove();
-		// 	Edit.Box && Edit.Box.dialog('close');
-		// }).then(null,errfun)
+		var saveData = this.getData();
+		$.post(apis.add,saveData,null,'json').then(function(data){
+			if(data.code != 0){return $.Deferred().reject(data.message || data.msg || "未知错误!")}
+			D.suss("操作成功!");
+		}).then(null,errfun)
 	}
 
 	var selectObj = {};
@@ -110,6 +101,13 @@ define(function(require, exports, module) {
 			interfaceNum : $('#interfaceNum'),
 			currencyType : $('#currencyType')
 		}
+		// var data = {"code":"0","msg":"success","interfaceApplyIdsList":[{"interfaceApplyNum":"aaaaaaaaaaaaaaa","interfaceApplyId":"aaaaaaaaaaaaaa","interfaceList":[{"interfaceName":"jk1","interfaceNum":"接口1""currencyType":"1,2,3,4,5",},{"interfaceName":"jk2","interfaceNum":"接口2""currencyType":"1",},{"interfaceName":"jk3","interfaceNum":"接口3""currencyType":"1,2,3,4",},{"interfaceName":"jk4","interfaceNum":"接口4""currencyType":"1,5",}]},{"interfaceApplyNum":"bbbbbbbbbbbbbbbbb","interfaceApplyId":"bbbbbbbbbbbbb","interfaceList":[{"interfaceName":"jk1","interfaceNum":"接口1""currencyType":"1,2,3,4,5",},{"interfaceName":"jk2","interfaceNum":"接口2""currencyType":"1",}]},{"interfaceApplyNum":"cccccccccccccccccc","interfaceApplyId":"ccccccccccccc","interfaceList":[{"interfaceName":"jk1","interfaceNum":"接口1""currencyType":"1,2,3,4,5",},{"interfaceName":"jk2","interfaceNum":"接口2""currencyType":"1",},{"interfaceName":"jk3","interfaceNum":"接口3""currencyType":"1,2,3,4",},{"interfaceName":"jk4","interfaceNum":"接口4""currencyType":"1,5",}]},{"interfaceApplyNum":"dddddddddddddddd","interfaceApplyId":"ddddddddddddd","interfaceList":[{"interfaceName":"jk1","interfaceNum":"接口1""currencyType":"1,2,3,4,5",}]}]}
+		// selectObj.data = data.interfaceApplyIdsList;
+		// o.fill_interfaceApplyId();
+		// o.events();
+		// typeof cb == 'function' && cb();
+
+
 		$.get(apis.baselist,null,null,'json').then(function(data){
 			selectObj.data = data.interfaceApplyIdsList;
 			o.fill_interfaceApplyId();
@@ -124,7 +122,7 @@ define(function(require, exports, module) {
 		this.dom.interfaceApplyId.on('change',function(){
 			o.fill_interfaceNum();
 		})
-		this.dom.fill_interfaceNum.on('change',function(){
+		this.dom.interfaceNum.on('change',function(){
 			o.fill_currencyType();
 		})
 	}
@@ -135,7 +133,7 @@ define(function(require, exports, module) {
 			var item = arr[i];
 			html += '<option value='+item.interfaceApplyId+'>'+item.interfaceApplyId+'</option>'
 		}
-		o.interfaceApplyId.html(html);
+		o.dom.interfaceApplyId.html(html);
 		o.fill_interfaceNum()
 	}
 	selectObj.fill_interfaceNum = function(){
@@ -145,23 +143,30 @@ define(function(require, exports, module) {
 			if(data[k].interfaceApplyId == this.dom.interfaceApplyId.val()){
 				arr = data[k].interfaceList;
 				o.select_interfaceList = data[k].interfaceList;
+				break;
 			}
 		}
 		for(var i=0; i<arr.length; i++){
 			var item = arr[i];
-			html += '<option value='+item.interfaceApplyId+'>'+item.interfaceApplyId+'</option>'
+			html += '<option value='+item.interfaceNum+'>'+item.interfaceName+'</option>'
 		}
-		o.interfaceNum.html(html);
+		o.dom.interfaceNum.html(html);
 		o.fill_currencyType()
 	}
 	selectObj.fill_currencyType = function(){
 		var o = this;
-		var html = '',arr = o.select_interfaceList;
+		var html = '',data=o.select_interfaceList,arr = [];
+		for(var k = 0; k<data.length; k++){
+			if(data[k].interfaceNum == this.dom.interfaceNum.val()){
+				arr = data[k].currencyType.split(',');
+				break;
+			}
+		}
 		for(var i=0; i<arr.length; i++){
 			var item = arr[i];
-			html += '<option value='+item.interfaceApplyId+'>'+item.interfaceApplyId+'</option>'
+			html += '<option value='+item+'>'+item+'</option>'
 		}
-		o.currencyType.html(html);
+		o.dom.currencyType.html(html);
 	}
 
 	$(function(){
