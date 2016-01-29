@@ -482,15 +482,6 @@ define(function(require, exports, module) {
 					return;
 				}
 			}
-			if (cls.indexOf('fa-edit') > -1) {
-				selectedRow = self.getSelectedRow();
-				if (selectedRow.length) {
-					self.trigger('checkCallback', selectedRow, self);
-				} else {
-					alert('请先选择要审核的行.');
-					return;
-				}
-			}
 			if (cls.indexOf('add-edit-font') > -1) {
 				selectedRow = self.getSelectedRow();
 				if (selectedRow.length) {
@@ -534,15 +525,6 @@ define(function(require, exports, module) {
 					self.trigger('editCallback', selectedRow, self);
 				} else {
 					alert('请先选择要编辑的行.');
-					return;
-				}
-			}
-			if (cls.indexOf('fa-edit') > -1) {
-				selectedRow = self.getSelectedRow();
-				if (selectedRow.length) {
-					self.trigger('checkCallback', selectedRow, self);
-				} else {
-					alert('请先选择要审核的行.');
 					return;
 				}
 			}

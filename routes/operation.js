@@ -37,7 +37,8 @@ function getProxyUri(req) {
 
 if (daili) {
     var downFiles = [
-        '/fileUpload'
+        '/fileUpload',
+        '/tradeStatistics/downloadtradeDataList'
     ]
 
     // var conditions = [
@@ -53,7 +54,7 @@ if (daili) {
     //     }
     //     req.apiurl = req._parsedUrl.pathname + '?' + qs.stringify(comd)
     //         //req.query.condition = JSON.stringify(req.query)
-    //     next();
+    //     next();4
     // })
 
     //文件流代理

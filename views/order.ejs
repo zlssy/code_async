@@ -50,7 +50,7 @@
 						<div class="widget-main">
 							<div class="row">
 								<div class="col-xs-12 col-sm-4">
-									<label class="col-sm-3 control-label no-padding lm-5" for="ids">交易订单号:</label>
+									<label class="col-sm-3 control-label no-padding lm-5" for="payOrderId">交易订单号:</label>
 									<div class="col-sm-9">
 										<input type="text" id="payOrderId" class="form-control col-sm-5 input-sm" name="payOrderId">
 									</div>
@@ -74,9 +74,9 @@
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
-									<label class="col-sm-3 no-padding lm-5" for="chargeTypeInt">支付渠道:</label>
+									<label class="col-sm-3 no-padding lm-5" for="payChannel">支付渠道:</label>
 									<div class="col-sm-9">
-										<select class="form-control" id="payChannel"> 
+										<select class="form-control" id="payChannel" name="payChannel"> 
 											<option value="">全部</option>   
 								        	<option value="CYBS">CYBS</option>
 								        	<option value="PAYPAL">PayPal</option>
@@ -89,9 +89,9 @@
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
-									<label class="col-sm-3 no-padding lm-5" for="chargeTypeInt">支付币种:</label>
+									<label class="col-sm-3 no-padding lm-5" for="currencyType">支付币种:</label>
 									<div class="col-sm-9">
-										<select class="form-control" id="currencyType"> 
+										<select class="form-control" id="currencyType" name="currencyType"> 
 											<option value="">全部</option>   
 								        	<option value="USD">美元</option>
 								        	<option value="EUR">欧元</option>
@@ -118,7 +118,7 @@
 								<div class="col-xs-12 col-sm-4">
 									<label class="col-sm-3 no-padding lm-5" for="payStatus">订单状态:</label>
 									<div class="col-sm-9">
-										<select class="form-control" id="payStatus"> 
+										<select class="form-control" id="payStatus" name="payStatus"> 
 											<option value="">全部</option>
 											<option value="0">待支付</option>   
 								        	<option value="1">全额已支付</option>
@@ -147,6 +147,16 @@
 										<i class="ace-icon fa fa-check bigger-110"></i>
 										查询
 									</button>
+									<button id="reset-btn" class="btn btn-info btn-sm" type="reset">
+										<i class="ace-icon fa fa-undo bigger-110"></i>
+										重置
+									</button>
+								</div>
+								<div class="col-md-3 align-right">
+									<button id="export-btn" class="btn btn-info btn-sm" type="button">
+										<i class="ace-icon fa fa-file-excel-o bigger-110"></i>
+										导出
+									</button>
 								</div>
 							</div>
 						</div>
@@ -165,6 +175,120 @@
 </div>
 <div id="mask" class="widget-box-overlay hide"></div>
 
+<script type="text/html" id="viewTpl">
+<div class="row">
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">交易订单号：</div>
+		<div class="col-sm-9"><%%=data.payOrderId%></div>
+	</div>
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">源订单编号：</div>
+		<div class="col-sm-9"><%%=data.sourcePayOrderId%></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">交易流水号：</div>
+		<div class="col-sm-9"><%%=data.tradeId%></div>
+	</div>
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">商户ID：</div>
+		<div class="col-sm-9"><%%=data.merchantId%></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">商户订单号：</div>
+		<div class="col-sm-9"><%%=data.outOrderId%></div>
+	</div>
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">商户名称：</div>
+		<div class="col-sm-9"><%%=data.merchantName%></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">交易类型：</div>
+		<div class="col-sm-9"><%%=data.tradeType%></div>
+	</div>
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">国家代码：</div>
+		<div class="col-sm-9"><%%=data.countryCode%></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">用户编号：</div>
+		<div class="col-sm-9"><%%=data.payer%></div>
+	</div>
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">产品名称：</div>
+		<div class="col-sm-9"><%%=data.productName%></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">订单状态：</div>
+		<div class="col-sm-9"><%%=data.payStatus%></div>
+	</div>
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">产品代码：</div>
+		<div class="col-sm-9"><%%=data.productCode%></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">支付渠道：</div>
+		<div class="col-sm-9"><%%=data.payChannel%></div>
+	</div>
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">银行卡类型：</div>
+		<div class="col-sm-9"><%%=data.bankCardType%></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">支付币种：</div>
+		<div class="col-sm-9"><%%=data.currencyType%></div>
+	</div>
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">银行账号：</div>
+		<div class="col-sm-9"><%%=data.bankNum%></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">订单金额：</div>
+		<div class="col-sm-9"><%%=data.orderAmount%></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">支付开始时间：</div>
+		<div class="col-sm-9"><%%=data.startPayTime%></div>
+	</div>
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">税额：</div>
+		<div class="col-sm-9"><%%=data.taxAmount%></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">支付结束时间：</div>
+		<div class="col-sm-9"><%%=data.payOverTime%></div>
+	</div>
+	<div class="col-xs-12 col-sm-6">
+		<div class="col-sm-3 no-padding">运费：</div>
+		<div class="col-sm-9"><%%=data.shippingAmount%></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-12">
+		<div class="col-sm-3 no-padding">订单备注：</div>
+		<div class="col-sm-9"><%%=data.remark%></div>
+	</div>
+</div>
+</script>
 
 <%- include('public/footscript1') %>
 <%- include('public/footscript2') %>

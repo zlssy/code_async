@@ -23,6 +23,7 @@ define(function(require, exports, module) {
 			payOverEndTime: $('input[name="payOverEndTime"]'),
 			merchantName: $('#merchantName')
 		},
+		viewTpl = $('#viewTpl').html(),
 
 		_grid,
 		idle = true, // 当前空闲，可操作
@@ -118,11 +119,12 @@ define(function(require, exports, module) {
 				width: 150,
 				format: function(v, i, row) {
 					var html = '<div class="">';
-					if ('1' == row.payStatus) {
-						html += '<a href="javascript:void(0)" class="history">操作历史</a>&nbsp;';
-					}
+					html += '<a href="javascript:void(0)" class="detail">详情</a>&nbsp;';
 					if ('1' == row.payStatus && ('CYBS' == row.payChannel || 'PAYPAL' == row.payChannel) && ('5' != row.refundStatus && '7' != row.refundStatus)) {
 						html += '<a href="javascript:void(0)" class="refund">退款</a>&nbsp;';
+					}
+					if ('1' == row.payStatus) {
+						html += '<a href="javascript:void(0)" class="history">操作历史</a>&nbsp;';
 					}
 					html += '</div>';
 					return html;
@@ -185,9 +187,16 @@ define(function(require, exports, module) {
 			}).on('click', '.history', function(e) {
 				idle && (idle = false, setTimeout(function() {
 					setTimeout(function() {
-						idle = true
+						idle = true;
 					}, wait);
 					viewHistory(_grid.getSelectedRow());
+				}, 0));
+			}).on('click', '.detail', function(e) {
+				idle && (idle = false, setTimeout(function() {
+					setTimeout(function() {
+						idle = true;
+					}, wait);
+					view(_grid.getSelectedRow());
 				}, 0));
 			});
 		});
@@ -243,6 +252,51 @@ define(function(require, exports, module) {
 		Box.alert(html.join(''));
 	}
 
+	function view(row) {
+		var id = row && row[0] && row[0].payOrderId;
+		$.ajax({
+			url: global_config.serverRoot + 'getPayOrderDetail?payOrderId=' + id,
+			success: function(json) {
+				var data = json.payOrderDetail;
+				if (data) {
+					data.hasOwnProperty('tradeType') && (data.tradeType = '0' == data.tradeType ? '支付' : '代扣');
+					if (data.hasOwnProperty('payStatus')) {
+						switch (data.payStatus) {
+							case '0':
+								data.payStatus = '代付款';
+								break;
+							case '1':
+								data.payStatus = '全款已支付';
+								break;
+							case '3':
+								data.payStatus = '付款失败';
+								break;
+							case '5':
+								data.payStatus = '退款中';
+								break;
+							case '6':
+								data.payStatus = '退款失败';
+								break;
+							case '7':
+								data.payStatus = '退款成功';
+								break;
+							case '8':
+								data.payStatus = '订单关闭';
+								break;
+						}
+					}
+					console.log(data);
+					Box.alert(Utils.formatJson(viewTpl, {
+						data: data
+					}));
+				}
+			},
+			error: function(json) {
+
+			}
+		});
+	}
+
 	function changeCurrency(v) {
 		if (/\d+(\.\d+)?/.test(v)) {
 			return new Number(v / 100).toFixed(2);
@@ -295,7 +349,45 @@ define(function(require, exports, module) {
 					_grid.loadData();
 				}
 			}
+			if (cls && cls.indexOf('fa-undo') > -1 || (id && 'reset-btn' == id)) {
+				$('#payOrderId').val('');
+				$('#outOrderId').val('');
+				$('#merchantId').val('');
+				$('#merchantName').val('');
+				$('#payChannel').val('');
+				$('#currencyType').val('');
+				$('#startDate').val('');
+				$('#endDate').val('');
+				$('#payStatus').val('');
+				$('#payOverBeginTime').val('');
+				$('#payOverEndTime').val('');
+			}
+			if (cls && cls.indexOf('fa-file-excel-o') > -1 || (id && 'export-btn' == id)) {
+				exportExcel();
+			}
 		});
+	}
+
+	function exportExcel() {
+		// var settleDateStart = $('#settleDateStart').val(),
+		// 	settleDateEnd = $('#settleDateEnd').val();
+		// if (!settleDateStart || !settleDateEnd) {
+		// 	Box.alert('请选择结算日期后下载。');
+		// 	return;
+		// }
+		// userParam.settleDateStart = settleDateStart;
+		// userParam.settleDateEnd = settleDateEnd;
+		var a = document.createElement('a');
+		var url = global_config.serverRoot + '/downloadTradeOrders?' + Utils.object2param(userParam);
+		a.href = url; //global_config.serverRootQF + '/settleStatement/export?userId=&' + Utils.object2param(userParam);
+		a.target = '_blank';
+		a.height = 0;
+		a.width = 0;
+		document.body.appendChild(a);
+		var e = document.createEvent('MouseEvents');
+		e.initEvent('click', true, false);
+		a.dispatchEvent(e);
+		a.remove();
 	}
 
 	function getParams() {
@@ -373,7 +465,7 @@ define(function(require, exports, module) {
 		var resver = arguments[1] || 0;
 		try {
 			var dd = new Date(d.replace(/-/g, '/'));
-			dd = new Date(Utils.date[resver ? 'utc2local':'local2utc'](dd.getTime()));
+			dd = new Date(Utils.date[resver ? 'utc2local' : 'local2utc'](dd.getTime()));
 			return dd.getFullYear() + '-' + fix(dd.getMonth() + 1) + '-' + fix(dd.getDate()) + ' ' + fix(dd.getHours()) + ':' + fix(dd.getMinutes()) + ':' + fix(dd.getSeconds());
 		} catch (e) {
 			window.console && console.log(e);

@@ -4,21 +4,36 @@ define(function(require, exports, module) {
 		Xss = require('xss'),
 		accountCheck = require('checkAccount'),
 
-		
+
 		Box = require('boxBootstrap'),
 		content = $('#content'),
 		listContainer = $('#grid_list'),
 		userParam = {},
-		dictionaryCollection = {'status':{'0':'审核通过','1':'审核拒绝','2':'待审核'},'action':{'0':'注册事件','1':'支付接入','2':'修改信息','3':'代扣申请','4':'删除信息'}},
+		dictionaryCollection = {
+			'status': {
+				'0': '审核通过',
+				'1': '审核拒绝',
+				'2': '待审核'
+			},
+			'action': {
+				'0': '注册事件',
+				'1': '支付接入',
+				'2': '修改信息',
+				'3': '代扣申请',
+				'4': '删除信息'
+			}
+		},
 		infoCheckTpl = $('#infoCheckTpl').html(),
 		otherCheckTpl = $('#otherCheckTpl').html(),
-		doms = {			
+		doms = {
 			startTime: $('input[name="startTime"]'),
 			endTime: $('input[name="endTime"]'),
 			action: $('#action'),
 			status: $('#status')
 		},
-		_grid;
+		_grid,
+		dataMap = {},
+		guid = 1000;
 
 	function init() {
 		loadData();
@@ -26,7 +41,7 @@ define(function(require, exports, module) {
 
 	function loadData() {
 		_grid = Grid.create({
-			key: 'id',//记得这里要换成现在接口的参数
+			key: 'merchantId', //记得这里要换成现在接口的参数
 			checkbox: false,
 			cols: [{
 				name: '账户名',
@@ -37,9 +52,9 @@ define(function(require, exports, module) {
 			}, {
 				name: '事件',
 				index: 'action',
-				format: function(v){
-				         return dictionaryCollection['action'][v];
-				    }
+				format: function(v) {
+					return dictionaryCollection['action'][v];
+				}
 			}, {
 				name: '提交审核时间',
 				index: 'submitTime'
@@ -49,9 +64,9 @@ define(function(require, exports, module) {
 			}, {
 				name: '状态',
 				index: 'status',
-				format: function(v){
-				         return dictionaryCollection['status'][v];
-				    }
+				format: function(v) {
+					return dictionaryCollection['status'][v];
+				}
 			}, {
 				name: '说明',
 				index: 'explanation'
@@ -59,150 +74,138 @@ define(function(require, exports, module) {
 				name: '操作',
 				index: 'status',
 				closeXss: true,
-				format: function(v) {
-					if(v==2)
-					{
-						return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-edit blue" title="审核"></span></div>';
+				format: function(v,key,row) {
+					var id = ++guid;
+					dataMap[id] = row;
+					if (v == 2) {
+						return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-edit blue" title="审核" data-id="' + id + '"></span></div>';
 					}
 					//return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-edit blue" title="审核"></span></div>';
 				}
 			}],
 			url: getUrl(),
 			pagesize: 15,
-			pageName:'index',
+			pageName: 'index',
 			jsonReader: {
 				root: 'merchantCheckVos',
 				page: 'page.index',
 				records: 'page.total'
 			}
 		});
-		listContainer.html(_grid.getHtml());		
+		listContainer.html(_grid.getHtml());
 		_grid.load();
-		_grid.listen('checkCallback', function(row) {
-			checkUpdate(row);
-		});
 		registerEvents();
 	}
-	
-	function checkUpdate(data)
-	{
+
+	function checkUpdate(data) {
 		var opt = {},
 			id = '',
 			tpl = infoCheckTpl;
-		if(data[0].action=='1'||data[0].action=='3')
-		{
+		if (data[0].action == '1' || data[0].action == '3') {
 			tpl = otherCheckTpl;
 		}
 		opt.message = '<h4><b>商户审核</b></h4><hr class="no-margin">' + tpl;
-		opt.buttons = {			
+		opt.buttons = {
 			"save": {
 				label: '通过',
 				className: 'btn-sm btn-success',
 				callback: function() {
-					checkSubmit(data,0);
+					checkSubmit(data, 0);
 				}
 			},
 			"cancel": {
 				label: '驳回',
 				className: 'btn-sm btn-success',
-				callback: function(){
-					checkSubmit(data,1);
+				callback: function() {
+					checkSubmit(data, 1);
 				}
 			}
 		};
-		showDialog(opt);		
+		showDialog(opt);
 		data && fillData(data);
 	}
-	
+
 	function showDialog(opt) {
 		Box.dialog(opt);
 	}
-	
-	function fillData(d)
-	{
+
+	function fillData(d) {
 		var data = d[0] || {};
-		if(data.merchantName)
-		{
+		console.log(d);
+		if (data.merchantName) {
 			$("[vfor=merchantName]").html(data.accountName);
 		}
-		if(data.accountName)
-		{
+		if (data.accountName) {
 			$("[vfor=accountName]").html(data.accountName);
 		}
 		//data.action:0/2/4;1\3
-		if(data.action==0||data.action==2||data.action==4)
-		{			
-			if(data.merchantVO)
-			{
-				if(data.merchantVO['linkmail'])
-				{
+		if (data.action == 0 || data.action == 2 || data.action == 4) {
+			if (data.merchantVO) {
+				if (data.merchantVO['linkmail']) {
 					$("[vfor=linkmail]").html(data.merchantVO['linkmail']);
 				}
-				if(data.merchantVO['businessAddr'])
-				{
+				if (data.merchantVO['businessAddr']) {
 					$("[vfor=businessAddr]").html(data.merchantVO['businessAddr']);
 				}
-				if(data.merchantVO['postalCode'])
-				{
+				if (data.merchantVO['postalCode']) {
 					$("[vfor=postalCode]").html(data.merchantVO['postalCode']);
 				}
-				if(data.merchantVO['businessCertAddr'])
-				{
+				if (data.merchantVO['businessCertAddr']) {
 					$("[vfor=businessCertAddr]").html(data.merchantVO['businessCertAddr']);
 				}
-				if(data.merchantVO['businessCertCode'])
-				{
+				if (data.merchantVO['businessCertCode']) {
 					$("[vfor=businessCertCode]").html(data.merchantVO['businessCertCode']);
 				}
-				if(data.merchantVO['linkman'])
-				{
+				if (data.merchantVO['linkman']) {
 					$("[vfor=linkman]").html(data.merchantVO['linkman']);
 				}
-				if(data.merchantVO['linkphone'])
-				{
+				if (data.merchantVO['linkphone']) {
 					$("[vfor=linkphone]").html(data.merchantVO['linkphone']);
 				}
-				if(data.merchantVO['merchantUrl'])
-				{
+				if (data.merchantVO['merchantUrl']) {
 					$("[vfor=merchantUrl]").html(data.merchantVO['merchantUrl']);
 				}
 			}
-		}
-		else if(data.action==1||data.action==3)
-		{
-			if(data.tools)
-			{
+			else{
+				$('[vfor=linkmail],[vfor=businessAddr],[vfor=postalCode],[vfor=businessCertAddr],[vfor=businessCertCode],[vfor=linkman],[vfor=linkphone],[vfor=merchantUrl]').parent().parent().hide();
+			}
+		} else if (data.action == 1 || data.action == 3) {
+			if (data.tools) {
 				var strTool = '';
-				for(var i=0;i<data.tools.length;i++)
-				{
-					strTool += '<div class="col-xs-12 col-sm-2"><input type="checkbox" '+(data.tools[i]['checked']?'checked':'')+' disabled/>'+data.tools[i]['tool']+'</div>';
+				for (var i = 0; i < data.tools.length; i++) {
+					strTool += '<div class="col-xs-12 col-sm-2"><input type="checkbox" ' + (data.tools[i]['checked'] ? 'checked' : '') + ' disabled/>' + data.tools[i]['tool'] + '</div>';
 				}
 				$("[vfor=tools]").html(strTool);
 			}
 		}
-		
+
 	}
 	/*
 	 * 审核：驳回/通过
 	 * status:0 通过 1 驳回
 	 */
-	function checkSubmit(data,status){
+	function checkSubmit(data, status) {
 		//console.log(data);
 		var id = data[0].id;
 		$.ajax({
 			url: global_config.serverRoot + '/updateMerchantCheck',
-			type:'post',
-			data:{'id':data[0].id,'status':status,'explanation':$("#explanation").val()},
+			type: 'post',
+			data: {
+				'id': data[0].id,
+				'status': status,
+				'explanation': $("#explanation").val()
+			},
 			success: function(res) {
-				$("tr[data-id="+id+"]").find("td:eq(5)").html(dictionaryCollection['status'][status]);
-				$("tr[data-id="+id+"]").find("td:eq(6)").html($("#explanation").val());
-				$("tr[data-id="+id+"]").find("td:last").children('div').remove();
+				$("tr[data-id=" + id + "]").find("td:eq(5)").html(dictionaryCollection['status'][status]);
+				$("tr[data-id=" + id + "]").find("td:eq(6)").html($("#explanation").val());
+				$("tr[data-id=" + id + "]").find("td:last").children('div').remove();
 			},
 			error: function(json) {
 				// some report
 			}
 		})
 	}
+
 	function registerEvents() {
 		$('.datepicker').datetimepicker({
 			autoclose: true,
@@ -222,19 +225,23 @@ define(function(require, exports, module) {
 					_grid.setUrl(getUrl());
 					_grid.loadData();
 				}
-			}	
+			}
+			if(cls && cls.indexOf('fa-edit') > -1){
+				var row = dataMap[$el.data('id')];
+				checkUpdate([row]);
+			}
 			//刷新页面时，清空查询条件
-			var _s="close";
-			window.onunload = function(){
-			   if(_s=="fresh")
-			    userParam = {};
+			var _s = "close";
+			window.onunload = function() {
+				if (_s == "fresh")
+					userParam = {};
 				doms.startTime.val('');
 				doms.endTime.val('');
 				doms.action.val(-1);
 				doms.status.val(-1);
 			}
-			window.onbeforeunload = function(){
-			   _s="fresh";
+			window.onbeforeunload = function() {
+				_s = "fresh";
 			}
 		});
 	}
@@ -252,10 +259,10 @@ define(function(require, exports, module) {
 		if (endTime) {
 			newParam.endTime = endTime;
 		}
-		if (action!=='-1') {
+		if (action !== '-1') {
 			newParam.action = action;
 		}
-		if (status!=='-1') {
+		if (status !== '-1') {
 			newParam.status = status;
 		}
 		for (var k in newParam) {
@@ -272,16 +279,12 @@ define(function(require, exports, module) {
 				break;
 			}
 		}
-		if (!newchange) {
-			Box.alert('您的查询条件并没有做任何修改.');
-			return false;
-		}
 		userParam = newParam;
 		return true;
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + '/queryMerchantCheck?size=15&index=1&' + Utils.object2param(userParam)+ '&t=' + Math.random();
+		return global_config.serverRoot + '/queryMerchantCheck?size=15&index=1&' + Utils.object2param(userParam) + '&t=' + Math.random();
 	}
 
 	return {
