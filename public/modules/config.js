@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 	var D = window.D = require("dialog.ace");
 	var tool = require("why");
 	var apis = {
-			edit : global_config.serverRoot.replace(/\/+$/,'') + '/operation/config/configFortumo'
+			edit : global_config.serverRoot.replace(/\/+$/,'') + '/config/configFortumo'
 		}
 	var errfun = function(e){
 		var msg = typeof e == 'object' ? e.statusText || e.msg || "操作失败!" : e;
@@ -56,7 +56,7 @@ define(function(require, exports, module) {
 			if(pass){
 				$.post(apis.edit,form.serialize(),null,'json').then(function(data){
 					if(data.code == 0){
-						D.suss('操作成功!',function(){location.reload()});
+						D.suss('操作成功!','提示',function(){location.reload()});
 					}else{
 						return $.Deferred().reject(data.message || data.msg || "操作失败!")
 					}

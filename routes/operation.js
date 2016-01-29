@@ -294,7 +294,7 @@ if (!daili) {
         if (pageNo) {
             fileName = req.path + ':' + pageNo;
             if (fileapi[fileName]) {
-                console.log(fileName, ' replace as ', fileapi[fileName]);
+                //console.log(fileName, ' replace as ', fileapi[fileName]);
                 fs.readFile(path.resolve(__dirname, '../temp_data', fileapi[fileName]), {
                     encoding: 'utf-8'
                 }, function(err, data) {
@@ -310,7 +310,7 @@ if (!daili) {
             }
         } else {
             if (fileapi[req.path]) {
-                console.log(req.path, ' replace as ', fileapi[req.path]);
+                //console.log(req.path, ' replace as ', fileapi[req.path]);
                 fs.readFile(path.resolve(__dirname, '../temp_data', fileapi[req.path]), {
                     encoding: 'utf-8'
                 }, function(err, data) {
