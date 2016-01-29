@@ -62,37 +62,52 @@
                             </div>
                         </div>
                     </div>
-                    <table id="addtable" class="g-table table table-bordered" style="width:800px; margin:30px auto 0 auto;">
-                        <thead>
-                            <tr>
-                                <th style=""><div>事件名称</div></th>
-                                <th style=""><div>值</div></th>
-                                <th style="width:100px"><div>操作</div></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-<!--                             <tr role="row">
-                                <td role="gridcell" title="" class="text-center"><input type="text" name="key"></td>
-                                <td role="gridcell" title="" class="text-center"><input type="text" name="value"></td>
-                                <td role="gridcell" title="" class="text-center">
-                                    <div class="btn-group btn-group-xs">
-                                        <button data-comm="add" type="button" class="btn btn-default disabled" title="添加"><i class="glyphicon glyphicon-plus"></i></button>
-                                        <button data-comm="del" type="button" class="btn btn-default disabled" title="删除"><i class="glyphicon glyphicon-minus"></i></button>
+                    <div style="width:800px; margin:10px auto 0 auto; max-width:100%;">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><!-- <a href="javascript:;" class="pull-right addItem"><i class="glyphicon glyphicon-plus"></i></a> -->添加事件</h3>
+                            </div>
+                            <div class="panel-body">
+                                    <table id="addtable" class="g-table table table-bordered" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th style=""><div>事件名称</div></th>
+                                                <th style=""><div>值</div></th>
+                                                <th style="width:100px"><div>操作</div></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                <!--                             <tr role="row">
+                                                <td role="gridcell" title="" class="text-center"><input type="text" name="key"></td>
+                                                <td role="gridcell" title="" class="text-center"><input type="text" name="value"></td>
+                                                <td role="gridcell" title="" class="text-center">
+                                                    <div class="btn-group btn-group-xs">
+                                                        <button data-comm="add" type="button" class="btn btn-default disabled" title="添加"><i class="glyphicon glyphicon-plus"></i></button>
+                                                        <button data-comm="del" type="button" class="btn btn-default disabled" title="删除"><i class="glyphicon glyphicon-minus"></i></button>
+                                                    </div>
+                                                </td>
+                                            </tr> -->
+                                        </tbody>
+                                    </table>
+                                    <div class="text-right" style="padding:10px;">
+                                        <button class="btn btn-info btn-xs" id="save" type="button"><i class="ace-icon fa fa-check bigger-110"></i>保存</button>
+                                        <button class="btn btn-xs" id="reset" type="button"><i class="ace-icon fa fa-undo bigger-110"></i>重置</button>
                                     </div>
-                                </td>
-                            </tr> -->
-                        </tbody>
-                    </table>
+                                
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         </div>
     </div>
 </div>
+<!--  <td role="gridcell" title="" class="text-center"><input type="text" name="value" style="width:90%"></td> -->
 <script id="itemTpl" type="text/temp">
 <tr role="row">
-    <td role="gridcell" title="" class="text-center"><input type="text" name="key"></td>
-    <td role="gridcell" title="" class="text-center"><input type="text" name="value"></td>
+    <td role="gridcell" title="" class="text-center"><input type="text" name="key" style="width:90%"></td>
+    <td role="gridcell" title="" class="text-center"><textarea name="value" style="width:90%;" rows="2"></textarea></td>
     <td role="gridcell" title="" class="text-center">
         <div class="btn-group btn-group-xs">
             <button data-comm="add" type="button" class="btn btn-default disabled" title="添加"><i class="glyphicon glyphicon-plus"></i></button>
