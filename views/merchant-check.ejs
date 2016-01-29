@@ -118,7 +118,7 @@
 </div>
 <div id="mask" class="widget-box-overlay hide"></div>
 <script id="infoCheckTpl" type="text/html">
-<div class="widget-box">	
+<div id="baseInfoBox" class="widget-box">	
 	<div class="widget-header"><h5 class="widget-title">基本信息</h5></div>
 	<div class="widget-body">
 		<div class="widget-main">
@@ -178,11 +178,31 @@
 					</div>
 				</div>				
 			</div>
+		</div>
+	</div>
+</div>
+<div id="payInfoBox" class="widget-box">
+	<div class="widget-header"><h5 class="widget-title">支付产品</h5></div>
+	<div class="widget-body">
+		<div class="widget-main">
 			<div class="row">
-				<div class="col-xs-12 col-sm-6 form-group">
-					<label class="col-sm-3 control-label no-padding lm-5">审核说明:</label>
-					<div class="col-sm-9 lm-5">
-						<textarea id="explanation" name="infoCheckExp"></textarea>
+				<div class="col-xs-12 col-sm-12 form-group">
+					<label class="col-sm-1 control-label no-padding lm-5"></label>
+					<div class="col-sm-11" id="payInfoList">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="holdInfoBox" class="widget-box">
+	<div class="widget-header"><h5 class="widget-title">代扣产品</h5></div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 form-group">
+					<label class="col-sm-1 control-label no-padding lm-5"></label>
+					<div class="col-sm-11" id="holdInfoList">
 					</div>
 				</div>
 			</div>
@@ -192,11 +212,8 @@
 </script>
 <script id="otherCheckTpl" type="text/html">
 <div class="widget-box">	
-	<div class="widget-header"><h5 class="widget-title">账户名：<span vfor="accountName"></span></h5></div>
 	<div class="widget-body">
 		<div class="widget-main">
-			<div class="row" vfor="tools">	
-			</div>
 			<div class="row">
 				<label class="col-sm-1 control-label no-padding lm-5">审核说明:</label>
 				<div class="col-sm-9 lm-5">

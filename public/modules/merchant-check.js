@@ -74,7 +74,7 @@ define(function(require, exports, module) {
 				name: '操作',
 				index: 'status',
 				closeXss: true,
-				format: function(v,key,row) {
+				format: function(v, key, row) {
 					var id = ++guid;
 					dataMap[id] = row;
 					if (v == 2) {
@@ -100,10 +100,8 @@ define(function(require, exports, module) {
 	function checkUpdate(data) {
 		var opt = {},
 			id = '',
-			tpl = infoCheckTpl;
-		if (data[0].action == '1' || data[0].action == '3') {
-			tpl = otherCheckTpl;
-		}
+			tpl = infoCheckTpl + otherCheckTpl;
+		
 		opt.message = '<h4><b>商户审核</b></h4><hr class="no-margin">' + tpl;
 		opt.buttons = {
 			"save": {
@@ -130,7 +128,8 @@ define(function(require, exports, module) {
 	}
 
 	function fillData(d) {
-		var data = d[0] || {};
+		var data = d[0] || {},
+			strTool = '';
 		console.log(d);
 		if (data.merchantName) {
 			$("[vfor=merchantName]").html(data.accountName);
@@ -138,67 +137,83 @@ define(function(require, exports, module) {
 		if (data.accountName) {
 			$("[vfor=accountName]").html(data.accountName);
 		}
-		//data.action:0/2/4;1\3
-		if (data.action == 0 || data.action == 2 || data.action == 4) {
-			if (data.merchantVO) {
-				if (data.merchantVO['linkmail']) {
-					$("[vfor=linkmail]").html(data.merchantVO['linkmail']);
-				}
-				if (data.merchantVO['businessAddr']) {
-					$("[vfor=businessAddr]").html(data.merchantVO['businessAddr']);
-				}
-				if (data.merchantVO['postalCode']) {
-					$("[vfor=postalCode]").html(data.merchantVO['postalCode']);
-				}
-				if (data.merchantVO['businessCertAddr']) {
-					$("[vfor=businessCertAddr]").html(data.merchantVO['businessCertAddr']);
-				}
-				if (data.merchantVO['businessCertCode']) {
-					$("[vfor=businessCertCode]").html(data.merchantVO['businessCertCode']);
-				}
-				if (data.merchantVO['linkman']) {
-					$("[vfor=linkman]").html(data.merchantVO['linkman']);
-				}
-				if (data.merchantVO['linkphone']) {
-					$("[vfor=linkphone]").html(data.merchantVO['linkphone']);
-				}
-				if (data.merchantVO['merchantUrl']) {
-					$("[vfor=merchantUrl]").html(data.merchantVO['merchantUrl']);
-				}
+
+		if (data.merchantVO) {
+			if (data.merchantVO['linkmail']) {
+				$("[vfor=linkmail]").html(data.merchantVO['linkmail']);
 			}
-			else{
-				$('[vfor=linkmail],[vfor=businessAddr],[vfor=postalCode],[vfor=businessCertAddr],[vfor=businessCertCode],[vfor=linkman],[vfor=linkphone],[vfor=merchantUrl]').parent().parent().hide();
+			if (data.merchantVO['businessAddr']) {
+				$("[vfor=businessAddr]").html(data.merchantVO['businessAddr']);
 			}
-		} else if (data.action == 1 || data.action == 3) {
-			if (data.tools) {
-				var strTool = '';
-				for (var i = 0; i < data.tools.length; i++) {
-					strTool += '<div class="col-xs-12 col-sm-2"><input type="checkbox" ' + (data.tools[i]['checked'] ? 'checked' : '') + ' disabled/>' + data.tools[i]['tool'] + '</div>';
-				}
-				$("[vfor=tools]").html(strTool);
+			if (data.merchantVO['postalCode']) {
+				$("[vfor=postalCode]").html(data.merchantVO['postalCode']);
 			}
+			if (data.merchantVO['businessCertAddr']) {
+				$("[vfor=businessCertAddr]").html(data.merchantVO['businessCertAddr']);
+			}
+			if (data.merchantVO['businessCertCode']) {
+				$("[vfor=businessCertCode]").html(data.merchantVO['businessCertCode']);
+			}
+			if (data.merchantVO['linkman']) {
+				$("[vfor=linkman]").html(data.merchantVO['linkman']);
+			}
+			if (data.merchantVO['linkphone']) {
+				$("[vfor=linkphone]").html(data.merchantVO['linkphone']);
+			}
+			if (data.merchantVO['merchantUrl']) {
+				$("[vfor=merchantUrl]").html(data.merchantVO['merchantUrl']);
+			}
+		} else {
+			$('#baseInfoBox').hide();
 		}
 
+		if (data.tools) {			
+			for (var i = 0; i < data.tools.length; i++) {
+				strTool += '<div class="col-xs-12 col-sm-2"><input type="checkbox" ' + (data.tools[i]['checked'] ? 'checked' : '') + ' disabled/>' + data.tools[i]['tool'] + '</div>';
+			}
+			$("#payInfoList").html(strTool);
+		}
+		else{
+			$('#payInfoBox').hide();
+		}
+
+		if(data.withTools){
+			strTool = '';
+			for (var i = 0; i < data.withTools.length; i++) {
+				strTool += '<div class="col-xs-12 col-sm-2"><input type="checkbox" ' + (data.withTools[i]['checked'] ? 'checked' : '') + ' disabled/>' + data.withTools[i]['tool'] + '</div>';
+			}
+			$("#holdInfoList").html(strTool);
+		}
+		else{
+			$('#holdInfoBox').hide();
+		}
 	}
 	/*
 	 * 审核：驳回/通过
 	 * status:0 通过 1 驳回
 	 */
-	function checkSubmit(data, status) {
-		//console.log(data);
-		var id = data[0].id;
+	function checkSubmit(data, status) {		
+		var d = data[0], pdata = {};
+		if(d.merchantId && 'null' != d.merchantId){
+			pdata.merchantId = d.merchantId;
+		}
+		if(d.payToolId && 'null' != d.payToolId){
+			pdata.payToolId = d.payToolId;
+		}
+		if(d.withToolId && 'null' != d.withToolId){
+			pdata.withToolId = d.withToolId;
+		}
+		pdata.status = status;
+		pdata.explanation = $('#explanation').val();
 		$.ajax({
 			url: global_config.serverRoot + '/updateMerchantCheck',
 			type: 'post',
-			data: {
-				'id': data[0].id,
-				'status': status,
-				'explanation': $("#explanation").val()
-			},
+			data: pdata,
 			success: function(res) {
-				$("tr[data-id=" + id + "]").find("td:eq(5)").html(dictionaryCollection['status'][status]);
-				$("tr[data-id=" + id + "]").find("td:eq(6)").html($("#explanation").val());
-				$("tr[data-id=" + id + "]").find("td:last").children('div').remove();
+				// $("tr[data-id=" + id + "]").find("td:eq(5)").html(dictionaryCollection['status'][status]);
+				// $("tr[data-id=" + id + "]").find("td:eq(6)").html($("#explanation").val());
+				// $("tr[data-id=" + id + "]").find("td:last").children('div').remove();
+				_grid.loadData();
 			},
 			error: function(json) {
 				// some report
@@ -226,7 +241,7 @@ define(function(require, exports, module) {
 					_grid.loadData();
 				}
 			}
-			if(cls && cls.indexOf('fa-edit') > -1){
+			if (cls && cls.indexOf('fa-edit') > -1) {
 				var row = dataMap[$el.data('id')];
 				checkUpdate([row]);
 			}
