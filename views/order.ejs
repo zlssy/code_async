@@ -22,6 +22,12 @@
 			.row{
 				margin: 4px 0;
 			}
+			.detailRow{
+				line-height: 24px;
+			}
+			.detailRow:nth-child(2n+1){
+				background-color: #eee;
+			}
 			@media(min-width: 768px) {
 				.modal-dialog{
 					width: 900px!important;
@@ -169,7 +175,7 @@
 <div id="mask" class="widget-box-overlay hide"></div>
 
 <script type="text/html" id="viewTpl">
-<div class="row">
+<div class="row detailRow">
 	<div class="col-xs-12 col-sm-6">
 		<div class="col-sm-3 no-padding">交易订单号：</div>
 		<div class="col-sm-9"><%%=data.payOrderId%></div>
@@ -179,7 +185,7 @@
 		<div class="col-sm-9"><%%=data.sourcePayOrderId%></div>
 	</div>
 </div>
-<div class="row">
+<div class="row detailRow">
 	<div class="col-xs-12 col-sm-6">
 		<div class="col-sm-3 no-padding">交易流水号：</div>
 		<div class="col-sm-9"><%%=data.tradeId%></div>
@@ -189,7 +195,7 @@
 		<div class="col-sm-9"><%%=data.merchantId%></div>
 	</div>
 </div>
-<div class="row">
+<div class="row detailRow">
 	<div class="col-xs-12 col-sm-6">
 		<div class="col-sm-3 no-padding">商户订单号：</div>
 		<div class="col-sm-9"><%%=data.outOrderId%></div>
@@ -199,7 +205,7 @@
 		<div class="col-sm-9"><%%=data.merchantName%></div>
 	</div>
 </div>
-<div class="row">
+<div class="row detailRow">
 	<div class="col-xs-12 col-sm-6">
 		<div class="col-sm-3 no-padding">交易类型：</div>
 		<div class="col-sm-9"><%%=data.tradeType%></div>
@@ -209,7 +215,7 @@
 		<div class="col-sm-9"><%%=data.countryCode%></div>
 	</div>
 </div>
-<div class="row">
+<div class="row detailRow">
 	<div class="col-xs-12 col-sm-6">
 		<div class="col-sm-3 no-padding">用户编号：</div>
 		<div class="col-sm-9"><%%=data.payer%></div>
@@ -219,7 +225,7 @@
 		<div class="col-sm-9"><%%=data.imsi%></div>
 	</div>
 </div>
-<div class="row">
+<div class="row detailRow">
 	<div class="col-xs-12 col-sm-6">
 		<div class="col-sm-3 no-padding">订单状态：</div>
 		<div class="col-sm-9"><%%=data.payStatus%></div>
@@ -229,7 +235,7 @@
 		<div class="col-sm-9"><%%=data.productName%></div>
 	</div>
 </div>
-<div class="row">
+<div class="row detailRow">
 	<div class="col-xs-12 col-sm-6">
 		<div class="col-sm-3 no-padding">支付渠道：</div>
 		<div class="col-sm-9"><%%=data.payChannel%></div>
@@ -239,7 +245,7 @@
 		<div class="col-sm-9"><%%=data.productCode%></div>
 	</div>
 </div>
-<div class="row">
+<div class="row detailRow">
 	<div class="col-xs-12 col-sm-6">
 		<div class="col-sm-3 no-padding">支付币种：</div>
 		<div class="col-sm-9"><%%=data.currencyType%></div>
@@ -249,7 +255,7 @@
 		<div class="col-sm-9"><%%=data.bankCardType%></div>
 	</div>
 </div>
-<div class="row">
+<div class="row detailRow">
 	<div class="col-xs-12 col-sm-6">
 		<div class="col-sm-3 no-padding">订单金额：</div>
 		<div class="col-sm-9"><%%=data.orderAmount%> <%%=data.currencyType%></div>
@@ -259,7 +265,7 @@
 		<div class="col-sm-9"><%%=data.bankNum%></div>
 	</div>
 </div>
-<div class="row">
+<div class="row detailRow">
 	<div class="col-xs-12 col-sm-6">
 		<div class="col-sm-3 no-padding">支付开始时间：</div>
 		<div class="col-sm-9"><%%=data.startPayTime%></div>
@@ -269,7 +275,7 @@
 		<div class="col-sm-9"><%%=data.taxAmount%></div>
 	</div>
 </div>
-<div class="row">
+<div class="row detailRow">
 	<div class="col-xs-12 col-sm-6">
 		<div class="col-sm-3 no-padding">支付结束时间：</div>
 		<div class="col-sm-9"><%%=data.payOverTime%></div>
@@ -279,7 +285,7 @@
 		<div class="col-sm-9"><%%=data.shippingAmount%></div>
 	</div>
 </div>
-<div class="row">
+<div class="row detailRow">
 	<div class="col-xs-12 col-sm-12">
 		<div class="col-sm-3 no-padding">订单备注：</div>
 		<div class="col-sm-9"><%%=data.remark%></div>
