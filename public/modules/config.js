@@ -56,7 +56,10 @@ define(function(require, exports, module) {
 			if(pass){
 				$.post(apis.edit,form.serialize(),null,'json').then(function(data){
 					if(data.code == 0){
-						D.suss('操作成功!','提示',function(){location.reload()});
+						D.suss('操作成功!','提示',function(){
+						form[0].reset();
+						//location.reload(true)
+					});
 					}else if(data.code == 2){
 						form.find('[name="merchantId"]').focus().showErrMsg('您输入的merchant ID不存在，请重新输入！');
 						item.closest('selector').addClass('has-error');
