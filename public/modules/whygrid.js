@@ -252,7 +252,7 @@ var Lang_config = {
     		// changeHash[prmNames.order] = order;
     		// changeHash[prmNames.sort] = sort;
             // document.location.href = tool.urlComm.setHash(changeHash)
-			o.option.setSearch(prmNames.page,page);
+			o.option.setSearch(prmNames.page,null);
 			o.option.setSearch(prmNames.order,order);
 			o.option.setSearch(prmNames.sort,sort);
     		o.load();

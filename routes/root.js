@@ -6,7 +6,7 @@ var fs = require('fs');
 var path = require('path');
 var router = express.Router();
 
-var Passport = require("../lib/passport-client").debug();
+var Passport = require("../lib/passport-client");
 var config = {
     url  : setting.passport,
     code : setting.projectCode,
