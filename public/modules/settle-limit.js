@@ -622,13 +622,14 @@ define(function(require, exports, module) {
 				doms.merchantIds.val('');
 				doms.merchantName.val('');
 				doms.district.val('');
-				doms.businessLimitFloor.val('');
-				doms.businessLimitCeiling.val('');
+				doms.businessLimitFloor.val('').prop('disabled', false);
+				doms.businessLimitCeiling.val('').prop('disabled', false);
 				doms.businessLimit.val('');
-				doms.legalPersonLimitFloor.val('');
-				doms.legalPersonLimitCeiling.val('');
+				doms.legalPersonLimitFloor.val('').prop('disabled', false);
+				doms.legalPersonLimitCeiling.val('').prop('disabled', false);
 				doms.legalPersonLimit.val('');
 				doms.businessTypeInt.val(0);
+
 			}
 			if(cls && cls.indexOf('edit') > -1){
 				addAndUpdate([dataMap[$el.data('id')]]);

@@ -137,6 +137,11 @@ define(function(require, exports, module) {
 	}
 
 	function registerEvents() {
+		$('.datepicker').datetimepicker({
+			autoclose: true,
+			todayHighlight: true,
+			minView: 2
+		});
 		$(document.body).on('click', function(e){
 			var $el = $(e.target || e.srcElement),
 				id = $el.attr('id'),

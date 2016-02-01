@@ -9,8 +9,8 @@ define(function(require, exports, module) {
 		listContainer = $('#grid_list'),
 		userParam = {},
 		doms = {
-			qfstart: $('input[name="qfstart"]'),
-			qfend: $('input[name="qfend"]'),
+			qfstart: $('input[name="clearingDateStart"]'),
+			qfend: $('input[name="clearingDateEnd"]'),
 			jystart: $('input[name="jystart"]'),
 			jyend: $('input[name="jyend"]'),
 			qfstatus: $('#qfstatus'),
@@ -104,6 +104,7 @@ define(function(require, exports, module) {
 						dataTypes[typename] = arr;
 						for (var i = 0; i < arr.length; i++) {
 							var item = arr[i];
+							val = item.innerValue;
 							html += '<option value=' + val + '>' + item.label + '</option>'
 						}
 					}
