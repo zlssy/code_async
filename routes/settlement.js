@@ -16,7 +16,8 @@ var userid = 12345;
 if (daili) {
     var downFiles = [
         '/fileUpload',
-        '/financialStatistic/export'
+        '/financialStatistic/export',
+        '/clearing/export'
     ]
 
     var conditions = [

@@ -26,7 +26,7 @@ define(function(require, exports, module) {
 			}, {
 				name: '支付状态',
 				index: 'payStatus',
-				format: function(row, x, y){
+				format: function(row, x, y) {
 					return EnumOrderStatus.get(row[this.index]);
 				}
 			}, {
@@ -67,10 +67,11 @@ define(function(require, exports, module) {
 						dataTypes[typename] = arr;
 						for (var i = 0; i < arr.length; i++) {
 							var item = arr[i];
-							if('currencyCode' == typename){
+							if ('currencyCode' == typename) {
 								val = item.label;
-							}else{
-							val = item.innerValue;}
+							} else {
+								val = item.innerValue;
+							}
 							html += '<option value=' + val + '>' + item.label + '</option>'
 						}
 					}
@@ -101,7 +102,7 @@ define(function(require, exports, module) {
 		a.remove();
 	}
 
-	function getParams(){
+	function getParams() {
 		var merchantName = $('#merchantName').val(),
 			merchantId = $('#merchantId').val(),
 			currencyType = $('#currencyCode').val(),
@@ -112,31 +113,31 @@ define(function(require, exports, module) {
 			payOverBeginTime = $('#payOverBeginTime').val(),
 			payOverEndTime = $('#payOverEndTime').val();
 		userParam = {};
-		if(merchantName){
+		if (merchantName) {
 			userParam.merchantName = merchantName;
 		}
-		if(merchantId){
+		if (merchantId) {
 			userParam.merchantId = merchantId;
 		}
-		if(currencyType){
+		if (currencyType) {
 			userParam.currencyCode = currencyType;
 		}
-		if(payStatus){
+		if (payStatus) {
 			userParam.payStatus = payStatus;
 		}
-		if(payChannel){
+		if (payChannel) {
 			userParam.payChannel = payChannel;
 		}
-		if(startPayBeginTime){
+		if (startPayBeginTime) {
 			userParam.startPayBeginTime = startPayBeginTime;
 		}
-		if(startPayEndTime){
+		if (startPayEndTime) {
 			userParam.startPayEndTime = startPayEndTime;
 		}
-		if(payOverBeginTime){
+		if (payOverBeginTime) {
 			userParam.payOverBeginTime = payOverBeginTime;
 		}
-		if(payOverEndTime){
+		if (payOverEndTime) {
 			userParam.payOverEndTime = payOverEndTime;
 		}
 	}
@@ -144,14 +145,14 @@ define(function(require, exports, module) {
 	function registerEvents() {
 		$('.datepicker').datetimepicker({
 			autoclose: true,
-			todayHighlight: true,
-			minView: 2
+			todayHighlight: true,			
+			minuteStep: 10
 		});
-		$(document.body).on('click', function(e){
+		$(document.body).on('click', function(e) {
 			var $el = $(e.target || e.srcElement),
 				id = $el.attr('id'),
 				cls = $el.attr('class');
-			if(cls && cls.indexOf('fa-file-excel-o') > -1 || (id && 'export' == id)){
+			if (cls && cls.indexOf('fa-file-excel-o') > -1 || (id && 'export' == id)) {
 				exportExcel();
 			}
 		});
