@@ -4,6 +4,7 @@ define(function(require, exports, module) {
 		Xss = require('xss'),
 		accountCheck = require('checkAccount'),
 		Tips = require('tips'),
+		EnumOrderStatus = require('enum-order-status'),
 
 		Box = require('boxBootstrap'),
 		content = $('#content'),
@@ -42,6 +43,7 @@ define(function(require, exports, module) {
 		_tips = new Tips.Tips();
 
 	function init() {
+		$('#payStatus').append(EnumOrderStatus.getOptions());
 		loadData();
 	}
 
@@ -92,7 +94,7 @@ define(function(require, exports, module) {
 				index: 'payStatus',
 				width: 90,
 				format: function(v) {
-					return PAY_STATUS[v] || '';
+					return EnumOrderStatus.get(v);
 				}
 			}, {
 				name: '支付开始时间',
@@ -261,34 +263,11 @@ define(function(require, exports, module) {
 				if (data) {
 					data.hasOwnProperty('tradeType') && (data.tradeType = '0' == data.tradeType ? '支付' : '代扣');
 					if (data.hasOwnProperty('payStatus')) {
-						switch (data.payStatus) {
-							case '0':
-								data.payStatus = '代付款';
-								break;
-							case '1':
-								data.payStatus = '全款已支付';
-								break;
-							case '3':
-								data.payStatus = '付款失败';
-								break;
-							case '5':
-								data.payStatus = '退款中';
-								break;
-							case '6':
-								data.payStatus = '退款失败';
-								break;
-							case '7':
-								data.payStatus = '退款成功';
-								break;
-							case '8':
-								data.payStatus = '订单关闭';
-								break;
-						}
+						data.payStatus = EnumOrderStatus.get(data.payStatus);
 					}
 					if(data.hasOwnProperty('orderAmount')){
 						data.orderAmount = ((data.orderAmount - 0) / 100).toFixed(2);
 					}
-					console.log(data);
 					Box.alert(Utils.formatJson(viewTpl, {
 						data: data
 					}));

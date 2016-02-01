@@ -2,6 +2,7 @@ define(function(require, exports, module) {
 	var Table = require('whygrid'),
 		Box = require('boxBootstrap'),
 		Utils = require('utils'),
+		EnumOrderStatus = require('enum-order-status'),
 
 		apis = {
 			list: global_config.serverRoot + 'tradeStatistics/findtradeDataList'
@@ -14,6 +15,7 @@ define(function(require, exports, module) {
 		_grid;
 
 	function init() {
+		$('#payStatus').append(EnumOrderStatus.getOptions());
 		_grid = Table('#grid_list', apis.list, {
 			checkRow: false,
 			seachForm: '#sform',
@@ -23,7 +25,10 @@ define(function(require, exports, module) {
 				index: 'startPayTime'
 			}, {
 				name: '支付状态',
-				index: 'payStatus'
+				index: 'payStatus',
+				format: function(row, x, y){
+					return EnumOrderStatus.get(row[this.index]);
+				}
 			}, {
 				name: '支付渠道',
 				index: 'payChannel'
