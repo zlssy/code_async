@@ -285,6 +285,9 @@ define(function(require, exports, module) {
 								break;
 						}
 					}
+					if(data.hasOwnProperty('orderAmount')){
+						data.orderAmount = ((data.orderAmount - 0) / 100).toFixed(2);
+					}
 					console.log(data);
 					Box.alert(Utils.formatJson(viewTpl, {
 						data: data
