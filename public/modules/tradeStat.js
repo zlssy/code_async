@@ -40,7 +40,10 @@ define(function(require, exports, module) {
 				index: 'tradeCount'
 			}, {
 				name: '交易金额',
-				index: 'tradeAmount'
+				index: 'tradeAmount',
+				format: function(v){
+					return ((v[this.index] - 0)/100).toFixed(2);
+				}
 			}],
 			jsonReader: {
 				root: 'tradeOrders',
