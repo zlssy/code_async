@@ -38,6 +38,7 @@ function getProxyUri(req) {
 if (daili) {
     var downFiles = [
         '/fileUpload',
+        '/downloadTradeOrders',
         '/tradeStatistics/downloadtradeDataList'
     ]
 
