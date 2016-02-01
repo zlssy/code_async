@@ -35,7 +35,7 @@ var pathConfig = [
     ['/payment-channel', 'zfqdgl-zfqd'],
     ['/documet', 'wdgl-wdgl'],
     ['/dataDictionary/list', 'sjzdgl-sjzd'],
-    ['/config', 'wdgl-wdgl']
+    ['/config', 'pzxx-pzxx']
     /*
     ["/abc/list,","sjzdgl-sjzd"],
     ["/abc/a,abc/b","sjzdgl-sjzd"],
