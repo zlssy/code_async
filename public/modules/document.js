@@ -204,6 +204,10 @@ define(function(require, exports, module) {
 							}
 						});
 					}
+					else{
+						art_dialog.loading.end();
+						art_dialog.error('上传失败');
+					}
 				}
 			}
 		});
