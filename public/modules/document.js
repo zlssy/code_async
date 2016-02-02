@@ -206,7 +206,7 @@ define(function(require, exports, module) {
 					}
 					else if('3' == result.response){
 						art_dialog.loading.end();
-						art_dialog.error('请上传正确格式的文件，目前仅支持pdf, doc, docx, xls, xlsx, apk, aar, rar, zip, json。');
+						art_dialog.error('请上传pdf, doc, docx, xls, xlsx, apk, aar, rar, zip, json等格式的文件！');
 					}else{
 						art_dialog.loading.end();
 						art_dialog.error('上传失败');
