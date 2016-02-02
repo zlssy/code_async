@@ -204,7 +204,10 @@ define(function(require, exports, module) {
 							}
 						});
 					}
-					else{
+					else if('3' == result.response){
+						art_dialog.loading.end();
+						art_dialog.error('请上传正确格式的文件，目前仅支持pdf, doc, docx, xls, xlsx, apk, aar, rar, zip, json。');
+					}else{
 						art_dialog.loading.end();
 						art_dialog.error('上传失败');
 					}
