@@ -40,11 +40,39 @@ define(function(require, exports, module) {
 			'7': '退款成功',
 			'8': '支付关闭'
 		},
+		dataTypes = {},
 		_tips = new Tips.Tips();
 
 	function init() {
-		$('#payStatus').append(EnumOrderStatus.getOptions());
+		initControl();
 		loadData();
+	}
+
+	function initControl() {
+		$('#payStatus').append(EnumOrderStatus.getOptions());
+		$('select[data-typename]').each(function(i, v) {
+			var $this = $(v),
+				typename = $this.data('typename');
+			$.get(global_config.serverRootQF + 'dataDictionary/dropdownlist', {
+				type: typename
+			}, function(data) {
+				if (data.code != 0) {
+					// return $.Deferred().reject(data.message || data.msg || "未知错误!")
+				}
+				if (data.data && data.data.dataArray) {
+					var html = '',
+						arr = data.data.dataArray,
+						val;
+					dataTypes[typename] = arr;					
+					for (var i = 0; i < arr.length; i++) {
+						var item = arr[i];
+						val = item.innerValue;
+						html += '<option value=' + val + '>' + item.label + '</option>'
+					}
+				}
+				$this.append(html);
+			});
+		});
 	}
 
 	function loadData() {
@@ -265,7 +293,7 @@ define(function(require, exports, module) {
 					if (data.hasOwnProperty('payStatus')) {
 						data.payStatus = EnumOrderStatus.get(data.payStatus);
 					}
-					if(data.hasOwnProperty('orderAmount')){
+					if (data.hasOwnProperty('orderAmount')) {
 						data.orderAmount = ((data.orderAmount - 0) / 100).toFixed(2);
 					}
 					Box.alert(Utils.formatJson(viewTpl, {
