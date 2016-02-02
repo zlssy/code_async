@@ -70,7 +70,7 @@ define(function(require, exports, module) {
 						dataTypes[typename] = arr;
 						for (var i = 0; i < arr.length; i++) {
 							var item = arr[i];
-							if ('currencyCode' == typename) {
+							if ('currencyCode' == typename || 'payChannel' == typename) {
 								val = item.label;
 							} else {
 								val = item.innerValue;
