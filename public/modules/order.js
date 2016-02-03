@@ -63,11 +63,16 @@ define(function(require, exports, module) {
 					var html = '',
 						arr = data.data.dataArray,
 						val;
-					dataTypes[typename] = arr;					
+					dataTypes[typename] = arr;
 					for (var i = 0; i < arr.length; i++) {
 						var item = arr[i];
-						val = item.innerValue;
+						if ('payChannel' == typename || 'currencyCode' == typename) {
+							val = item.label;
+						} else {
+							val = item.innerValue;
+						}
 						html += '<option value=' + val + '>' + item.label + '</option>'
+
 					}
 				}
 				$this.append(html);
