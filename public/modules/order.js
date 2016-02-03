@@ -354,17 +354,17 @@ define(function(require, exports, module) {
 				}
 			}
 			if (cls && cls.indexOf('fa-undo') > -1 || (id && 'reset-btn' == id)) {
-				$('#payOrderId').val('');
-				$('#outOrderId').val('');
-				$('#merchantId').val('');
-				$('#merchantName').val('');
-				$('#payChannel').val('');
-				$('#currencyType').val('');
-				$('#startDate').val('');
-				$('#endDate').val('');
-				$('#payStatus').val('');
-				$('#payOverBeginTime').val('');
-				$('#payOverEndTime').val('');
+				doms.payOrderId.val('');
+				doms.outOrderId.val('');
+				doms.merchantId.val('');
+				doms.payChannel.val('');
+				doms.currencyType.val('');
+				doms.payStatus.val('');
+				doms.startPayBeginTime.val('');
+				doms.startPayEndTime.val('');
+				doms.payOverBeginTime.val('');
+				doms.payOverEndTime.val('');
+				doms.merchantName.val('');
 			}
 			if (cls && cls.indexOf('fa-file-excel-o') > -1 || (id && 'export-btn' == id)) {
 				exportExcel();
@@ -373,14 +373,6 @@ define(function(require, exports, module) {
 	}
 
 	function exportExcel() {
-		// var settleDateStart = $('#settleDateStart').val(),
-		// 	settleDateEnd = $('#settleDateEnd').val();
-		// if (!settleDateStart || !settleDateEnd) {
-		// 	Box.alert('请选择结算日期后下载。');
-		// 	return;
-		// }
-		// userParam.settleDateStart = settleDateStart;
-		// userParam.settleDateEnd = settleDateEnd;
 		var a = document.createElement('a');
 		var url = global_config.serverRoot + '/downloadTradeOrders?' + Utils.object2param(userParam);
 		a.href = url; //global_config.serverRootQF + '/settleStatement/export?userId=&' + Utils.object2param(userParam);
@@ -443,9 +435,6 @@ define(function(require, exports, module) {
 			newParam.merchantName = merchantName;
 		}
 
-		/*if (payChannel != '') {
-			newParam.payChannel = payChannel;
-		}*/
 
 		for (var k in newParam) {
 			if (newParam[k] !== userParam[k]) {
