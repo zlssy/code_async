@@ -12,34 +12,23 @@ define(function(require, exports, module) {
 		userParam = {},
 		dictionaryCollection = {},
 		doms = {
-			payOrderId: $('#payOrderId'),
+			payOrderId: $('input[name="payOrderId"]'),
 			outOrderId: $('input[name="outOrderId"]'), //这里获取元素还有点问题记得修复
 			merchantId: $('input[name="merchantId"]'),
-			payChannel: $('#payChannel'),
-			currencyType: $('#currencyType'),
-			payStatus: $('#payStatus'),
+			payChannel: $('select[name="payChannel"]'),
+			currencyType: $('select[name="currencyType"]'),
+			payStatus: $('select[name="payStatus"]'),
 			startPayBeginTime: $('input[name="startPayBeginTime"]'),
 			startPayEndTime: $('input[name="startPayEndTime"]'),
 			payOverBeginTime: $('input[name="payOverBeginTime"]'),
 			payOverEndTime: $('input[name="payOverEndTime"]'),
-			merchantName: $('#merchantName')
+			merchantName: $('input[name="merchantName"]')
 		},
 		viewTpl = $('#viewTpl').html(),
 
 		_grid,
 		idle = true, // 当前空闲，可操作
-		wait = 1000, // 控制用户操作频率，2个操作间需要等待的时间
-		PAY_STATUS = {
-			'0': '待支付',
-			'1': '全额已支付',
-			'2': '部分已支付',
-			'3': '支付失败',
-			'4': '付款中',
-			'5': '退款中',
-			'6': '退款失败',
-			'7': '退款成功',
-			'8': '支付关闭'
-		},
+		wait = 1000, // 控制用户操作频率，2个操作间需要等待的时间		
 		dataTypes = {},
 		_tips = new Tips.Tips();
 
