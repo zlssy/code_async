@@ -22,7 +22,7 @@ define(function(require, exports, module) {
 		dataMap = {};
 
 	function init() {
-		_grid = Table('#grid_list', getUrl(),{
+		_grid = Table('#grid_list', getUrl(), {
 			checkRow: false,
 			seachForm: '#sform',
 			pagenav: true,
@@ -68,7 +68,7 @@ define(function(require, exports, module) {
 				format: function(v, ov, col) {
 					dataMap[v.id] = v;
 					if ('1' == v.status) {
-						return '<div class="ui-pg-div align-center"><a href="javascript:;" class="confirm" title="付款确认" data-id="'+v.id+'">付款确认</a></div>';
+						return '<div class="ui-pg-div align-center"><a href="javascript:;" class="confirm" title="付款确认" data-id="' + v.id + '">付款确认</a></div>';
 					} else {
 						return ' '
 					}
@@ -206,7 +206,7 @@ define(function(require, exports, module) {
 		userParam.settleDateStart = settleDateStart;
 		userParam.settleDateEnd = settleDateEnd;
 		var a = document.createElement('a');
-		var url = 'http://testtclpay.tclclouds.com/settlement/settleStatement/export?userId=&' + Utils.object2param(userParam);
+		var url = global_config.serverRootQF + '/settleStatement/export?userId=&' + Utils.object2param(userParam);
 		a.href = url; //global_config.serverRootQF + '/settleStatement/export?userId=&' + Utils.object2param(userParam);
 		a.target = '_blank';
 		a.height = 0;
@@ -336,7 +336,7 @@ define(function(require, exports, module) {
 				doms.settleDateStart.val('');
 				doms.settleDateEnd.val('');
 			}
-			if(cls && cls.indexOf('confirm')>-1){
+			if (cls && cls.indexOf('confirm') > -1) {
 				confirmPay([dataMap[$el.data('id')]]);
 			}
 		});
