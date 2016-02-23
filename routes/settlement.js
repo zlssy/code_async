@@ -17,7 +17,8 @@ if (daili) {
     var downFiles = [
         '/fileUpload',
         '/financialStatistic/export',
-        '/clearing/export'
+        '/clearing/export',
+        '/settleCard/template'
     ]
 
     var conditions = [
