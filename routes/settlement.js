@@ -18,7 +18,8 @@ if (daili) {
         '/fileUpload',
         '/financialStatistic/export',
         '/clearing/export',
-        '/settleCard/template'
+        '/settleCard/template',
+        '/settleStatement/export'
     ]
 
     var conditions = [
