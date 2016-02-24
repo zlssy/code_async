@@ -123,7 +123,7 @@ define(function(require, exports, module) {
                 width: 150
             }, {
                 name: 'Original currency',
-                index: 'originalCurrency',
+                index: 'currencyType',
                 width: 120
             }, {
                 name: 'Gross revenue in original',
