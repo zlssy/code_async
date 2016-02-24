@@ -143,10 +143,10 @@ define(function(require, exports, module) {
                 width: 120
             }, {
                 name: 'Net revenue in original currency',
-                index: 'netRevenueInOriginalCurrency',
+                index: 'netProfit',
                 width: 250,
                 format: function(v) {
-                    var d = (v['amount'] - v['fixedCharge'] - v['variableCharges'] || 0).toFixed(2);
+                    var d = (v[this.index] || 0).toFixed(2);
                     return '<span style="color:' + (d < 0 ? 'red' : 'green') + ';">' + d + '</span>';
                 }
             }, {
@@ -167,10 +167,10 @@ define(function(require, exports, module) {
                 width: 200
             }, {
                 name: 'Net revenue in USD',
-                index: 'netRevenueInUSD',
+                index: 'netProfitUsd',
                 width: 150,
                 format: function(v) {
-                    var d = (v['amountUsd'] - v['fixedChargesUsd'] - v['variableChargesUsd'] || 0).toFixed(2);
+                    var d = (v[this.index] || 0).toFixed(2);
                     return '<span style="color:' + (d < 0 ? 'red' : 'green') + ';">' + d + '</span>';
                 }
             }],
