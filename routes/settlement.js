@@ -19,7 +19,8 @@ if (daili) {
         '/financialStatistic/export',
         '/clearing/export',
         '/settleCard/template',
-        '/settleStatement/export'
+        '/settleStatement/export',
+        '/reconciliation'
     ]
 
     var conditions = [
